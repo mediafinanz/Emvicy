@@ -38,15 +38,29 @@
                     }
 
                     // sanitize_var
-                    foreach (get($aSet['sanitize_var'], []) as $iSanitizeVar)
+                    if (true === is_int(get($aSet['sanitize_var'])))
                     {
-                        $aInput[$sKey] = filter_var($aInput[$sKey], $iSanitizeVar);
+                        $aInput[$sKey] = filter_var($aInput[$sKey], get($aSet['sanitize_var']));
+                    }
+                    elseif(true === is_array(get($aSet['sanitize_var'])))
+                    {
+                        foreach (get($aSet['sanitize_var'], []) as $iSanitizeVar)
+                        {
+                            $aInput[$sKey] = filter_var($aInput[$sKey], $iSanitizeVar);
+                        }
                     }
 
                     // preg_replace
-                    foreach (get($aSet['preg_replace'], []) as $sRegEx)
+                    if (true === is_int(get($aSet['preg_replace'])))
                     {
-                        $aInput[$sKey] = preg_replace($sRegEx, '', $aInput[$sKey]);
+                        $aInput[$sKey] = filter_var($aInput[$sKey], get($aSet['preg_replace']));
+                    }
+                    elseif(true === is_array(get($aSet['preg_replace'])))
+                    {
+                        foreach (get($aSet['preg_replace'], []) as $sRegEx)
+                        {
+                            $aInput[$sKey] = filter_var($aInput[$sKey], $sRegEx);
+                        }
                     }
 
                     // cast
