@@ -317,14 +317,16 @@ class Db
             'dir' => Registry::get('MVC_MODULES_DIR') . '/' . $sModulename . '/DataType/',
             'unlinkDir' => false,
             'createEvents' => true,
-            'class' => array(array(
-                 'name' => $sClassName,
-                 'file' => $sClassName . '.php',
-                 'extends' => '\\MVC\\DB\\DataType\\DB\\TableDataType',
-                 'namespace' => $sModulename . '\DataType',
-                 'constant' => array(),
-                 'property' => array(),
-             )),
+            'class' => array(
+                array(
+                    'name' => $sClassName,
+                    'file' => $sClassName . '.php',
+                    'extends' => '\\MVC\\DB\\DataType\\DB\\TableDataType',
+                    'namespace' => $sModulename . '\DataType',
+                    'constant' => array(),
+                    'property' => array(),
+                )
+            ),
         );
 
         $aTableDataTypeProperty = array_keys(TableDataType::create()->getPropertyArray());
@@ -787,14 +789,17 @@ class Db
         }
 
         // add comment from foreigns
-        if (!empty(get($this->aForeign[$sFieldName])))
+        foreach ($aResult as $sKey => $aValue)
         {
-            /** @var \MVC\DB\DataType\DB\Foreign $oDTForeign */
-            $oDTForeign = get($this->aForeign[$sFieldName]);
-
-            if (!empty($oDTForeign->get_sComment()))
+            if (!empty(get($this->aForeign[$sKey])))
             {
-                $aResult[$sFieldName]['Comment'] = $oDTForeign->get_sComment();
+                /** @var \MVC\DB\DataType\DB\Foreign $oDTForeign */
+                $oDTForeign = get($this->aForeign[$sKey]);
+
+                if (!empty($oDTForeign->get_sComment()))
+                {
+                    $aResult[$sKey]['Comment'] = $oDTForeign->get_sComment();
+                }
             }
         }
 
