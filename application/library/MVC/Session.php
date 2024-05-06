@@ -216,6 +216,23 @@ class Session
     }
 
     /**
+     * empty a session namespace; removes all data in the current namespace
+     * @return bool
+     */
+    public function empty()
+    {
+        if (true === isset($_SESSION[$this->_sNamespace]))
+        {
+            $_SESSION[$this->_sNamespace] = null;
+            unset($_SESSION[$this->_sNamespace]);
+
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
      * kills current session
      * @param bool $bRegenerateId
      * @return \MVC\Session|null
