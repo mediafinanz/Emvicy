@@ -52,7 +52,7 @@ class InfoTool
 
         // add sRendered markup of current page
         $aToolbar['sRendered'] = $oView->getTemplateVars('layout');
-        $aToolbar['sRenderedHighlight'] = Strings::highlight_html($aToolbar['sRendered']);
+        $aToolbar['sRenderedHighlight'] = Strings::highlight_html(get($aToolbar['sRendered'], ''));
         Registry::set('aToolbar', $aToolbar);
 
         $sToolBarVarName = 'sToolBar_' . uniqid();
