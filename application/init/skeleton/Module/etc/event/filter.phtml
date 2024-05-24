@@ -26,7 +26,9 @@
                 : $aInput = $oDTValue->get_mValue()
             ;
 
-            if (is_array($aInput))
+            $bAnyFilterHasTakenAffect = false;
+
+            if (true === is_array($aInput))
             {
                 foreach ($aInput as $sKey => $sInput)
                 {
@@ -70,13 +72,16 @@
                     ('bool' === $sCast) ? $aInput[$sKey] = (boolean) $aInput[$sKey] : false;
                     ('float' === $sCast) ? $aInput[$sKey] = (float) $aInput[$sKey] : false;
                     ('array' === $sCast) ? $aInput[$sKey] = (array) $aInput[$sKey] : false;
+
+                    $bAnyFilterHasTakenAffect = true;
+                }
+
+                if (true === $bAnyFilterHasTakenAffect)
+                {
+                    // save array back
+                    $oDTValue->set_mValue($aInput);
                 }
             }
-
-            // ...if incoming type was string, convert back
-            ('string' === $sTypeIncoming && false === \MVC\Strings::isJson($oDTValue->get_mValue())) ? $aInput = http_build_query($aInput) : false;
-
-            $oDTValue->set_mValue($aInput);
         },
     ],
 ]);
