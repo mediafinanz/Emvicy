@@ -427,7 +427,7 @@ class Db
         try
         {
             // Select 1 from table_name will return false if the table does not exist.
-            $aResult = $this->oDbPDO->fetchAll("DESCRIBE `" . $sTable . "`");
+            $aResult = $this->oDbPDO->fetchAll("DESCRIBE " . $sTable);
         }
         catch (\Exception $oException)
         {
@@ -659,6 +659,12 @@ class Db
         // INSERT
         foreach ($aInsert as $sKey => $aValue)
         {
+            // skip if that named column already exists
+            if (isset($aColumnFinal[$sKey]))
+            {
+                continue;
+            }
+
             $sSql = "ALTER TABLE  `" . $this->sTableName  . "` ADD  `" . $sKey . "` " . $aValue . " AFTER  `id` \n";
 
             Event::run('mvc.db.model.db.insert.sql', $sSql . (' /* ' . Log::prepareDebug(debug_backtrace(limit: 1)) . ' */ ') . "\n");
