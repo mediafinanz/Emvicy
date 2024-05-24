@@ -78,6 +78,9 @@
 
                 if (true === $bAnyFilterHasTakenAffect)
                 {
+                    // ...if incoming type was string, convert back
+                    ('string' === $sTypeIncoming && false === \MVC\Strings::isJson($oDTValue->get_mValue())) ? $aInput = http_build_query($aInput) : false;
+
                     // save array back
                     $oDTValue->set_mValue($aInput);
                 }
