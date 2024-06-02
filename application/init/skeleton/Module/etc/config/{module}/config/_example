@@ -17,6 +17,9 @@ declare(strict_types=1);  // @see https://www.php.net/manual/en/language.types.d
 error_reporting(E_ALL);
 date_default_timezone_set('Europe/Berlin');
 
+// add routing files dir
+$aConfig['MVC_ROUTING_DIR'][] = realpath(__DIR__ . '/../../../') . '/routing';
+
 // recommended to set a logrotate mechanism for these logfiles as they may grow quickly
 $aConfig['MVC_LOG_SQL'] = true;
 $aConfig['MVC_LOG_EVENT'] = true;

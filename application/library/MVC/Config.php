@@ -1544,4 +1544,18 @@ class Config
         Registry::set('MVC_LOG_ROUTEINTERVALL', $bVar);
         $GLOBALS['aConfig']['MVC_LOG_ROUTEINTERVALL'] = $bVar;
     }
+
+    /**
+     * @return array
+     * @throws \ReflectionException
+     */
+    public static function get_MVC_ROUTING_DIR() : array
+    {
+        if (Registry::isRegistered('MVC_ROUTING_DIR'))
+        {
+            return (array) Registry::get('MVC_ROUTING_DIR');
+        }
+
+        return array();
+    }
 }

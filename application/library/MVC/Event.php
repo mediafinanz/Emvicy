@@ -41,7 +41,7 @@ class Event
             return false;
         }
 
-        //  require recursively all php files in module's routing dir
+        //  require recursively all php files in module's event dir
         /** @var \SplFileInfo $oSplFileInfo */
         foreach (new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator($sEventDir)) as $oSplFileInfo)
         {

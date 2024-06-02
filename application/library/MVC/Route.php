@@ -38,17 +38,19 @@ class Route
     public static function init() : void
     {
         Event::run('mvc.route.init.before');
-        $sRoutingDir = Config::get_MVC_MODULE_PRIMARY_ETC_DIR() . '/routing';
 
-        if (true === file_exists($sRoutingDir))
+        foreach (array_unique(Config::get_MVC_ROUTING_DIR()) as $sRoutingDir)
         {
-            //  require recursively all php files in module's routing dir
-            /** @var \SplFileInfo $oSplFileInfo */
-            foreach (new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator($sRoutingDir)) as $oSplFileInfo)
+            if (true === file_exists($sRoutingDir))
             {
-                if ('php' === strtolower($oSplFileInfo->getExtension()))
+                //  require recursively all php files in module's routing dir
+                /** @var \SplFileInfo $oSplFileInfo */
+                foreach (new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator($sRoutingDir)) as $oSplFileInfo)
                 {
-                    require_once $oSplFileInfo->getPathname();
+                    if ('php' === strtolower($oSplFileInfo->getExtension()))
+                    {
+                        require_once $oSplFileInfo->getPathname();
+                    }
                 }
             }
         }

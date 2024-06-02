@@ -63,14 +63,6 @@ MVC_BIN: {
 MVC_APPLICATION_SETTINGS_I: {
 
     /**-----------------------------------------------------------------------------------------------------------------
-     * keys for "query" notation in \MVC\Route routings
-     * e.g.: 'module=Foo&c=index&m=index'
-     */
-    $aConfig['MVC_ROUTE_QUERY_PARAM_MODULE'] = 'module';
-    $aConfig['MVC_ROUTE_QUERY_PARAM_C'] = 'c';
-    $aConfig['MVC_ROUTE_QUERY_PARAM_M'] = 'm';
-
-    /**-----------------------------------------------------------------------------------------------------------------
      * Name of method to be executed in the Target Controller Class
      * before session and other main functionalities.
      * It will be called in /application/library/MVC/Application.php:
@@ -133,11 +125,9 @@ MVC_APPLICATION_SETTINGS_I: {
     $aConfig['MVC_LOG_REQUEST'] = true;            // logging enabled true|false
     $aConfig['MVC_LOG_DEFAULT'] = true;             // logging enabled true|false
     $aConfig['MVC_LOG_ROUTEINTERVALL'] = true;      // logging enabled true|false
-
     $aConfig['MVC_LOG_FORCE_LINEBREAK'] = false;    // force linebreaks in logfiles no matter what
 
     // Log file places
-
     $aConfig['MVC_LOG_FILE_DIR'] = $aConfig['MVC_APPLICATION_PATH'] . '/log/';          # trailing slash required
     $aConfig['MVC_LOG_FILE_DEFAULT'] = $aConfig['MVC_LOG_FILE_DIR'] . 'default.log';
     $aConfig['MVC_LOG_FILE_ERROR'] = $aConfig['MVC_LOG_FILE_DIR'] . 'error.log';
@@ -221,12 +211,6 @@ MVC_APPLICATION_SETTINGS_I: {
     // true:    session will start
     $aConfig['MVC_SESSION_ENABLE'] = false;
 
-    // Routing Class
-    $aConfig['MVC_ROUTING_CLASS'] = '\\MVC\\Routing';
-
-    // routing.json file
-    $aConfig['MVC_ROUTING_JSON'] = '';
-
     // detect if request is done via cli. set boole true|false
     $aConfig['MVC_CLI'] = (('cli' === php_sapi_name()) ? true : false);
 }
@@ -262,6 +246,23 @@ MODULES: {
 
 MVC_APPLICATION_SETTINGS_II:
 {
+    /**-----------------------------------------------------------------------------------------------------------------
+     * Routing etc.
+     */
+    // contains all routing file dirs to get read
+    $aConfig['MVC_ROUTING_DIR'] = array(
+        // add primary per default
+        $aConfig['MVC_MODULE_PRIMARY_ETC_DIR'] . '/routing'
+    );
+
+    /**
+     * keys for "query" notation in \MVC\Route routings
+     * e.g.: 'module=Foo&c=index&m=index'
+     */
+    $aConfig['MVC_ROUTE_QUERY_PARAM_MODULE'] = 'module';
+    $aConfig['MVC_ROUTE_QUERY_PARAM_C'] = 'c';
+    $aConfig['MVC_ROUTE_QUERY_PARAM_M'] = 'm';
+
     /**
      * MVC fallback routing
      * this routing will be used if none is specified for routing
