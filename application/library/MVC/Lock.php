@@ -21,8 +21,8 @@ class Lock
 {
     /**
      * @param string $sKey
-     * @param bool   $bReturn
-     * @return bool|void
+     * @param bool $bReturn
+     * @return string|void
      * @throws \ReflectionException
      */
     public static function create(string $sKey = '', bool $bReturn = false)
@@ -69,7 +69,7 @@ class Lock
 
             if (true === $bReturn)
             {
-                return false;
+                return $sFile;
             }
 
             exit();
@@ -84,7 +84,7 @@ class Lock
 
         if (true === $bReturn)
         {
-            return true;
+            return $sFile;
         }
     }
 }
