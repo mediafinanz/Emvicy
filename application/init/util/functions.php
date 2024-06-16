@@ -303,3 +303,83 @@ function hr(string $sString = '-', int $iLength = 80, $sColor = "\033[0m")
     echo $sColor . str_repeat($sString, $iLength) . "\033[0m";
     nl();
 }
+
+//-----------------------
+// @credits https://www.php.net/manual/en/function.parse-str.php#126789
+
+const PSCperiod = 'XXXPSCperiodXXX';
+const PSCspace = 'ZZZPSCspaceZZZ';
+
+/**
+ * @param $aArray
+ * @param $sQueryString
+ * @return void
+ */
+function PSCsanitizeKeys(&$aArray, $sQueryString)
+{
+    foreach ($aArray as $key => $val)
+    {
+        // restore values to original
+        $newval = $val;
+
+        if (is_string($val))
+        {
+            $newval = str_replace([PSCperiod, PSCspace], [".", " "], $val);
+        }
+
+        $newkey = str_replace([PSCperiod, PSCspace], [".", " "], $key);
+
+        if (str_contains($newkey, '_'))
+        {
+            // periode of space or [ or ] converted to _. Restore with querystring
+            $regex = '/&(' . str_replace('_', '[ \.\[\]]', preg_quote($newkey, '/')) . ')=/';
+            $matches = null;
+
+            if (preg_match_all($regex, "&" . urldecode($sQueryString), $matches))
+            {
+                if (count(array_unique($matches[1])) === 1 && $key != $matches[1][0])
+                {
+                    $newkey = $matches[1][0];
+                }
+            }
+        }
+
+        if ($newkey != $key)
+        {
+            unset($aArray[$key]);
+            $aArray[$newkey] = $newval;
+        }
+        elseif ($val != $newval)
+        {
+            $aArray[$key] = $newval;
+        }
+
+        if (is_array($val))
+        {
+            PSCsanitizeKeys($aArray[$newkey], $sQueryString);
+        }
+    }
+}
+
+/**
+ * leaves key names preserved
+ * @param $querystr
+ * @param $arr
+ * @return array|null
+ */
+function parse_str_clean($querystr, &$arr): array
+{
+    // without the converting of spaces and dots etc to underscores.
+    $qquerystr = str_ireplace(['.', '%2E', '+', ' ', '%20'], [
+        PSCperiod,
+        PSCperiod,
+        PSCspace,
+        PSCspace,
+        PSCspace,
+    ], $querystr);
+    $arr = null;
+    parse_str($qquerystr, $arr);
+    PSCsanitizeKeys($arr, $querystr);
+
+    return $arr;
+}
