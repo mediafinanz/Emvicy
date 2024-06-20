@@ -35,6 +35,7 @@ class File
         $aInfo['is_dir'] = is_dir($sFilePathAbs);
         $aInfo['filemtime'] = filemtime($sFilePathAbs);
         $aInfo['filectime'] = filemtime($sFilePathAbs);
+        $aInfo['filesize'] = filesize($sFilePathAbs);
         $aInfo['mimetype'] = self::getMimeType($sFilePathAbs);
         $aPathInfo = pathinfo($sFilePathAbs);
         $aInfo = array_merge($aInfo, $aPathInfo);

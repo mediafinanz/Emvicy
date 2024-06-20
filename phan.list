@@ -18,8 +18,13 @@ application/library/MVC/DataType/DTKeyValue.php
 application/library/MVC/DataType/DTRequestCurrent.php
 application/library/MVC/DataType/DTDBWhereRelation.php
 application/library/MVC/DataType/DTRoutingAdditional.php
+application/library/MVC/DataType/.bak/DTFileinfo.php
 application/library/MVC/DataType/DTContainer.php
 application/library/MVC/DataType/DTDBSet.php
+application/library/MVC/DataType/.test/DTDBWhere.php
+application/library/MVC/DataType/.test/DTDBWhereRelation.php
+application/library/MVC/DataType/.test/DTFileinfo.php
+application/library/MVC/DataType/.test/DTRoute.php
 application/library/MVC/DataType/DTEventContext.php
 application/library/MVC/DataType/DTFileinfo.php
 application/library/MVC/DataType/DTDBOption.php
@@ -31,6 +36,7 @@ application/library/MVC/DataType/DTConfig.php
 application/library/MVC/DataType/DTValue.php
 application/library/MVC/DataType/DTFileUpload.php
 application/library/MVC/DataType/DTCronTask.php
+application/library/MVC/DataType/._datatype.php
 application/library/MVC/Cache.php
 application/library/MVC/View.php
 application/library/MVC/Request.php

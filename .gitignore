@@ -3,6 +3,8 @@
 .bak
 .trash
 .env
+.test
+._datatype.php
 .phpstorm.meta.php
 application/.composer
 application/cache/*

@@ -1,135 +1,137 @@
 <?php
-/**
- * DTFileinfo.php
- * @package   Emvicy
- * @copyright ueffing.net
- * @author    Guido K.B.W. Üffing <emvicy@ueffing.net>
- * @license   GNU GENERAL PUBLIC LICENSE Version 3. See application/doc/COPYING
- */
+# 2024-06-20 11:43:16
 
 /**
  * @name $MVCDataType
  */
 namespace MVC\DataType;
 
+use MVC\DataType\DTValue;
 use MVC\MVCTrait\TraitDataType;
 
 class DTFileinfo
 {
 	use TraitDataType;
 
-	const DTHASH = '1301c656d77cf30864476f75fb648a51';
+	public const DTHASH = '90a71a3267e3d8d0e9b51f7d9ecbe137';
 
 	/**
-	 * @required false
+	 * @required true
 	 * @var string
 	 */
 	protected $dirname;
 
 	/**
-	 * @required false
+	 * @required true
 	 * @var string
 	 */
 	protected $basename;
 
 	/**
-	 * @required false
+	 * @required true
 	 * @var string
 	 */
 	protected $path;
 
 	/**
-	 * @required false
+	 * @required true
 	 * @var bool
 	 */
 	protected $is_file;
 
 	/**
-	 * @required false
+	 * @required true
 	 * @var bool
 	 */
 	protected $is_dir;
 
 	/**
-	 * @required false
+	 * @required true
 	 * @var string
 	 */
 	protected $extension;
 
 	/**
-	 * @required false
+	 * @required true
 	 * @var string
 	 */
 	protected $filename;
 
 	/**
-	 * @required false
+	 * @required true
 	 * @var string
 	 */
 	protected $name;
 
 	/**
-	 * @required false
+	 * @required true
 	 * @var string
 	 */
 	protected $passwd;
 
 	/**
-	 * @required false
+	 * @required true
 	 * @var int
 	 */
 	protected $uid;
 
 	/**
-	 * @required false
+	 * @required true
 	 * @var int
 	 */
 	protected $gid;
 
 	/**
-	 * @required false
-	 * @var string
-	 */
-	protected $gecos;
-
-	/**
-	 * @required false
-	 * @var string
-	 */
-	protected $dir;
-
-	/**
-	 * @required false
-	 * @var string
-	 */
-	protected $shell;
-
-	/**
-	 * @required false
+	 * @required true
 	 * @var int
 	 */
 	protected $filemtime;
 
 	/**
-	 * @required false
+	 * @required true
 	 * @var int
 	 */
 	protected $filectime;
 
-    /**
-     * @var string
-     */
-    protected $mimetype;
+	/**
+	 * @required true
+	 * @var int
+	 */
+	protected $filesize;
+
+	/**
+	 * @required true
+	 * @var string
+	 */
+	protected $gecos;
+
+	/**
+	 * @required true
+	 * @var string
+	 */
+	protected $dir;
+
+	/**
+	 * @required true
+	 * @var string
+	 */
+	protected $shell;
+
+	/**
+	 * @required true
+	 * @var string
+	 */
+	protected $mimetype;
 
 	/**
 	 * DTFileinfo constructor.
-	 * @param array $aData
+	 * @param DTValue $oDTValue
 	 * @throws \ReflectionException 
 	 */
-	public function __construct(array $aData = array())
+	protected function __construct(DTValue $oDTValue)
 	{
-        $oDTValue = DTValue::create()->set_mValue($aData); \MVC\Event::RUN ('DTFileinfo.__construct.before', $oDTValue);
-        $aData = $oDTValue->get_mValue();
+		\MVC\Event::run('DTFileinfo.__construct.before', $oDTValue);
+		$aData = $oDTValue->get_mValue();
 
 		$this->dirname = '';
 		$this->basename = '';
@@ -142,447 +144,522 @@ class DTFileinfo
 		$this->passwd = '';
 		$this->uid = 0;
 		$this->gid = 0;
+		$this->filemtime = 0;
+		$this->filectime = 0;
+		$this->filesize = 0;
 		$this->gecos = '';
 		$this->dir = '';
 		$this->shell = '';
-		$this->filemtime = 0;
-		$this->filectime = 0;
-        $this->mimetype = '';
+		$this->mimetype = '';
+		$this->setProperties($oDTValue);
 
-		foreach ($aData as $sKey => $mValue)
-		{
-			$sMethod = 'set_' . $sKey;
-
-			if (method_exists($this, $sMethod))
-			{
-				$this->$sMethod($mValue);
-			}
-		}
-
-        $oDTValue = DTValue::create()->set_mValue($aData); \MVC\Event::RUN ('DTFileinfo.__construct.after', $oDTValue);
+		$oDTValue = DTValue::create()->set_mValue($aData); 
+		\MVC\Event::run('DTFileinfo.__construct.after', $oDTValue);
 	}
 
     /**
-     * @param array $aData
+     * @param array|null $aData
      * @return DTFileinfo
      * @throws \ReflectionException
      */
-    public static function create(array $aData = array())
-    {
-        $oDTValue = DTValue::create()->set_mValue($aData); \MVC\Event::RUN ('DTFileinfo.create.before', $oDTValue);
-        $oObject = new self($oDTValue->get_mValue());
-        $oDTValue = DTValue::create()->set_mValue($oObject); \MVC\Event::RUN ('DTFileinfo.create.after', $oDTValue);
+    public static function create(?array $aData = array())
+    {            
+        (null === $aData) ? $aData = array() : false;
+        $oDTValue = DTValue::create()->set_mValue($aData);
+		\MVC\Event::run('DTFileinfo.create.before', $oDTValue);
+		$oObject = new self($oDTValue);
+        $oDTValue = DTValue::create()->set_mValue($oObject); \MVC\Event::run('DTFileinfo.create.after', $oDTValue);
 
         return $oDTValue->get_mValue();
     }
 
 	/**
-	 * @param string $aValue 
+     * @deprecated
+     * @param array $aData
+     * @return array
+     * @throws \ReflectionException
+     */
+    public static function cast(array $aData = array())
+    {
+        $oThis = new self();
+
+        foreach ($aData as $sKey => $sValue)
+        {
+            $sVar = $aData[$sKey];
+            settype($sVar, $oThis->getDocCommentValueOfProperty($sKey));
+            $aData[$sKey] = $sVar;
+        }
+
+        return $aData;
+    }
+
+	/**
+	 * @param string $mValue 
 	 * @return $this
 	 * @throws \ReflectionException
 	 */
-	public function set_dirname($aValue)
+	public function set_dirname(string $mValue)
 	{
-        $oDTValue = DTValue::create()->set_mValue($aValue); \MVC\Event::RUN ('DTFileinfo.set_dirname.before', $aValue);
+		$oDTValue = DTValue::create()->set_mValue($mValue); 
+		\MVC\Event::run('DTFileinfo.set_dirname.before', $oDTValue);
 		$this->dirname = (string) $oDTValue->get_mValue();
 
 		return $this;
 	}
 
 	/**
-	 * @param string $aValue 
+	 * @param string $mValue 
 	 * @return $this
 	 * @throws \ReflectionException
 	 */
-	public function set_basename($aValue)
+	public function set_basename(string $mValue)
 	{
-        $oDTValue = DTValue::create()->set_mValue($aValue); \MVC\Event::RUN ('DTFileinfo.set_basename.before', $oDTValue);
+		$oDTValue = DTValue::create()->set_mValue($mValue); 
+		\MVC\Event::run('DTFileinfo.set_basename.before', $oDTValue);
 		$this->basename = (string) $oDTValue->get_mValue();
 
 		return $this;
 	}
 
 	/**
-	 * @param string $aValue 
+	 * @param string $mValue 
 	 * @return $this
 	 * @throws \ReflectionException
 	 */
-	public function set_path($aValue)
+	public function set_path(string $mValue)
 	{
-        $oDTValue = DTValue::create()->set_mValue($aValue); \MVC\Event::RUN ('DTFileinfo.set_path.before', $oDTValue);
+		$oDTValue = DTValue::create()->set_mValue($mValue); 
+		\MVC\Event::run('DTFileinfo.set_path.before', $oDTValue);
 		$this->path = (string) $oDTValue->get_mValue();
 
 		return $this;
 	}
 
 	/**
-	 * @param bool $aValue 
+	 * @param bool $mValue 
 	 * @return $this
 	 * @throws \ReflectionException
 	 */
-	public function set_is_file($aValue)
+	public function set_is_file(bool $mValue)
 	{
-        $oDTValue = DTValue::create()->set_mValue($aValue); \MVC\Event::RUN ('DTFileinfo.set_is_file.before', $oDTValue);
+		$oDTValue = DTValue::create()->set_mValue($mValue); 
+		\MVC\Event::run('DTFileinfo.set_is_file.before', $oDTValue);
 		$this->is_file = (bool) $oDTValue->get_mValue();
 
 		return $this;
 	}
 
 	/**
-	 * @param bool $aValue 
+	 * @param bool $mValue 
 	 * @return $this
 	 * @throws \ReflectionException
 	 */
-	public function set_is_dir($aValue)
+	public function set_is_dir(bool $mValue)
 	{
-        $oDTValue = DTValue::create()->set_mValue($aValue); \MVC\Event::RUN ('DTFileinfo.set_is_dir.before', $oDTValue);
+		$oDTValue = DTValue::create()->set_mValue($mValue); 
+		\MVC\Event::run('DTFileinfo.set_is_dir.before', $oDTValue);
 		$this->is_dir = (bool) $oDTValue->get_mValue();
 
 		return $this;
 	}
 
 	/**
-	 * @param string $aValue 
+	 * @param string $mValue 
 	 * @return $this
 	 * @throws \ReflectionException
 	 */
-	public function set_extension($aValue)
+	public function set_extension(string $mValue)
 	{
-        $oDTValue = DTValue::create()->set_mValue($aValue); \MVC\Event::RUN ('DTFileinfo.set_extension.before', $oDTValue);
+		$oDTValue = DTValue::create()->set_mValue($mValue); 
+		\MVC\Event::run('DTFileinfo.set_extension.before', $oDTValue);
 		$this->extension = (string) $oDTValue->get_mValue();
 
 		return $this;
 	}
 
 	/**
-	 * @param string $aValue 
+	 * @param string $mValue 
 	 * @return $this
 	 * @throws \ReflectionException
 	 */
-	public function set_filename($aValue)
+	public function set_filename(string $mValue)
 	{
-        $oDTValue = DTValue::create()->set_mValue($aValue); \MVC\Event::RUN ('DTFileinfo.set_filename.before', $oDTValue);
+		$oDTValue = DTValue::create()->set_mValue($mValue); 
+		\MVC\Event::run('DTFileinfo.set_filename.before', $oDTValue);
 		$this->filename = (string) $oDTValue->get_mValue();
 
 		return $this;
 	}
 
 	/**
-	 * @param string $aValue 
+	 * @param string $mValue 
 	 * @return $this
 	 * @throws \ReflectionException
 	 */
-	public function set_name($aValue)
+	public function set_name(string $mValue)
 	{
-        $oDTValue = DTValue::create()->set_mValue($aValue); \MVC\Event::RUN ('DTFileinfo.set_name.before', $oDTValue);
+		$oDTValue = DTValue::create()->set_mValue($mValue); 
+		\MVC\Event::run('DTFileinfo.set_name.before', $oDTValue);
 		$this->name = (string) $oDTValue->get_mValue();
 
 		return $this;
 	}
 
 	/**
-	 * @param string $aValue 
+	 * @param string $mValue 
 	 * @return $this
 	 * @throws \ReflectionException
 	 */
-	public function set_passwd($aValue)
+	public function set_passwd(string $mValue)
 	{
-        $oDTValue = DTValue::create()->set_mValue($aValue); \MVC\Event::RUN ('DTFileinfo.set_passwd.before', $oDTValue);
+		$oDTValue = DTValue::create()->set_mValue($mValue); 
+		\MVC\Event::run('DTFileinfo.set_passwd.before', $oDTValue);
 		$this->passwd = (string) $oDTValue->get_mValue();
 
 		return $this;
 	}
 
 	/**
-	 * @param int $aValue 
+	 * @param int $mValue 
 	 * @return $this
 	 * @throws \ReflectionException
 	 */
-	public function set_uid($aValue)
+	public function set_uid(int $mValue)
 	{
-        $oDTValue = DTValue::create()->set_mValue($aValue); \MVC\Event::RUN ('DTFileinfo.set_uid.before', $oDTValue);
+		$oDTValue = DTValue::create()->set_mValue($mValue); 
+		\MVC\Event::run('DTFileinfo.set_uid.before', $oDTValue);
 		$this->uid = (int) $oDTValue->get_mValue();
 
 		return $this;
 	}
 
 	/**
-	 * @param int $aValue 
+	 * @param int $mValue 
 	 * @return $this
 	 * @throws \ReflectionException
 	 */
-	public function set_gid($aValue)
+	public function set_gid(int $mValue)
 	{
-        $oDTValue = DTValue::create()->set_mValue($aValue); \MVC\Event::RUN ('DTFileinfo.set_gid.before', $oDTValue);
+		$oDTValue = DTValue::create()->set_mValue($mValue); 
+		\MVC\Event::run('DTFileinfo.set_gid.before', $oDTValue);
 		$this->gid = (int) $oDTValue->get_mValue();
 
 		return $this;
 	}
 
 	/**
-	 * @param string $aValue 
+	 * @param int $mValue 
 	 * @return $this
 	 * @throws \ReflectionException
 	 */
-	public function set_gecos($aValue)
+	public function set_filemtime(int $mValue)
 	{
-        $oDTValue = DTValue::create()->set_mValue($aValue); \MVC\Event::RUN ('DTFileinfo.set_gecos.before', $oDTValue);
-		$this->gecos = (string) $oDTValue->get_mValue();
-
-		return $this;
-	}
-
-	/**
-	 * @param string $aValue 
-	 * @return $this
-	 * @throws \ReflectionException
-	 */
-	public function set_dir($aValue)
-	{
-        $oDTValue = DTValue::create()->set_mValue($aValue); \MVC\Event::RUN ('DTFileinfo.set_dir.before', $oDTValue);
-		$this->dir = (string) $oDTValue->get_mValue();
-
-		return $this;
-	}
-
-	/**
-	 * @param string $aValue 
-	 * @return $this
-	 * @throws \ReflectionException
-	 */
-	public function set_shell($aValue)
-	{
-        $oDTValue = DTValue::create()->set_mValue($aValue); \MVC\Event::RUN ('DTFileinfo.set_shell.before', $oDTValue);
-		$this->shell = (string) $oDTValue->get_mValue();
-
-		return $this;
-	}
-
-	/**
-	 * @param int $aValue 
-	 * @return $this
-	 * @throws \ReflectionException
-	 */
-	public function set_filemtime($aValue)
-	{
-        $oDTValue = DTValue::create()->set_mValue($aValue); \MVC\Event::RUN ('DTFileinfo.set_filemtime.before', $oDTValue);
+		$oDTValue = DTValue::create()->set_mValue($mValue); 
+		\MVC\Event::run('DTFileinfo.set_filemtime.before', $oDTValue);
 		$this->filemtime = (int) $oDTValue->get_mValue();
 
 		return $this;
 	}
 
 	/**
-	 * @param int $aValue 
+	 * @param int $mValue 
 	 * @return $this
 	 * @throws \ReflectionException
 	 */
-	public function set_filectime($aValue)
+	public function set_filectime(int $mValue)
 	{
-        $oDTValue = DTValue::create()->set_mValue($aValue); \MVC\Event::RUN ('DTFileinfo.set_filectime.before', $oDTValue);
+		$oDTValue = DTValue::create()->set_mValue($mValue); 
+		\MVC\Event::run('DTFileinfo.set_filectime.before', $oDTValue);
 		$this->filectime = (int) $oDTValue->get_mValue();
 
 		return $this;
 	}
 
-    /**
-     * @param int $sValue
-     * @return $this
-     * @throws \ReflectionException
-     */
-    public function set_mimetype($sValue)
-    {
-        $oDTValue = DTValue::create()->set_mValue($sValue); \MVC\Event::RUN ('DTFileinfo.set_mimetype.before', $oDTValue);
-        $this->mimetype = (string) $oDTValue->get_mValue();
-
-        return $this;
-    }
-
 	/**
-	 * @return string
+	 * @param int $mValue 
+	 * @return $this
 	 * @throws \ReflectionException
 	 */
-	public function get_dirname()
+	public function set_filesize(int $mValue)
 	{
-        $oDTValue = DTValue::create()->set_mValue($this->dirname); \MVC\Event::RUN ('DTFileinfo.get_dirname.before', $oDTValue);
+		$oDTValue = DTValue::create()->set_mValue($mValue); 
+		\MVC\Event::run('DTFileinfo.set_filesize.before', $oDTValue);
+		$this->filesize = (int) $oDTValue->get_mValue();
 
-        return $oDTValue->get_mValue();
+		return $this;
+	}
+
+	/**
+	 * @param string $mValue 
+	 * @return $this
+	 * @throws \ReflectionException
+	 */
+	public function set_gecos(string $mValue)
+	{
+		$oDTValue = DTValue::create()->set_mValue($mValue); 
+		\MVC\Event::run('DTFileinfo.set_gecos.before', $oDTValue);
+		$this->gecos = (string) $oDTValue->get_mValue();
+
+		return $this;
+	}
+
+	/**
+	 * @param string $mValue 
+	 * @return $this
+	 * @throws \ReflectionException
+	 */
+	public function set_dir(string $mValue)
+	{
+		$oDTValue = DTValue::create()->set_mValue($mValue); 
+		\MVC\Event::run('DTFileinfo.set_dir.before', $oDTValue);
+		$this->dir = (string) $oDTValue->get_mValue();
+
+		return $this;
+	}
+
+	/**
+	 * @param string $mValue 
+	 * @return $this
+	 * @throws \ReflectionException
+	 */
+	public function set_shell(string $mValue)
+	{
+		$oDTValue = DTValue::create()->set_mValue($mValue); 
+		\MVC\Event::run('DTFileinfo.set_shell.before', $oDTValue);
+		$this->shell = (string) $oDTValue->get_mValue();
+
+		return $this;
+	}
+
+	/**
+	 * @param string $mValue 
+	 * @return $this
+	 * @throws \ReflectionException
+	 */
+	public function set_mimetype(string $mValue)
+	{
+		$oDTValue = DTValue::create()->set_mValue($mValue); 
+		\MVC\Event::run('DTFileinfo.set_mimetype.before', $oDTValue);
+		$this->mimetype = (string) $oDTValue->get_mValue();
+
+		return $this;
 	}
 
 	/**
 	 * @return string
 	 * @throws \ReflectionException
 	 */
-	public function get_basename()
+	public function get_dirname() : string
 	{
-        $oDTValue = DTValue::create()->set_mValue($this->basename); \MVC\Event::RUN ('DTFileinfo.get_basename.before', $oDTValue);
+		$oDTValue = DTValue::create()->set_mValue($this->dirname); 
+		\MVC\Event::run('DTFileinfo.get_dirname.before', $oDTValue);
 
-        return $oDTValue->get_mValue();
+		return $oDTValue->get_mValue();
 	}
 
 	/**
 	 * @return string
 	 * @throws \ReflectionException
 	 */
-	public function get_path()
+	public function get_basename() : string
 	{
-        $oDTValue = DTValue::create()->set_mValue($this->path); \MVC\Event::RUN ('DTFileinfo.get_path.before', $oDTValue);
+		$oDTValue = DTValue::create()->set_mValue($this->basename); 
+		\MVC\Event::run('DTFileinfo.get_basename.before', $oDTValue);
 
-        return $oDTValue->get_mValue();
+		return $oDTValue->get_mValue();
+	}
+
+	/**
+	 * @return string
+	 * @throws \ReflectionException
+	 */
+	public function get_path() : string
+	{
+		$oDTValue = DTValue::create()->set_mValue($this->path); 
+		\MVC\Event::run('DTFileinfo.get_path.before', $oDTValue);
+
+		return $oDTValue->get_mValue();
 	}
 
 	/**
 	 * @return bool
 	 * @throws \ReflectionException
 	 */
-	public function get_is_file()
+	public function get_is_file() : bool
 	{
-        $oDTValue = DTValue::create()->set_mValue($this->is_file); \MVC\Event::RUN ('DTFileinfo.get_is_file.before', $oDTValue);
+		$oDTValue = DTValue::create()->set_mValue($this->is_file); 
+		\MVC\Event::run('DTFileinfo.get_is_file.before', $oDTValue);
 
-        return $oDTValue->get_mValue();
+		return $oDTValue->get_mValue();
 	}
 
 	/**
 	 * @return bool
 	 * @throws \ReflectionException
 	 */
-	public function get_is_dir()
+	public function get_is_dir() : bool
 	{
-        $oDTValue = DTValue::create()->set_mValue($this->is_dir); \MVC\Event::RUN ('DTFileinfo.get_is_dir.before', $oDTValue);
+		$oDTValue = DTValue::create()->set_mValue($this->is_dir); 
+		\MVC\Event::run('DTFileinfo.get_is_dir.before', $oDTValue);
 
-        return $oDTValue->get_mValue();
+		return $oDTValue->get_mValue();
 	}
 
 	/**
 	 * @return string
 	 * @throws \ReflectionException
 	 */
-	public function get_extension()
+	public function get_extension() : string
 	{
-        $oDTValue = DTValue::create()->set_mValue($this->extension); \MVC\Event::RUN ('DTFileinfo.get_extension.before', $oDTValue);
+		$oDTValue = DTValue::create()->set_mValue($this->extension); 
+		\MVC\Event::run('DTFileinfo.get_extension.before', $oDTValue);
 
-        return $oDTValue->get_mValue();
+		return $oDTValue->get_mValue();
 	}
 
 	/**
 	 * @return string
 	 * @throws \ReflectionException
 	 */
-	public function get_filename()
+	public function get_filename() : string
 	{
-        $oDTValue = DTValue::create()->set_mValue($this->filename); \MVC\Event::RUN ('DTFileinfo.get_filename.before', $oDTValue);
+		$oDTValue = DTValue::create()->set_mValue($this->filename); 
+		\MVC\Event::run('DTFileinfo.get_filename.before', $oDTValue);
 
-        return $oDTValue->get_mValue();
+		return $oDTValue->get_mValue();
 	}
 
 	/**
 	 * @return string
 	 * @throws \ReflectionException
 	 */
-	public function get_name()
+	public function get_name() : string
 	{
-        $oDTValue = DTValue::create()->set_mValue($this->name); \MVC\Event::RUN ('DTFileinfo.get_name.before', $oDTValue);
+		$oDTValue = DTValue::create()->set_mValue($this->name); 
+		\MVC\Event::run('DTFileinfo.get_name.before', $oDTValue);
 
-        return $oDTValue->get_mValue();
+		return $oDTValue->get_mValue();
 	}
 
 	/**
 	 * @return string
 	 * @throws \ReflectionException
 	 */
-	public function get_passwd()
+	public function get_passwd() : string
 	{
-        $oDTValue = DTValue::create()->set_mValue($this->passwd); \MVC\Event::RUN ('DTFileinfo.get_passwd.before', $oDTValue);
+		$oDTValue = DTValue::create()->set_mValue($this->passwd); 
+		\MVC\Event::run('DTFileinfo.get_passwd.before', $oDTValue);
 
-        return $oDTValue->get_mValue();
+		return $oDTValue->get_mValue();
 	}
 
 	/**
 	 * @return int
 	 * @throws \ReflectionException
 	 */
-	public function get_uid()
+	public function get_uid() : int
 	{
-        $oDTValue = DTValue::create()->set_mValue($this->uid); \MVC\Event::RUN ('DTFileinfo.get_uid.before', $oDTValue);
+		$oDTValue = DTValue::create()->set_mValue($this->uid); 
+		\MVC\Event::run('DTFileinfo.get_uid.before', $oDTValue);
 
-        return $oDTValue->get_mValue();
+		return $oDTValue->get_mValue();
 	}
 
 	/**
 	 * @return int
 	 * @throws \ReflectionException
 	 */
-	public function get_gid()
+	public function get_gid() : int
 	{
-        $oDTValue = DTValue::create()->set_mValue($this->gid); \MVC\Event::RUN ('DTFileinfo.get_gid.before', $oDTValue);
+		$oDTValue = DTValue::create()->set_mValue($this->gid); 
+		\MVC\Event::run('DTFileinfo.get_gid.before', $oDTValue);
 
-        return $oDTValue->get_mValue();
-	}
-
-	/**
-	 * @return string
-	 * @throws \ReflectionException
-	 */
-	public function get_gecos()
-	{
-        $oDTValue = DTValue::create()->set_mValue($this->gecos); \MVC\Event::RUN ('DTFileinfo.get_gecos.before', $oDTValue);
-
-        return $oDTValue->get_mValue();
-	}
-
-	/**
-	 * @return string
-	 * @throws \ReflectionException
-	 */
-	public function get_dir()
-	{
-        $oDTValue = DTValue::create()->set_mValue($this->dir); \MVC\Event::RUN ('DTFileinfo.get_dir.before', $oDTValue);
-
-        return $oDTValue->get_mValue();
-	}
-
-	/**
-	 * @return string
-	 * @throws \ReflectionException
-	 */
-	public function get_shell()
-	{
-        $oDTValue = DTValue::create()->set_mValue($this->shell); \MVC\Event::RUN ('DTFileinfo.get_shell.before', $oDTValue);
-
-        return $oDTValue->get_mValue();
+		return $oDTValue->get_mValue();
 	}
 
 	/**
 	 * @return int
 	 * @throws \ReflectionException
 	 */
-	public function get_filemtime()
+	public function get_filemtime() : int
 	{
-        $oDTValue = DTValue::create()->set_mValue($this->filemtime); \MVC\Event::RUN ('DTFileinfo.get_filemtime.before', $oDTValue);
+		$oDTValue = DTValue::create()->set_mValue($this->filemtime); 
+		\MVC\Event::run('DTFileinfo.get_filemtime.before', $oDTValue);
 
-        return $oDTValue->get_mValue();
+		return $oDTValue->get_mValue();
 	}
 
 	/**
 	 * @return int
 	 * @throws \ReflectionException
 	 */
-	public function get_filectime()
+	public function get_filectime() : int
 	{
-        $oDTValue = DTValue::create()->set_mValue($this->filectime); \MVC\Event::RUN ('DTFileinfo.get_filectime.before', $oDTValue);
+		$oDTValue = DTValue::create()->set_mValue($this->filectime); 
+		\MVC\Event::run('DTFileinfo.get_filectime.before', $oDTValue);
 
-        return $oDTValue->get_mValue();
+		return $oDTValue->get_mValue();
 	}
 
-    /**
-     * @return string
-     * @throws \ReflectionException
-     */
-    public function get_mimetype()
-    {
-        $oDTValue = DTValue::create()->set_mValue($this->mimetype); \MVC\Event::RUN ('DTFileinfo.get_mimetype.before', $oDTValue);
+	/**
+	 * @return int
+	 * @throws \ReflectionException
+	 */
+	public function get_filesize() : int
+	{
+		$oDTValue = DTValue::create()->set_mValue($this->filesize); 
+		\MVC\Event::run('DTFileinfo.get_filesize.before', $oDTValue);
 
-        return $oDTValue->get_mValue();
-    }
+		return $oDTValue->get_mValue();
+	}
+
+	/**
+	 * @return string
+	 * @throws \ReflectionException
+	 */
+	public function get_gecos() : string
+	{
+		$oDTValue = DTValue::create()->set_mValue($this->gecos); 
+		\MVC\Event::run('DTFileinfo.get_gecos.before', $oDTValue);
+
+		return $oDTValue->get_mValue();
+	}
+
+	/**
+	 * @return string
+	 * @throws \ReflectionException
+	 */
+	public function get_dir() : string
+	{
+		$oDTValue = DTValue::create()->set_mValue($this->dir); 
+		\MVC\Event::run('DTFileinfo.get_dir.before', $oDTValue);
+
+		return $oDTValue->get_mValue();
+	}
+
+	/**
+	 * @return string
+	 * @throws \ReflectionException
+	 */
+	public function get_shell() : string
+	{
+		$oDTValue = DTValue::create()->set_mValue($this->shell); 
+		\MVC\Event::run('DTFileinfo.get_shell.before', $oDTValue);
+
+		return $oDTValue->get_mValue();
+	}
+
+	/**
+	 * @return string
+	 * @throws \ReflectionException
+	 */
+	public function get_mimetype() : string
+	{
+		$oDTValue = DTValue::create()->set_mValue($this->mimetype); 
+		\MVC\Event::run('DTFileinfo.get_mimetype.before', $oDTValue);
+
+		return $oDTValue->get_mValue();
+	}
 
 	/**
 	 * @return string
@@ -675,6 +752,30 @@ class DTFileinfo
 	/**
 	 * @return string
 	 */
+	public static function getPropertyName_filemtime()
+	{
+        return 'filemtime';
+	}
+
+	/**
+	 * @return string
+	 */
+	public static function getPropertyName_filectime()
+	{
+        return 'filectime';
+	}
+
+	/**
+	 * @return string
+	 */
+	public static function getPropertyName_filesize()
+	{
+        return 'filesize';
+	}
+
+	/**
+	 * @return string
+	 */
 	public static function getPropertyName_gecos()
 	{
         return 'gecos';
@@ -699,17 +800,9 @@ class DTFileinfo
 	/**
 	 * @return string
 	 */
-	public static function getPropertyName_filemtime()
+	public static function getPropertyName_mimetype()
 	{
-        return 'filemtime';
-	}
-
-	/**
-	 * @return string
-	 */
-	public static function getPropertyName_filectime()
-	{
-        return 'filectime';
+        return 'mimetype';
 	}
 
 	/**
@@ -753,7 +846,7 @@ class DTFileinfo
 	 */
 	public function flushProperties()
 	{
-		foreach ($this->getPropertyArray() as $sKey => $aValue)
+		foreach ($this->getPropertyArray() as $sKey => $mValue)
 		{
 			$sMethod = 'set_' . $sKey;
 
@@ -765,4 +858,5 @@ class DTFileinfo
 
 		return $this;
 	}
+
 }
