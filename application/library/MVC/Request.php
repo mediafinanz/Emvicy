@@ -387,7 +387,9 @@ class Request
      */
     public static function getHeader(string $sKey = '') : string
     {
-        $aHeader = self::getHeaderArray();
+        // Convert searched key and all header array keys to lowercase for easier comparison (HTTP1.1)
+        $sKey = strtolower($sKey);
+        $aHeader = array_change_key_case(self::getHeaderArray(), CASE_LOWER);
 
         return (string) get($aHeader[$sKey], '');
     }
