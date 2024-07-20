@@ -4,6 +4,8 @@
 .trash
 .env
 .test
+*.sql
+.ddev
 ._datatype.php
 .phpstorm.meta.php
 application/.composer
