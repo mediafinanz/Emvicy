@@ -12,6 +12,7 @@ application/library/MVC/Date.php
 application/library/MVC/Arr.php
 application/library/MVC/Policy.php
 application/library/MVC/InfoTool.php
+application/library/MVC/xarray.php
 application/library/MVC/DataType/DTClass.php
 application/library/MVC/DataType/DTDBWhere.php
 application/library/MVC/DataType/DTKeyValue.php

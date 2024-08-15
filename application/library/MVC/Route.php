@@ -455,22 +455,33 @@ class Route
      *          Route::getOnTag('home')
      *          Route::getOnTag('home')->get_additional()
      * @param string $sTag
-     * @return \MVC\DataType\DTRoute|null
+     * @return \MVC\DataType\DTRoute
      * @throws \ReflectionException
      */
     public static function getOnTag(string $sTag = '') : DTRoute|null
     {
         if (true === empty($sTag))
         {
-            return null;
+            return DTRoute::create();
         }
 
         // index
         $aIndex = Arr::recursiveFind(Convert::objectToArray(Route::$aMethodRoute), $sTag);
-        array_pop($aIndex); # remove last
-        $sIndex = implode('.', $aIndex);
-        $oArrDot = new ArrDot(Convert::objectToArray(Route::$aMethodRoute));
-        $oDTRoute = (false === empty($sIndex)) ? DTRoute::create($oArrDot->get($sIndex)) : DTRoute::create();
+
+        // is wildcard; take DTRoute from Route::$aRoute
+        if ('*' === get($aIndex[0]))
+        {
+            $sPath = get($aIndex[1], '');
+            $oDTRoute = get(Route::$aRoute[$sPath], DTRoute::create());
+        }
+        // is concrete, not a wildcard; take DTRoute from Route::$aMethodRoute
+        else
+        {
+            array_pop($aIndex); # remove last
+            $sIndex = implode('.', $aIndex);
+            $oArrDot = new ArrDot(Convert::objectToArray(Route::$aMethodRoute));
+            $oDTRoute = (false === empty($sIndex)) ? DTRoute::create($oArrDot->get($sIndex)) : DTRoute::create();
+        }
 
         return $oDTRoute;
     }
