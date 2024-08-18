@@ -56,7 +56,7 @@ class Controller
                         . "Expected Filepath Target Controller\n" . $sTargetClassFile . "\n\n"
                         . "Abort.\n\n"
                         . str_repeat('-', 80) . "\n\n"
-                        . "Documentation\nhttps://emvicy.ueffing.net/\n\n"
+                        . "Documentation\nhttps://emvicy.com/\n\n"
             ;
 
             if (true === Request::isHttp())

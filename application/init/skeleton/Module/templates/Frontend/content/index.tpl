@@ -11,7 +11,7 @@
             <br>
         </p>
         <p>
-            <a class="btn btn-primary btn-lg" href="https://emvicy.ueffing.net/" role="button" target="_blank">
+            <a class="btn btn-primary btn-lg" href="https://emvicy.com/" role="button" target="_blank">
                 see Documentation
             </a>
         </p>

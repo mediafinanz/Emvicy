@@ -1,7 +1,7 @@
 {
     "name": "emvicy/emvicy",
     "type": "framework",
-    "description": "MVC Framework, written in PHP. MVC Structure, +Events, +Policies, +DataTypes, Smarty Template Engine, Modular, Expandable. https://emvicy.ueffing.net/",
+    "description": "MVC Framework, written in PHP. MVC Structure, +Events, +Policies, +DataTypes, Smarty Template Engine, Modular, Expandable. https://emvicy.com/",
     "keywords": ["framework","emvicy"],
     "license": "GPL-3.0-or-later",
     "homepage": "https://emvicy.com/",

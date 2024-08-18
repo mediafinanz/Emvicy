@@ -278,7 +278,7 @@ class MyMVCInstaller
                    . '<div id="jumboHomepage" class="bg-white shadow padding20">'
                    . '<noscript><p>please activate Javascript<br />then run this page again.</p></noscript>'
                    . '</div><hr>'
-                   . '<footer class="footer"><p>documentation: <a href="https://emvicy.ueffing.net/" target="_blank">emvicy.ueffing.net</a></p></footer>'
+                   . '<footer class="footer"><p>documentation: <a href="https://emvicy.com/" target="_blank">emvicy.com</a></p></footer>'
                    . '</div>'
                    . '<script>function text(sTxt){var sInnerHTML = document.getElementById("jumboHomepage").innerHTML; document.getElementById("jumboHomepage").innerHTML = sInnerHTML + sTxt};function reload(){setTimeout(function(){window.location.reload(1);}, 5000);}</script>'
                    . '<script src="/Emvicy/assets/jquery-3.7.1/jquery-3.7.1.min.js" type="text/javascript"></script><script src="/Emvicy/assets/jquery-cookie-1.4.1/jquery.cookie.min.js" type="text/javascript"></script><script src="/Emvicy/assets/bootstrap-5.3.2-dist/js/bootstrap.min.js" type="text/javascript"></script><script src="/Emvicy/scripts/cookieConsent.min.js" type="text/javascript"></script></body></html>';
