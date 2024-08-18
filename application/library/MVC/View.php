@@ -12,13 +12,10 @@ namespace MVC;
 
 use MVC\DataType\DTArrayObject;
 use MVC\DataType\DTKeyValue;
+use Smarty\Smarty;
 
-/**
- * View
- *
- * @extends \Smarty
- */
-class View extends \Smarty
+
+class View extends Smarty
 {
     /**
      * switch rendering on/off
@@ -71,6 +68,7 @@ class View extends \Smarty
     public function __construct()
     {
         parent::__construct();
+        $this->addExtension(new WildcardExtension()); /* @see https://github.com/smarty-php/smarty/issues/813#issuecomment-1409997854 */
 
         $this->sTemplateDir = Config::get_MVC_VIEW_TEMPLATE_DIR();
 
@@ -128,7 +126,7 @@ class View extends \Smarty
      * returns a given template rendered as String
      * @param string $sTemplate
      * @return string
-     * @throws \SmartyException
+     * @throws \Smarty\Exception
      */
     public function loadTemplateAsString(string $sTemplate = '') : string
     {
@@ -291,4 +289,15 @@ class View extends \Smarty
     {
         return Config::get_MVC_SMARTY_CACHE_STATUS();
     }
+}
+
+class WildcardExtension extends \Smarty\Extension\Base {
+
+    public function getModifierCallback(string $modifierName) {
+        if (is_callable($modifierName)) {
+            return $modifierName;
+        }
+        return null;
+    }
+
 }

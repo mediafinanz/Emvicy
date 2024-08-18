@@ -8,7 +8,7 @@ a PHP Framework
 - Modular
 - Expandable
 - DataType Creation
-- PHP >= 8.2
+- PHP >= 8.3
 
 Documentation:  [https://emvicy.com](https://emvicy.com)    
 github:  [https://github.com/emvicy/emvicy/](https://github.com/emvicy/emvicy/)  

@@ -10,6 +10,8 @@
 namespace MVC;
 
 
+use Smarty\Smarty;
+
 /**
  * InfoTool
  */
@@ -19,10 +21,10 @@ class InfoTool
      * Index constructor.
      * adds Event Listener to 'mvc.view.render.before'
      * starts collecting Infos and save it to Registry
-     * @param \Smarty $oView
+     * @param \Smarty\Smarty $oView
      * @throws \ReflectionException
      */
-    public function __construct(\Smarty $oView)
+    public function __construct(Smarty $oView)
     {
         // add toolbar at the right time
         Event::bind('mvc.view.render.before', function() {
@@ -35,13 +37,13 @@ class InfoTool
 
     /**
      * adds the toolbar to the html dom before closing body tag
-     * @param \Smarty $oView
-     * @return void
+     * @param \Smarty\Smarty $oView
+     * @return false|void
      * @throws \DOMException
      * @throws \ReflectionException
-     * @throws \SmartyException
+     * @throws \Smarty\Exception
      */
-    public static function injectToolbar(\Smarty $oView)
+    public static function injectToolbar(Smarty $oView)
     {
         if (false === Registry::isRegistered('aToolbar'))
         {
@@ -110,12 +112,11 @@ class InfoTool
 
     /**
      * collects all Info for being displayed by the Toolbar
-     * @param \Smarty $oView
+     * @param \Smarty\Smarty $oView
      * @return array
      * @throws \ReflectionException
-     * @throws \Exception
      */
-    protected function collectInfo(\Smarty $oView) : array
+    protected function collectInfo(Smarty $oView) : array
     {
         $aToolbar = array ();
 
