@@ -37,6 +37,9 @@ class Controller implements \MVC\MVCInterface\Controller
         // get .version of Emvicy Framework
         mvcStoreEnv(realpath(Config::get_MVC_APPLICATION_PATH() . '/../') . '/.version');
 
+        view()->registerClass('View', '\App\View');
+        view()->registerClass('Config', '\MVC\Config');
+
         // get .version of Emvicy Modules if available
         foreach (glob(Config::get_MVC_MODULES_DIR() . '/*', GLOB_ONLYDIR) as $sModuleAbs)
         {

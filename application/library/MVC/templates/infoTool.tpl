@@ -257,7 +257,7 @@ Config::MODULE('{MVC\Config::get_MVC_MODULE_PRIMARY_NAME()}')['SESSION']</pre>
 					<p>
 						{foreach key=key item=aData from=$aToolbar.aConfig}
 						<b>{$aData.sVar}</b><br>
-					<code>{$aData.mResult}</code>{*{$aData.mResult|@print_r:true}*}
+					<code>{$aData.mResult|@print_r:true}</code>
 					<pre>{$aData.sMethod}</pre>
 					<hr>
 					{/foreach}
@@ -273,18 +273,17 @@ Config::MODULE('{MVC\Config::get_MVC_MODULE_PRIMARY_NAME()}')['SESSION']</pre>
 				</div>
 				<div class="subtab22">
 					<h6>Current Request Object</h6>
-					<pre>{MVC\Request::getCurrentRequest()}</pre>{*{MVC\Request::getCurrentRequest()|@print_r:true}*}
+					<pre>{MVC\Request::getCurrentRequest()|@print_r:true}</pre>
 					<pre>Request::getCurrentRequest()</pre>
 					<br>
 
 					<h6>Path <small>requested</small><a id="myMvcToolbar_Path"></a> </h6>
-{*					<code>{$aToolbar.sRoutingPath|escape:"htmlall":"UTF-8"}</code>*}
-					<code>{$aToolbar.sRoutingPath}</code>
+					<code>{$aToolbar.sRoutingPath|escape:"htmlall":"UTF-8"}</code>
 					<pre>Request::getCurrentRequest()->get_path()</pre>
 
 					<h6>Path Param Array</h6>
 					<code>
-						{if true === empty($aToolbar.aPathParam)}
+						{if true == empty($aToolbar.aPathParam)}
 							...no path parameters
 						{else}
 							{$aToolbar.sPathParam}
@@ -298,8 +297,7 @@ Request::getPathParam( $sKey )</pre>
 						{if '' === $aToolbar.sRoutingQuery}
 							...no GET query
 						{else}
-{*							{$aToolbar.sRoutingQuery|unescape:"url"|escape:"htmlall":"UTF-8"}*}
-							{$aToolbar.sRoutingQuery}
+							{$aToolbar.sRoutingQuery|unescape:"url"|escape:"htmlall":"UTF-8"}
 						{/if}
 					</code>
 					<pre>Request::getCurrentRequest()->get_query()</pre>
@@ -358,7 +356,7 @@ Request::getPathParam( $sKey )</pre>
 				</div>
 				<div class="subtab24">
 					<h6>Current Route <a id="myMvcToolbar_Routing"></a> </h6>
-					<pre>{MVC\Route::getCurrent()}</pre>{*{MVC\Route::getCurrent()|@print_r:true}*}
+					<pre>{MVC\Route::getCurrent()|@print_r:true}</pre>
 					<i>object</i>
 					<pre>MVC\Route::getCurrent()</pre>
 					<i>array</i>
@@ -445,8 +443,7 @@ Request::getPathParam( $sKey )</pre>
 
 					<h6>Template Folder</h6>
 					<code>
-{*						{MVC\Config::get_MVC_VIEW_TEMPLATE_DIR()|escape:'htmlall'}*}
-						{MVC\Config::get_MVC_VIEW_TEMPLATE_DIR()}
+						{MVC\Config::get_MVC_VIEW_TEMPLATE_DIR()|escape:'htmlall'}
 					</code>
 					<pre>\{get_class(MVC\Config::get_MVC_MODULE_PRIMARY_VIEW())}::init()->sTemplateDir</pre>
 
@@ -503,16 +500,14 @@ Request::getPathParam( $sKey )</pre>
 				<div class="subtab41">
 					<h6>MVC_BASE_PATH</h6>
 					<code>
-{*						{$aToolbar.aRegistry.MVC_BASE_PATH|escape:'htmlall'}*}
-						{$aToolbar.aRegistry.MVC_BASE_PATH}
+						{$aToolbar.aRegistry.MVC_BASE_PATH|escape:'htmlall'}
 					</code>
 					<pre>Config::get_MVC_BASE_PATH()</pre>
 
 					<h6>Files</h6>
 					<ol class="prettyprint">
 						{foreach key=key item=item from=$aToolbar.aFilesIncluded}
-{*							<li>{$item|replace:$aToolbar.aRegistry.MVC_BASE_PATH:''|escape:'htmlall'}</li>*}
-							<li>{$item}</li>
+							<li>{$item|replace:$aToolbar.aRegistry.MVC_BASE_PATH:''|escape:'htmlall'}</li>
 						{/foreach}
 					</ol>
 					<pre>get_required_files()</pre>

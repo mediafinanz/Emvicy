@@ -22,7 +22,7 @@
         // switch on InfoTool
         function (\MVC\DataType\DTArrayObject $oDTArrayObject) {
             if (true === \MVC\Config::get_MVC_INFOTOOL_ENABLE()) {
-                new \MVC\InfoTool(\{module}\View\Index::init());
+                new \MVC\InfoTool(view());
             }
         }
     ],
