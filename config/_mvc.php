@@ -136,7 +136,18 @@ MVC_APPLICATION_SETTINGS_I: {
     $aConfig['MVC_LOG_FILE_POLICY'] = $aConfig['MVC_LOG_FILE_DIR'] . 'policy.log';
     $aConfig['MVC_LOG_FILE_EVENT'] = $aConfig['MVC_LOG_FILE_DIR'] . 'event.log';
     $aConfig['MVC_LOG_FILE_EVENT_RUN'] = $aConfig['MVC_LOG_FILE_DIR'] . 'event_run.log';
-    $aConfig['MVC_LOG_FILE_REQUEST'] = $aConfig['MVC_LOG_FILE_DIR'] . 'request.log';
+
+    #---
+    $aConfig['MVC_LOG_FILE_REQUEST_IN'] = $aConfig['MVC_LOG_FILE_DIR'] . 'request_in.log';
+    $aConfig['MVC_LOG_FILE_REQUEST_OUT'] = $aConfig['MVC_LOG_FILE_DIR'] . 'request_out.log';
+    $aConfig['MVC_LOG_FILE_RESPONSE_IN'] = $aConfig['MVC_LOG_FILE_DIR'] . 'response_in.log';
+    $aConfig['MVC_LOG_FILE_RESPONSE_OUT'] = $aConfig['MVC_LOG_FILE_DIR'] . 'response_out.log';
+
+    // 2024-08-24; for backwards compatibility
+    /** @todo refactor `MVC_LOG_FILE_REQUEST` into `MVC_LOG_FILE_REQUEST_IN` */
+    $aConfig['MVC_LOG_FILE_REQUEST'] = $aConfig['MVC_LOG_FILE_REQUEST_IN'];
+    #---
+
     $aConfig['MVC_LOG_FILE_SQL'] = $aConfig['MVC_LOG_FILE_DIR'] . 'sql.log';
     $aConfig['MVC_LOG_FILE_ROUTEINTERVALL'] = $aConfig['MVC_LOG_FILE_DIR'] . 'route_intervall.log';
 

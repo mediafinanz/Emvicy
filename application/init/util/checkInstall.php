@@ -40,9 +40,18 @@ class MyMVCInstaller
 	/**
 	 * Constructor
      * @param array $aConfig
+     * @throws \ReflectionException
      */
 	public function __construct (array $aConfig = array())
 	{
+        $bEmvicyCli = (bool) getenv('emvicy');
+        $sCheckInstallDotFile = __DIR__ . '/.checkInstall';
+
+        if (false === $bEmvicyCli && true === file_exists($sCheckInstallDotFile))
+        {
+            return false;
+        }
+
         $this->_aConfig = $aConfig;
 		$this->setupDirsAndFiles();
 		$this->checkForPHPExtensions();
@@ -63,6 +72,13 @@ class MyMVCInstaller
             echo ('cli' !== php_sapi_name()) ? $sMarkup : '';
             exit();
         }
+
+        (false === file_exists($sCheckInstallDotFile))
+            ? touch($sCheckInstallDotFile)
+            : false
+        ;
+
+        return true;
 	}
 
     /**
@@ -70,29 +86,29 @@ class MyMVCInstaller
      */
     public static function getEnvironmentOfRequest()
     {
-        $bEmvicy = (bool) getenv('emvicy');
+        $bEmvicyCli = (bool) getenv('emvicy');
         $bCli = $GLOBALS['aConfig']['MVC_CLI'];
 
         // is webserver Request
-        if (false === $bEmvicy && false === $bCli)
+        if (false === $bEmvicyCli && false === $bCli)
         {
             return 'server.web';
         }
 
         // is cli-server request
-        if (true === $bEmvicy && false === $bCli)
+        if (true === $bEmvicyCli && false === $bCli)
         {
             return 'server.cli';
         }
 
         // is cli request
-        if (false === $bEmvicy && true === $bCli)
+        if (false === $bEmvicyCli && true === $bCli)
         {
             return 'cli';
         }
 
         // is emvicy request
-        if (true === $bEmvicy && true === $bCli)
+        if (true === $bEmvicyCli && true === $bCli)
         {
             return 'cli.emvicy';
         }
@@ -220,7 +236,8 @@ class MyMVCInstaller
 	}
 
     /**
-     * @return bool
+     * @return false
+     * @throws \ReflectionException
      */
 	protected function setupDirsAndFiles()
 	{
@@ -230,7 +247,24 @@ class MyMVCInstaller
 		(!file_exists ($this->_aConfig['MVC_CONFIG_DIR'])) ? mkdir ($this->_aConfig['MVC_CONFIG_DIR']) : false;
 		(!file_exists ($this->_aConfig['MVC_LOG_FILE_DIR'])) ? mkdir ($this->_aConfig['MVC_LOG_FILE_DIR']) : false;
 
-		return false;
+        // create logfiles
+        $aLogFileKey = array(
+            'default',
+            'error', 'warning', 'notice',
+            'policy',
+            'event', 'event_run',
+            'request_in', 'request_out',
+            'response_in', 'response_out',
+            'sql',
+            'routeintervall'
+        );
+
+        foreach ($aLogFileKey as $sName)
+        {
+            touch($this->_aConfig['MVC_LOG_FILE_' . strtoupper($sName)]);
+        }
+
+		return true;
     }
 
     /**
