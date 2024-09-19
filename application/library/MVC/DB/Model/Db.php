@@ -514,6 +514,8 @@ class Db
             \MVC\Error::exception($oException);
         }
 
+        Event::run('mvc.db.model.db.createTable.after', $oDTValue);
+
         return $mState;
     }
 
