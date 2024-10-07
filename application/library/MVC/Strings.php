@@ -389,13 +389,8 @@ class Strings
 
         $sHash = substr(password_hash(str_shuffle($sCharLower . $sCharInt . $sCharSpecial . $sCharUpper),PASSWORD_DEFAULT), 7);
         $sString = $sStringPre . $sHash;
+        $sString = substr($sString, 0, $iMaxLength);
 
-        return str_shuffle(
-            substr(
-                $sString,
-                0,
-                $iMaxLength
-            )
-        );
+        return str_shuffle($sString);
     }
 }
