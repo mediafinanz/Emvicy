@@ -364,11 +364,11 @@ class Strings
 
     /**
      * creates a password
-     * @param $iMaxLength default=15; maximum=57
-     * @param $sCharSpecial default='#*!$.'
+     * @param int    $iMaxLength default=15; maximum=57
+     * @param string $sCharSpecial default='#*!$.'
      * @return string
      */
-    public static function createPassword($iMaxLength = 15, $sCharSpecial = '#*!$.')
+    public static function createPassword(int $iMaxLength = 15, string $sCharSpecial = '#*!$.') : string
     {
         $sCharLower = 'abcdefghijklmnopqrstuvwxyz';
         $sCharUpper = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
