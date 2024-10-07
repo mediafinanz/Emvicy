@@ -361,4 +361,41 @@ class Strings
 
         return $sMarkup;
     }
+
+    /**
+     * creates a password
+     * @param $iMaxLength default=15; maximum=57
+     * @param $sCharSpecial default='#*!$.'
+     * @return string
+     */
+    public static function createPassword($iMaxLength = 15, $sCharSpecial = '#*!$.')
+    {
+        $sCharLower = 'abcdefghijklmnopqrstuvwxyz';
+        $sCharUpper = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+        $sCharInt = '123467890';
+
+        // each special char only once
+        $sCharSpecial = count_chars($sCharSpecial, 3);
+
+        (true === empty($sCharSpecial)) ? $sCharSpecial = '#*!$.' : false;
+
+        // first 4 chars; make sure at least one of each lower, upper, int, special char is contained
+        $sStringPre = str_shuffle(
+            substr(str_shuffle($sCharLower), 0, 1) .
+            substr(str_shuffle($sCharUpper), 0, 1) .
+            substr(str_shuffle($sCharSpecial), 0, 1) .
+            substr(str_shuffle($sCharInt), 0, 1)
+        );
+
+        $sHash = substr(password_hash(str_shuffle($sCharLower . $sCharInt . $sCharSpecial . $sCharUpper),PASSWORD_DEFAULT), 7);
+        $sString = $sStringPre . $sHash;
+
+        return str_shuffle(
+            substr(
+                $sString,
+                0,
+                $iMaxLength
+            )
+        );
+    }
 }

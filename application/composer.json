@@ -19,7 +19,6 @@
     "ext-simplexml": "*",
     "ext-spl": "*",
     "ext-zip": "*",
-    "gueff/cachix": "1.0.*",
     "smarty/smarty": "4.*",
     "mrclay/jsmin-php": "2.4.*",
     "ezyang/htmlpurifier": "v4.17.*",
