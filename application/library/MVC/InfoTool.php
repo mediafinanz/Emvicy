@@ -288,7 +288,7 @@ class InfoTool
         {
             $sTmp = str_replace (Config::get_MVC_CACHE_DIR(), '', $sName);
 
-            if ($sTmp != '.' && $sTmp != '..')
+            if (false == in_array(basename($sName), array('.', '..')))
             {
                 $aCache[] = $sTmp;
             }
