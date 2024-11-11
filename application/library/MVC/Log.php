@@ -18,15 +18,15 @@ class Log
     /**
      * @var int
      */
-	public static $iCount = 0;
+    public static $iCount = 0;
 
-	/**
-	 * prepares debug output string
+    /**
+     * prepares debug output string
      * @param array $aBacktrace
      * @return string
      */
-	public static function prepareDebug(array $aBacktrace = array ()) : string
-	{
+    public static function prepareDebug(array $aBacktrace = array ()) : string
+    {
         $aData = Debug::prepareBacktraceArray($aBacktrace);
 
         if (true === str_starts_with($aData['sFile'], $GLOBALS['aConfig']['MVC_BASE_PATH']))
@@ -35,57 +35,57 @@ class Log
         }
 
         return $aData['sFile'] . ', ' . $aData['sLine'];
-	}
+    }
 
-	/**
-	 * prepares logfile
+    /**
+     * prepares logfile
      * @param string $sLogfile
      * @return string
      * @throws \ReflectionException
      */
-	public static function prepareLogfile(string $sLogfile = '') : string
-	{
-		// make sure it is a logfile inside the configured log directory
-		($sLogfile === '')
+    public static function prepareLogfile(string $sLogfile = '') : string
+    {
+        // make sure it is a logfile inside the configured log directory
+        ($sLogfile === '')
             ? $sLogfile = self::getLogFileDefault()
             : ($sLogfile = pathinfo (self::getLogFileDefault(), PATHINFO_DIRNAME) . '/' . basename ($sLogfile));
 
-		if (!file_exists ($sLogfile))
-		{
+        if (false === empty($sLogfile) && false === file_exists($sLogfile))
+        {
             touch($sLogfile);
 
-			if (!file_exists ($sLogfile))
-			{
-				Error::error('cannot create logfile: ' . $sLogfile);
-			}
-		}
+            if (false === file_exists($sLogfile))
+            {
+                Error::error('cannot create logfile: ' . $sLogfile);
+            }
+        }
 
-		return $sLogfile;
-	}
+        return $sLogfile;
+    }
 
-	/**
-	 * prepares message 
+    /**
+     * prepares message
      * @param mixed $mMessage
      * @param string $sDebug
      * @return string
      */
-	public static function prepareMessage(mixed $mMessage = '', string $sDebug = '') : string
-	{
-		if (is_array ($mMessage))
-		{
-			$mMessage = print_r($mMessage, true);
-		}
+    public static function prepareMessage(mixed $mMessage = '', string $sDebug = '') : string
+    {
+        if (is_array ($mMessage))
+        {
+            $mMessage = print_r($mMessage, true);
+        }
 
-		if (is_object($mMessage))
-		{
-			ob_start();
-			var_dump($mMessage);
-			$mMessage = ob_get_contents();
-			ob_end_clean();
-		}
+        if (is_object($mMessage))
+        {
+            ob_start();
+            var_dump($mMessage);
+            $mMessage = ob_get_contents();
+            ob_end_clean();
+        }
 
-		// count 1 up
-		self::$iCount++;
+        // count 1 up
+        self::$iCount++;
 
         $sReport = '';
         (true === (boolean) get($GLOBALS['aConfig']['MVC_LOG_DETAIL']['date'])) ? $sReport.= date ("Y-m-d H:i:s") : false;
@@ -100,8 +100,8 @@ class Log
         $sReport.= "\n";
         $sReport = ltrim($sReport, "\t");
 
-		return $sReport;
-	}
+        return $sReport;
+    }
 
     /**
      * Writes a Message into Logfile
@@ -124,6 +124,7 @@ class Log
 
         $sLogfile = self::prepareLogfile($sLogfile);
 
+        if (true === empty($sLogfile)) {return;}
         if ($sLogfile === Config::get_MVC_LOG_FILE_SQL() && false === Config::get_MVC_LOG_SQL()) {return;}
         if ($sLogfile === Config::get_MVC_LOG_FILE_EVENT() && false === Config::get_MVC_LOG_EVENT()) {return;}
         if ($sLogfile === Config::get_MVC_LOG_FILE_EVENT_RUN() && false === Config::get_MVC_LOG_EVENT_RUN()) {return;}
@@ -149,11 +150,28 @@ class Log
      */
     public static function getLogFileDefault() : string
     {
-        $sLogFileDefault = Config::get_MVC_LOG_FILE_DEFAULT();
+        $sLogFileDir = get($GLOBALS['aConfig']['MVC_LOG_FILE_DIR']);
+        $sLogFileDefault = get($GLOBALS['aConfig']['MVC_LOG_FILE_DEFAULT']);
 
+        if (true === empty($sLogFileDir) || true === empty($sLogFileDefault))
+        {
+            return '';
+        }
+
+        // log file dir is missing
+        if (false === file_exists($sLogFileDir))
+        {
+            mkdir(
+                $sLogFileDir,
+                0754,
+                true
+            );
+        }
+
+        // default log file is missing
         if (false === file_exists($sLogFileDefault))
         {
-            $sLogFileDefault = realpath(__DIR__ . '/../../') . '/log/default.log';
+            touch($sLogFileDefault);
         }
 
         return $sLogFileDefault;
