@@ -38,10 +38,10 @@ CONFIG: {
 
 LOAD_FIRST_ESSENTIALS:{
 
-    require_once $aConfig['MVC_LIBRARY'] . '/MVC/Config.php';
-    require_once $aConfig['MVC_LIBRARY'] . '/MVC/Debug.php';
-    require_once $aConfig['MVC_LIBRARY'] . '/MVC/Log.php';
-    require_once $aConfig['MVC_LIBRARY'] . '/MVC/Registry.php';
+    require_once realpath(__DIR__ . '/../../') . '/library/MVC/Config.php';
+    require_once realpath(__DIR__ . '/../../') . '/library/MVC/Debug.php';
+    require_once realpath(__DIR__ . '/../../') . '/library/MVC/Log.php';
+    require_once realpath(__DIR__ . '/../../') . '/library/MVC/Registry.php';
 }
 
 MVC_INSTALL: {

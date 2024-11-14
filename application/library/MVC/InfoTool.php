@@ -151,7 +151,7 @@ class InfoTool
         $aToolbar['sEnv'] = getenv('MVC_ENV');
         $aToolbar['aEnvGetenv'] = self::buildMarkupListTree(getenv());
         $aToolbar['aEnvEnv'] = self::buildMarkupListTree($_ENV);
-        $aToolbar['sEnvOfRequest'] = \MyMVCInstaller::getEnvironmentOfRequest();
+        $aToolbar['sEnvOfRequest'] = php_sapi_name();
         $aToolbar['aGet'] = self::buildMarkupListTree($_GET);
         $aToolbar['aPost'] = self::buildMarkupListTree($_POST);
         $aToolbar['aCookie'] = self::buildMarkupListTree($_COOKIE);
