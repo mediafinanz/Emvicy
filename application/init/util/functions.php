@@ -71,9 +71,19 @@ function stop()
 
     $aDebug = \MVC\Debug::prepareBacktraceArray(debug_backtrace());
     $sMessage = "\n<pre>stop at:\n- File: " . $aDebug['sFile'] . "\n- Line: " . $aDebug['sLine'] . "\n";
-    (!empty(get($aDebug['sClass']))) ? $sMessage.="- Method: " . $aDebug['sClass'] . "::" . $aDebug['sFunction'] . "</pre>" : false;
+    (!empty(get($aDebug['sClass']))) ? $sMessage.="- Method: " . $aDebug['sClass'] . "::" . $aDebug['sFunction'] : false;
+    $sMessage.= "\n" . 'Construction Time: ' . ct() . ' s' . "</pre>";
     ('cli' === strtolower(php_sapi_name())) ? $sMessage = strip_tags($sMessage): false;
     die($sMessage);
+}
+
+/**
+ * @return float
+ * @throws \ReflectionException
+ */
+function ct()
+{
+    return \MVC\Debug::constructionTime();
 }
 
 /**

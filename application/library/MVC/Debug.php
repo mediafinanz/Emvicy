@@ -289,4 +289,26 @@ class Debug
 
         echo $sExport;
     }
+
+    /**
+     * @return float
+     * @throws \ReflectionException
+     */
+    public static function constructionTime()
+    {
+        // calc now
+        $fMicrotime = microtime(true);
+        $sMicrotime = sprintf("%06d", ($fMicrotime - floor ($fMicrotime)) * 1000000);
+        $oDateTime = new \DateTime (date ('Y-m-d H:i:s.' . $sMicrotime));
+
+        // calc duration
+        $oStart = (false === empty(Session::is('Emvicy')
+                ->get('startDateTime')))
+            ? Session::is('Emvicy')
+                ->get('startDateTime')
+            : new \DateTime (date('Y-m-d H:i:s.' . $sMicrotime));
+        $fEnd = round((date_format ($oDateTime, "s.u") - date_format (get($oStart), "s.u")), 3);
+
+        return $fEnd;
+    }
 }
