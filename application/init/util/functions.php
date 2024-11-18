@@ -74,7 +74,7 @@ function stop()
     (!empty(get($aDebug['sClass']))) ? $sMessage.="- Method: " . $aDebug['sClass'] . "::" . $aDebug['sFunction'] : false;
     $sMessage.= "\n" . 'Construction Time: ' . ct() . ' s' . "</pre>";
     ('cli' === strtolower(php_sapi_name())) ? $sMessage = strip_tags($sMessage): false;
-    die($sMessage);
+    die($sMessage . "\n\n");
 }
 
 /**
