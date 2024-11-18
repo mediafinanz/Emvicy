@@ -228,29 +228,7 @@ class InfoTool
         $aToolbar['aCache'] = self::buildMarkupListTree($this->getCaches());
         $aToolbar['aError'] = Error::get(bConvertToArray: false);
         $aToolbar['aModuleCurrentConfig'] = self::buildMarkupListTree(Config::MODULE());
-
-        $fMicrotime = microtime(true);
-        $sMicrotime = sprintf("%06d", ($fMicrotime - floor ($fMicrotime)) * 1000000);
-        $oDateTime = new \DateTime (date ('Y-m-d H:i:s.' . $sMicrotime));
-
-        try
-        {
-            $oStart = (false === empty(Session::is('Emvicy')
-                    ->get('startDateTime')))
-                ? Session::is('Emvicy')
-                    ->get('startDateTime')
-                : new \DateTime (date('Y-m-d H:i:s.' . $sMicrotime));
-        }
-        catch (\ReflectionException $oReflectionException)
-        {
-            Error::exception($oReflectionException);
-            $aToolbar['sConstructionTime'] = 0;
-
-            return $aToolbar;
-        }
-
-        $dDiff = (date_format ($oDateTime, "s.u") - date_format (get($oStart), "s.u"));
-        $aToolbar['sConstructionTime'] = round($dDiff, 3);
+        $aToolbar['sConstructionTime'] = Debug::constructionTime();
 
         return $aToolbar;
     }
