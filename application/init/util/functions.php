@@ -87,6 +87,15 @@ function ct()
 }
 
 /**
+ * @return float
+ * @throws \ReflectionException
+ */
+function dct()
+{
+     display(ct());
+}
+
+/**
  * dumps data using print_r
  * @example pr(get_include_path(), ':');
  * @param mixed  $mData
