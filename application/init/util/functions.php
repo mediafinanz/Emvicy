@@ -32,13 +32,14 @@ function get(&$sVar, $mFallback = null)
 /**
  * shorthand for `Debug::display()` on userland
  * @param mixed $mData
+ * @param array $aDebugBacktrace
  * @return void
  */
-function display(mixed $mData = '')
+function display(mixed $mData = '', array $aDebugBacktrace = array())
 {
     if (true === class_exists('\MVC\Debug', true))
     {
-        \MVC\Debug::display($mData, debug_backtrace());
+        \MVC\Debug::display($mData, (false === empty($aDebugBacktrace)) ? $aDebugBacktrace : debug_backtrace());
     }
 }
 
@@ -92,7 +93,7 @@ function ct()
  */
 function dct()
 {
-     display(ct());
+    display(ct(), debug_backtrace(limit: 1));
 }
 
 /**
