@@ -25,7 +25,7 @@ class Log
      * @param array $aBacktrace
      * @return string
      */
-    public static function prepareDebug(array $aBacktrace = array ()) : string
+    public static function prepareDebug(array $aBacktrace = array()) : string
     {
         $aData = Debug::prepareBacktraceArray($aBacktrace);
 
@@ -115,7 +115,7 @@ class Log
     {
         $sMessage = self::prepareMessage(
             $mMessage,
-            self::prepareDebug(debug_backtrace())
+            self::prepareDebug(debug_backtrace(limit: 2))
         );
 
         (false == $bNewline && false == Config::get_MVC_LOG_FORCE_LINEBREAK())

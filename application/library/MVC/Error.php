@@ -91,7 +91,7 @@ class Error
      */
 	public static function error (string $sMessage = '', int $iCode = E_ERROR, int $iSeverity = 0, string $sFilename = '', int $iLineNr = 0) : void
 	{
-        $aDebug = Debug::prepareBacktraceArray(debug_backtrace());
+        $aDebug = Debug::prepareBacktraceArray(debug_backtrace(limit: 2));
         (true === empty($sFilename)) ? $sFilename = $aDebug['sFile'] : false;
         (true === empty($iLineNr)) ? $iLineNr = $aDebug['sLine'] : false;
 		$oErrorException = new \Errorexception($sMessage, (int) $iCode, (int) $iSeverity, $sFilename, (int) $iLineNr );
@@ -110,7 +110,7 @@ class Error
      */
     public static function warning (string $sMessage = '', int $iCode = E_WARNING, int $iSeverity = 0, string $sFilename = '', int $iLineNr = 0) : void
     {
-        $aDebug = Debug::prepareBacktraceArray(debug_backtrace());
+        $aDebug = Debug::prepareBacktraceArray(debug_backtrace(limit: 2));
         (true === empty($sFilename)) ? $sFilename = $aDebug['sFile'] : false;
         (true === empty($iLineNr)) ? $iLineNr = (int) $aDebug['sLine'] : false;
         $oErrorException = new \Errorexception($sMessage, $iCode, $iSeverity, $sFilename, $iLineNr );
@@ -129,7 +129,7 @@ class Error
      */
     public static function notice (string $sMessage = '', int $iCode = E_NOTICE, int $iSeverity = 0, string $sFilename = '', int $iLineNr = 0) : void
     {
-        $aDebug = Debug::prepareBacktraceArray(debug_backtrace());
+        $aDebug = Debug::prepareBacktraceArray(debug_backtrace(limit: 2));
         (true === empty($sFilename)) ? $sFilename = $aDebug['sFile'] : false;
         (true === empty($iLineNr)) ? $iLineNr = (int) $aDebug['sLine'] : false;
         $oErrorException = new \Errorexception($sMessage, $iCode, $iSeverity, $sFilename, $iLineNr );

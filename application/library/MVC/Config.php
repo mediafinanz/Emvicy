@@ -547,8 +547,9 @@ class Config
      */
     public static function set_MVC_SESSION_NAMESPACE(string $sNamespace = '') : bool
     {
-        $sClass = get(debug_backtrace()[1]['class'], '');
-        $sFunction = get(debug_backtrace()[1]['function'], '');
+        $aDebugBacktrace = debug_backtrace(limit: 2);
+        $sClass = get($aDebugBacktrace[1]['class'], '');
+        $sFunction = get($aDebugBacktrace[1]['function'], '');
 
         if (true === empty($sClass) || true === empty($sFunction))
         {

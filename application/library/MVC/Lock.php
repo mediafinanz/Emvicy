@@ -27,7 +27,7 @@ class Lock
      */
     public static function create(string $sKey = '', bool $bReturn = false)
     {
-        $aBacktrace = Debug::prepareBacktraceArray(debug_backtrace());
+        $aBacktrace = Debug::prepareBacktraceArray(debug_backtrace(limit: 2));
         $sCacheDir = Config::get_MVC_CACHE_DIR();
 
         if (false === file_exists($sCacheDir))

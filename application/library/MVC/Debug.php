@@ -55,7 +55,7 @@ class Debug
     public static function info(mixed $mData = '', array $aDebugBacktrace = array()) : void
     {
         // source
-        $aBacktrace = self::prepareBacktraceArray((false === empty($aDebugBacktrace)) ? $aDebugBacktrace : debug_backtrace());
+        $aBacktrace = self::prepareBacktraceArray((false === empty($aDebugBacktrace)) ? $aDebugBacktrace : debug_backtrace(limit: 2));
         $mData = self::obDump($mData);
 
         // output CLI
@@ -101,7 +101,7 @@ class Debug
         $iCount++;
 
         // Source
-        $aBacktrace = self::prepareBacktraceArray((false === empty($aDebugBacktrace)) ? $aDebugBacktrace : debug_backtrace());
+        $aBacktrace = self::prepareBacktraceArray((false === empty($aDebugBacktrace)) ? $aDebugBacktrace : debug_backtrace(limit: 2));
         $mData = self::obDump($mData);
 
         // Output for CLI
@@ -157,7 +157,7 @@ class Debug
         $iCount++;
 
         // source
-        (true === empty($aBacktrace)) ? $aBacktrace = self::prepareBacktraceArray(debug_backtrace()) : false;
+        (true === empty($aBacktrace)) ? $aBacktrace = self::prepareBacktraceArray(debug_backtrace(limit: 2)) : false;
 
         if (true === $bDump)
         {

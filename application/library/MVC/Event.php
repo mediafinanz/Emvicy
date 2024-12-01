@@ -75,13 +75,13 @@ class Event
             {
                 foreach ($mData as $oClosure)
                 {
-                    Event::bind($sEventName, $oClosure, debug_backtrace());
+                    Event::bind($sEventName, $oClosure, debug_backtrace(limit: 2));
                 }
 
                 continue;
             }
 
-            Event::bind($sEventName, $mData, debug_backtrace());
+            Event::bind($sEventName, $mData, debug_backtrace(limit: 2));
         }
     }
 
@@ -98,7 +98,7 @@ class Event
         $sEvent = trim($sEvent);
 
         $sDebug = Log::prepareDebug(((true === empty($aDebug))
-            ? debug_backtrace()
+            ? debug_backtrace(limit: 2)
             : $aDebug));
 
         if (!isset (self::$aEvent[$sEvent]))
@@ -156,7 +156,7 @@ class Event
 
         $bReturn = false;
         $sEvent = trim($sEvent);
-        $sDebug = Log::prepareDebug(debug_backtrace());
+        $sDebug = Log::prepareDebug(debug_backtrace(limit: 1));
         $sPreLog = ' (' . $sEvent . ') --> called in: ' . $sDebug;
 
         if (true === Config::get_MVC_EVENT_ENABLE_WILDCARD())
@@ -275,7 +275,7 @@ class Event
      */
     public static function delete(string $sEvent = ''): bool
     {
-        $sDebug = Log::prepareDebug(debug_backtrace());
+        $sDebug = Log::prepareDebug(debug_backtrace(limit: 1));
 
         // delete all
         if (true === empty($sEvent))
