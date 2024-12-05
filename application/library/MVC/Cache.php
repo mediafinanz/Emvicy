@@ -181,7 +181,7 @@ class Cache
      * @return bool
      * @throws \ReflectionException
      */
-    public static function autoDeleteCache(string $sToken = '', string $sMinutes = null) : bool
+    public static function autoDeleteCache(string $sToken = '', ?string $sMinutes = null) : bool
     {
         self::init();
 
