@@ -131,7 +131,7 @@ class DTArrayObject
      * @return $this
      * @throws \ReflectionException
      */
-    function setDTKeyValueByKey(DTKeyValue $oDTKeyValueNew = null, bool $bUnset = false)
+    function setDTKeyValueByKey(?DTKeyValue $oDTKeyValueNew = null, bool $bUnset = false)
     {
         $oDTValue = DTValue::create()->set_mValue($oDTKeyValueNew); \MVC\Event::run('DTArrayObject.setDTKeyValueByKey.before', $oDTValue->get_mValue());
         $oDTKeyValueNew = $oDTValue->get_mValue();
@@ -175,7 +175,7 @@ class DTArrayObject
      * @return mixed|\MVC\DataType\DTKeyValue
      * @throws \ReflectionException
      */
-    function getDTKeyValueByKey($sKey = '', DTArrayObject $oDTArrayObject = null)
+    function getDTKeyValueByKey($sKey = '', ?DTArrayObject $oDTArrayObject = null)
     {
         $oDTValue = DTValue::create()->set_mValue($sKey); \MVC\Event::run('DTArrayObject.getDTKeyValueByKey.before', $oDTValue->get_mValue());
         $sKey = $oDTValue->get_mValue();

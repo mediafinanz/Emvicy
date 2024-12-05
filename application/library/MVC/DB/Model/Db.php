@@ -27,7 +27,6 @@ use MVC\Generator\DataType;
 use MVC\Log;
 use MVC\Registry;
 use MVC\Strings;
-use function Symfony\Component\String\b;
 
 /**
  * Class Db
