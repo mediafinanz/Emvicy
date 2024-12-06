@@ -4,14 +4,6 @@
 #
 
 /**
- * @return \App\View
- */
-function view()
-{
-    return \App\View::init();
-}
-
-/**
  * simplifies the use of variables.
  * If a variable does not exist, null or a defined value is returned
  *
@@ -40,13 +32,14 @@ function get(&$sVar, $mFallback = null)
 /**
  * shorthand for `Debug::display()` on userland
  * @param mixed $mData
+ * @param array $aDebugBacktrace
  * @return void
  */
-function display(mixed $mData = '')
+function display(mixed $mData = '', array $aDebugBacktrace = array())
 {
     if (true === class_exists('\MVC\Debug', true))
     {
-        \MVC\Debug::display($mData, debug_backtrace());
+        \MVC\Debug::display($mData, (false === empty($aDebugBacktrace)) ? $aDebugBacktrace : debug_backtrace(limit: 2));
     }
 }
 
@@ -59,7 +52,7 @@ function info(mixed $mData = '')
 {
     if (true === class_exists('\MVC\Debug', true))
     {
-        \MVC\Debug::info($mData, debug_backtrace());
+        \MVC\Debug::info($mData, debug_backtrace(limit: 2));
     }
 }
 
@@ -74,14 +67,33 @@ function stop()
         (false === class_exists('\MVC\Request', true))
     )
     {
-        die("\nstop at: \n- File: " . debug_backtrace()[0]['file']. "\n- Line: " . debug_backtrace()[0]['line'] . "\n");
+        die("\nstop at: \n- File: " . debug_backtrace(limit: 1)[0]['file']. "\n- Line: " . debug_backtrace(limit: 1)[0]['line'] . "\n");
     }
 
-    $aDebug = \MVC\Debug::prepareBacktraceArray(debug_backtrace());
+    $aDebug = \MVC\Debug::prepareBacktraceArray(debug_backtrace(limit: 2));
     $sMessage = "\n<pre>stop at:\n- File: " . $aDebug['sFile'] . "\n- Line: " . $aDebug['sLine'] . "\n";
-    (!empty(get($aDebug['sClass']))) ? $sMessage.="- Method: " . $aDebug['sClass'] . "::" . $aDebug['sFunction'] . "</pre>" : false;
+    (!empty(get($aDebug['sClass']))) ? $sMessage.="- Method: " . $aDebug['sClass'] . "::" . $aDebug['sFunction'] : false;
+    $sMessage.= "\n" . 'Construction Time: ' . ct() . ' s' . "</pre>";
     ('cli' === strtolower(php_sapi_name())) ? $sMessage = strip_tags($sMessage): false;
-    die($sMessage);
+    die($sMessage . "\n\n");
+}
+
+/**
+ * @return float
+ * @throws \ReflectionException
+ */
+function ct()
+{
+    return \MVC\Debug::constructionTime();
+}
+
+/**
+ * @return float
+ * @throws \ReflectionException
+ */
+function dct()
+{
+    display(ct(), debug_backtrace(limit: 2));
 }
 
 /**

@@ -154,7 +154,7 @@ class Request
     public static function redirect(string $sLocation = '', bool $bReplace = true, int $iResponseCode = 0) : void
     {
         // source
-        $aBacktrace = debug_backtrace();
+        $aBacktrace = debug_backtrace(limit: 1);
 
         (array_key_exists('file', $aBacktrace[0]))
             ? $sFile = $aBacktrace[0]['file']
@@ -185,7 +185,7 @@ class Request
                     ->set_sValue('[CLI] php index.php "' . $sLocation . '"'))
                 ->add_aKeyValue(DTKeyValue::create()
                     ->set_sKey('aDebug')
-                    ->set_sValue(Debug::prepareBacktraceArray((debug_backtrace()[0] ?? array())))));
+                    ->set_sValue(Debug::prepareBacktraceArray((debug_backtrace(limit: 1)[0] ?? array())))));
 
             exit ();
         }
@@ -197,7 +197,7 @@ class Request
                 ->set_sValue($sLocation))
             ->add_aKeyValue(DTKeyValue::create()
                 ->set_sKey('aDebug')
-                ->set_sValue(Debug::prepareBacktraceArray((debug_backtrace()[0] ?? array())))));
+                ->set_sValue(Debug::prepareBacktraceArray((debug_backtrace(limit: 1)[0] ?? array())))));
 
         header('Location: ' . $sLocation, $bReplace, $iResponseCode);
         exit ();

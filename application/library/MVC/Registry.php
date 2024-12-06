@@ -75,7 +75,7 @@ class Registry
 	{
 		if (!array_key_exists ($sIndex, self::$_aStorage))
 		{
-            $aDebug = debug_backtrace();
+            $aDebug = debug_backtrace(limit: 1);
             $sMsg = "Registry Key unknown. No entry is registered for key '$sIndex'."
                 . ' ' . $aDebug[0]['file']
                 . ', ' . $aDebug[0]['line']

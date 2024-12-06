@@ -44,6 +44,22 @@ class _Master extends Controller
 	{
         parent::__construct($oDTRequestCurrent, $oDTRoute);
 
+        // View
+        if (true === $this->isPrimary())
+        {
+            if (false === function_exists('{module}\Controller\view'))
+            {
+                /**
+                 * @return \{module}\View\Index|\MVC\View|null
+                 */
+                function view() {return \{module}\View\Index::init();}
+            }
+        }
+        else
+        {
+            \{module}\View\Index::init();
+        }
+
         // Init Database
         DB::init();
     }

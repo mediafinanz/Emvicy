@@ -40,18 +40,9 @@ class MyMVCInstaller
 	/**
 	 * Constructor
      * @param array $aConfig
-     * @throws \ReflectionException
      */
 	public function __construct (array $aConfig = array())
 	{
-        $bEmvicyCli = (bool) getenv('emvicy');
-        $sCheckInstallDotFile = __DIR__ . '/.checkInstall';
-
-        if (false === $bEmvicyCli && true === file_exists($sCheckInstallDotFile))
-        {
-            return false;
-        }
-
         $this->_aConfig = $aConfig;
 		$this->setupDirsAndFiles();
 		$this->checkForPHPExtensions();
@@ -72,13 +63,6 @@ class MyMVCInstaller
             echo ('cli' !== php_sapi_name()) ? $sMarkup : '';
             exit();
         }
-
-        (false === file_exists($sCheckInstallDotFile))
-            ? touch($sCheckInstallDotFile)
-            : false
-        ;
-
-        return true;
 	}
 
     /**
@@ -86,29 +70,29 @@ class MyMVCInstaller
      */
     public static function getEnvironmentOfRequest()
     {
-        $bEmvicyCli = (bool) getenv('emvicy');
+        $bEmvicy = (bool) getenv('emvicy');
         $bCli = $GLOBALS['aConfig']['MVC_CLI'];
 
         // is webserver Request
-        if (false === $bEmvicyCli && false === $bCli)
+        if (false === $bEmvicy && false === $bCli)
         {
             return 'server.web';
         }
 
         // is cli-server request
-        if (true === $bEmvicyCli && false === $bCli)
+        if (true === $bEmvicy && false === $bCli)
         {
             return 'server.cli';
         }
 
         // is cli request
-        if (false === $bEmvicyCli && true === $bCli)
+        if (false === $bEmvicy && true === $bCli)
         {
             return 'cli';
         }
 
         // is emvicy request
-        if (true === $bEmvicyCli && true === $bCli)
+        if (true === $bEmvicy && true === $bCli)
         {
             return 'cli.emvicy';
         }
@@ -236,8 +220,7 @@ class MyMVCInstaller
 	}
 
     /**
-     * @return false
-     * @throws \ReflectionException
+     * @return bool
      */
 	protected function setupDirsAndFiles()
 	{
@@ -247,24 +230,7 @@ class MyMVCInstaller
 		(!file_exists ($this->_aConfig['MVC_CONFIG_DIR'])) ? mkdir ($this->_aConfig['MVC_CONFIG_DIR']) : false;
 		(!file_exists ($this->_aConfig['MVC_LOG_FILE_DIR'])) ? mkdir ($this->_aConfig['MVC_LOG_FILE_DIR']) : false;
 
-        // create logfiles
-        $aLogFileKey = array(
-            'default',
-            'error', 'warning', 'notice',
-            'policy',
-            'event', 'event_run',
-            'request_in', 'request_out',
-            'response_in', 'response_out',
-            'sql',
-            'routeintervall'
-        );
-
-        foreach ($aLogFileKey as $sName)
-        {
-            touch($this->_aConfig['MVC_LOG_FILE_' . strtoupper($sName)]);
-        }
-
-		return true;
+		return false;
     }
 
     /**
@@ -312,7 +278,7 @@ class MyMVCInstaller
                    . '<div id="jumboHomepage" class="bg-white shadow padding20">'
                    . '<noscript><p>please activate Javascript<br />then run this page again.</p></noscript>'
                    . '</div><hr>'
-                   . '<footer class="footer"><p>documentation: <a href="https://emvicy.com/" target="_blank">emvicy.com</a></p></footer>'
+                   . '<footer class="footer"><p>documentation: <a href="https://emvicy.ueffing.net/" target="_blank">emvicy.ueffing.net</a></p></footer>'
                    . '</div>'
                    . '<script>function text(sTxt){var sInnerHTML = document.getElementById("jumboHomepage").innerHTML; document.getElementById("jumboHomepage").innerHTML = sInnerHTML + sTxt};function reload(){setTimeout(function(){window.location.reload(1);}, 5000);}</script>'
                    . '<script src="/Emvicy/assets/jquery-3.7.1/jquery-3.7.1.min.js" type="text/javascript"></script><script src="/Emvicy/assets/jquery-cookie-1.4.1/jquery.cookie.min.js" type="text/javascript"></script><script src="/Emvicy/assets/bootstrap-5.3.2-dist/js/bootstrap.min.js" type="text/javascript"></script><script src="/Emvicy/scripts/cookieConsent.min.js" type="text/javascript"></script></body></html>';

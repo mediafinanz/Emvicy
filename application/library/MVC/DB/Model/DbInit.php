@@ -10,6 +10,7 @@
 
 namespace MVC\DB\Model;
 
+use MVC\Cache;
 use MVC\Config;
 use MVC\Debug;
 use MVC\Error;
@@ -40,7 +41,7 @@ class DbInit
         // try default fallback config; assuming it is called 'DB'
         (true === empty($aConfig)) ? $aConfig = self::getConfig() : false;
 
-        \Cachix::init(Config::get_MVC_CACHE_CONFIG());
+        Cache::init(Config::get_MVC_CACHE_CONFIG());
         $aClassVar = get_class_vars(get_class($this));
 
         try {

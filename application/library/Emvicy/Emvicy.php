@@ -247,7 +247,7 @@ class Emvicy
      * @return false|void
      * @throws \ReflectionException
      */
-    public static function create(bool $bForce = null, bool $bPrimary = null, string $sModule = '')
+    public static function create(?bool $bForce = null, ?bool $bPrimary = null, string $sModule = '')
     {
         $bForce = (false === isset($bForce)) ? self::get_force() : $bForce;
         $sModule = ucfirst(trim((true === empty($sModule)) ? self::get_module() : $sModule));

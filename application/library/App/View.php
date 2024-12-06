@@ -82,7 +82,7 @@ class View extends \MVC\View
      * @return void
      * @throws \ReflectionException
      */
-    public function autoAssign(DTRoute $oDTRoute = null)
+    public function autoAssign(?DTRoute $oDTRoute = null)
     {
         (true === is_null($oDTRoute)) ? $oDTRoute = Route::getCurrent() : false;
         $oDTRoutingAdditional = $oDTRoute->get_additional();

@@ -1,4 +1,4 @@
-# <img src="https://emvicy.com/myMVC.png" width="60" align="left"> Emvicy
+# <img src="https://emvicy.ueffing.net/myMVC.png" width="60" align="left"> Emvicy 2
 
 a PHP Framework
 
@@ -8,7 +8,7 @@ a PHP Framework
 - Modular
 - Expandable
 - DataType Creation
-- PHP >= 8.3
+- PHP >= 8.4
 
 Documentation:  [https://emvicy.com](https://emvicy.com)    
 github:  [https://github.com/emvicy/emvicy/](https://github.com/emvicy/emvicy/)  

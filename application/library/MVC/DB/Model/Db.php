@@ -27,7 +27,6 @@ use MVC\Generator\DataType;
 use MVC\Log;
 use MVC\Registry;
 use MVC\Strings;
-use function Symfony\Component\String\b;
 
 /**
  * Class Db
@@ -917,7 +916,7 @@ class Db
      * @return \MVC\DB\DataType\DB\TableDataType|null
      * @throws \ReflectionException
      */
-    public function create(TableDataType $oTableDataType = null, bool $bAutoIncrementId = true) : TableDataType|null
+    public function create(?TableDataType $oTableDataType = null, bool $bAutoIncrementId = true) : TableDataType|null
     {
         if (null === $oTableDataType)
         {
@@ -1032,7 +1031,7 @@ class Db
      * @return \MVC\DB\DataType\DB\TableDataType
      * @throws \ReflectionException
      */
-    public function retrieveTupel(TableDataType $oTableDataType = null) : TableDataType
+    public function retrieveTupel(?TableDataType $oTableDataType = null) : TableDataType
     {
         Event::run('mvc.db.model.db.retrieveTupel.before', $oTableDataType);
 

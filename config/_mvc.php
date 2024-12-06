@@ -48,16 +48,16 @@ MVC_RUNTIME_SETTINGS: {
     $aConfig['MVC_PHP_SERVER'] = '127.0.0.1:1969';
 }
 
-MVC_BIN: {
-
+MVC_BIN:
+{
     $aConfig['MVC_BIN_PHP_BINARY'] = PHP_BINARY;
-    $aConfig['MVC_BIN_PS'] = whereis('ps');         # ps - report a snapshot of the current processes.
-    $aConfig['MVC_BIN_SED'] = whereis('sed');       # sed - stream editor for filtering and transforming text
-    $aConfig['MVC_BIN_MOVE'] = whereis('mv');       # mv - move (rename) files
-    $aConfig['MVC_BIN_GREP'] = whereis('grep');     # grep, egrep, fgrep, rgrep - print lines that match patterns
-    $aConfig['MVC_BIN_FIND'] = whereis('find');     # find - search for files in a directory hierarchy
-    $aConfig['MVC_BIN_REMOVE'] = whereis('rm');     # rm - remove files or directories
-    $aConfig['MVC_BIN_XARGS'] = whereis('xargs');   # xargs - build and execute command lines from standard input
+    $aConfig['MVC_BIN_PS'] = '/usr/bin/ps';         # ps - report a snapshot of the current processes.
+    $aConfig['MVC_BIN_SED'] = '/usr/bin/sed';       # sed - stream editor for filtering and transforming text
+    $aConfig['MVC_BIN_MOVE'] = '/usr/bin/mv';       # mv - move (rename) files
+    $aConfig['MVC_BIN_GREP'] = '/usr/bin/grep';     # grep, egrep, fgrep, rgrep - print lines that match patterns
+    $aConfig['MVC_BIN_FIND'] = '/usr/bin/find';     # find - search for files in a directory hierarchy
+    $aConfig['MVC_BIN_REMOVE'] = '/usr/sbin/rm';    # rm - remove files or directories
+    $aConfig['MVC_BIN_XARGS'] = '/usr/bin/xargs';   # xargs - build and execute command lines from standard input
 }
 
 MVC_APPLICATION_SETTINGS_I: {
@@ -136,18 +136,7 @@ MVC_APPLICATION_SETTINGS_I: {
     $aConfig['MVC_LOG_FILE_POLICY'] = $aConfig['MVC_LOG_FILE_DIR'] . 'policy.log';
     $aConfig['MVC_LOG_FILE_EVENT'] = $aConfig['MVC_LOG_FILE_DIR'] . 'event.log';
     $aConfig['MVC_LOG_FILE_EVENT_RUN'] = $aConfig['MVC_LOG_FILE_DIR'] . 'event_run.log';
-
-    #---
-    $aConfig['MVC_LOG_FILE_REQUEST_IN'] = $aConfig['MVC_LOG_FILE_DIR'] . 'request_in.log';
-    $aConfig['MVC_LOG_FILE_REQUEST_OUT'] = $aConfig['MVC_LOG_FILE_DIR'] . 'request_out.log';
-    $aConfig['MVC_LOG_FILE_RESPONSE_IN'] = $aConfig['MVC_LOG_FILE_DIR'] . 'response_in.log';
-    $aConfig['MVC_LOG_FILE_RESPONSE_OUT'] = $aConfig['MVC_LOG_FILE_DIR'] . 'response_out.log';
-
-    // 2024-08-24; for backwards compatibility
-    /** @todo refactor `MVC_LOG_FILE_REQUEST` into `MVC_LOG_FILE_REQUEST_IN` */
-    $aConfig['MVC_LOG_FILE_REQUEST'] = $aConfig['MVC_LOG_FILE_REQUEST_IN'];
-    #---
-
+    $aConfig['MVC_LOG_FILE_REQUEST'] = $aConfig['MVC_LOG_FILE_DIR'] . 'request.log';
     $aConfig['MVC_LOG_FILE_SQL'] = $aConfig['MVC_LOG_FILE_DIR'] . 'sql.log';
     $aConfig['MVC_LOG_FILE_ROUTEINTERVALL'] = $aConfig['MVC_LOG_FILE_DIR'] . 'route_intervall.log';
 

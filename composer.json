@@ -6,7 +6,7 @@
     "license": "GPL-3.0-or-later",
     "homepage": "https://emvicy.com/",
     "require": {
-        "php": ">=8.3",
+        "php": ">=8.4",
         "emvicy/emvicy": "^2.0"
     },
     "authors": [
