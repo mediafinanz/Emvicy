@@ -162,14 +162,16 @@ class Db
         $this->sCacheValueTableName = func_get_args();
 
         // init DB
-        $sRegistryKey = self::createTableName(__CLASS__) . '.DbPDO';
+        $sRegistryKey = 'oDbPDO'; # self::createTableName(__CLASS__) . '.DbPDO';
 
         if (Registry::isRegistered($sRegistryKey))
         {
+            display('$oDbPDO Registry::get!');
             $this->oDbPDO = Registry::get($sRegistryKey);
         }
         else
         {
+            display('$oDbPDO Registry::set!');
             $this->oDbPDO = new DbPDO($this->aConfig);
             Registry::set($sRegistryKey, $this->oDbPDO);
         }

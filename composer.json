@@ -7,7 +7,7 @@
     "homepage": "https://emvicy.com/",
     "require": {
         "php": ">=8.4",
-        "emvicy/emvicy": "^2.0"
+        "emvicy/emvicy": "^2"
     },
     "authors": [
         {

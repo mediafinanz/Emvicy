@@ -2,16 +2,11 @@
 
 namespace MVC\DB\Trait;
 
-use MVC\DB\Model\DbInit;
-
 trait DbInitTrait
 {
-    /**
-     * for use in your concrete DBInit class
-     * @param array $aConfig
-     * @return \MVC\DB\Model\DbInit|null
-     */
-    public static function init(array $aConfig = array()) : DbInit|null
+    protected static $_oInstance = null;
+
+    public static function init(array $aConfig = array()) : self
     {
         if (null === self::$_oInstance)
         {
@@ -19,5 +14,14 @@ trait DbInitTrait
         }
 
         return self::$_oInstance;
+    }
+
+    /**
+     * @param array $aConfig
+     * @return self
+     */
+    public static function use(array $aConfig = array()) : self
+    {
+        return self::init($aConfig);
     }
 }

@@ -15,21 +15,14 @@ use MVC\Config;
 use MVC\Debug;
 use MVC\Error;
 use MVC\Event;
-use MVC\MVCTrait\TraitDataType;
+use MVC\Registry;
 
 class DbInit
 {
-    use TraitDataType;
-
     /**
      * @var null
      */
     protected static $_oInstance = null;
-
-    /**
-     * @var \MVC\DB\Model\DbPDO
-     */
-    public static $oPDO;
 
     /**
      * Constructor
@@ -42,7 +35,6 @@ class DbInit
         (true === empty($aConfig)) ? $aConfig = self::getConfig() : false;
 
         Cache::init(Config::get_MVC_CACHE_CONFIG());
-        $aClassVar = get_class_vars(get_class($this));
 
         try {
             $oDbPDO = new DbPDO($aConfig);
@@ -51,25 +43,10 @@ class DbInit
             return false;
         }
 
-        self::$oPDO = $oDbPDO;
+        /** @todo getter/setter für Registry based on aConfig */
+        Registry::set('oDbPDO', $oDbPDO);
 
-        foreach ($aClassVar as $sProperty => $mFoo)
-        {
-            // skip
-            if ('_oInstance' === $sProperty)
-            {
-                continue;
-            }
-
-            $sClass = $this->getDocCommentValueOfProperty($sProperty);
-            $oReflectionClass = new \ReflectionClass(get_class($this));
-            $oReflectionClass->setStaticPropertyValue(
-                $sProperty,
-                new $sClass($aConfig)
-            );
-        }
-
-        Event::run('mvc.db.model.dbinit.construct.after');
+        Event::run('mvc.db.model.dbinit.construct.after', $oDbPDO);
     }
 
     /**
@@ -96,5 +73,26 @@ class DbInit
         }
 
         return $aConfig;
+    }
+
+    /**
+     * @param $sProperty
+     * @return mixed
+     * @throws \ReflectionException
+     */
+    protected function activate($sProperty)
+    {
+        $oReflectionProperty = new \ReflectionProperty($this, $sProperty);
+        $sDocComment = $oReflectionProperty->getDocComment();
+        $sClass = trim(str_replace(['*','/','@var'], '', current(array_filter(array_map(
+            function($sLine){
+                if (stristr($sLine, 'var')) {
+                    return $sLine;
+                }
+            },
+            array_map('trim', explode("\n", $sDocComment))
+        )))));
+
+        return $sClass::init(self::getConfig());
     }
 }

@@ -1,6 +1,6 @@
 {
   "require": {
-    "php": ">=8.2",
+    "php": ">=8.4",
     "ext-ctype": "*",
     "ext-curl": "*",
     "ext-date": "*",
@@ -20,14 +20,14 @@
     "ext-spl": "*",
     "ext-zip": "*",
     "smarty/smarty": "4.*",
-    "mrclay/jsmin-php": "2.4.*",
+    "mrclay/jsmin-php": "2.*",
     "ezyang/htmlpurifier": "v4.*",
     "erusev/parsedown":"1.*",
-    "adbario/php-dot-notation": "3.3.*",
+    "adbario/php-dot-notation": "3.*",
     "symfony/var-dumper": "@stable",
     "symfony/http-kernel": "@stable",
     "symfony/http-foundation": "@stable",
-    "symfony/yaml": "v6.3.*",
+    "symfony/yaml": "v6.*",
     "symfony/console": "@stable"
   },
   "require-dev": {
