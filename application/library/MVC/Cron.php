@@ -1,198 +1,81 @@
 <?php
 
+/**
+ * @name $CdmController
+ */
 namespace MVC;
 
+use App\Controller;
+use MVC\DataType\DTRequestCurrent;
+use MVC\DataType\DTRoute;
 
-use Emvicy\Emvicy;
-use MVC\DataType\DTCronTask;
-use Symfony\Component\Yaml\Yaml;
-
-#[experimental]
-class Cron
+class Cron extends Controller
 {
     /**
-     * @var \MVC\Cron
+     * @param \MVC\DataType\DTRequestCurrent $oDTRequestCurrent
+     * @param \MVC\DataType\DTRoute          $oDTRoute
+     * @throws \ReflectionException
      */
-    protected static $_oInstance = null;
-
-    /**
-     * @var string
-     */
-    protected $sCronYamlFile = '';
-
-    /**
-     * @var string
-     */
-    protected $sCacheToken = 'mvccrnrn'; # mvc cron run
-
-    /**
-     * Constructor
-     */
-    protected function __construct(string $sCronYamlFile = '')
+    public function __construct(DTRequestCurrent $oDTRequestCurrent, DTRoute $oDTRoute)
     {
-        $this->sCronYamlFile = $sCronYamlFile;
-    }
+        parent::__construct($oDTRequestCurrent, $oDTRoute);
 
-    /**
-     * @param string $sCronYamlFile
-     * @return \MVC\Cron
-     */
-    public static function create(string $sCronYamlFile = '') : \MVC\Cron
-    {
-        if (null === self::$_oInstance)
+        if (false === Request::isCli())
         {
-            self::$_oInstance = new self($sCronYamlFile);
+            exit();
         }
-
-        return self::$_oInstance;
     }
 
     /**
-     * @param string $sCommand
-     * @return $this
+     * @param \MVC\DataType\DTRequestCurrent $oDTRequestCurrent
+     * @param \MVC\DataType\DTRoute          $oDTRoute
+     * @return void
      * @throws \ReflectionException
      */
-    public function emvicy(string $sCommand = '')
+    public function run(DTRequestCurrent $oDTRequestCurrent, DTRoute $oDTRoute)
     {
-        $sCmd = 'cd ' . Config::get_MVC_BASE_PATH() . '; ' . Config::get_MVC_BIN_PHP_BINARY() . ' emvicy ' . $sCommand;
-        Emvicy::shellExecute($sCmd, true);
-
-        return $this;
-    }
-
-    /**
-     * @example Cron::create()->call(function(){...});
-     *          Cron::create()->call(new ModelXy());
-     * @return $this
-     */
-    public function call()
-    {
-        return $this;
-    }
-
-    /**
-     * @return $this
-     * @throws \ReflectionException
-     */
-    public function routeIntervall()
-    {
-        $this->run('routeIntervall');
-
-        return $this;
-    }
-
-    /**
-     * @return false|void
-     * @throws \ReflectionException
-     */
-    protected function run(string $sAction = 'routeIntervall')
-    {
-        if (false === file_exists($this->sCronYamlFile))
+        // maintenance modus
+        if (true === file_exists(Config::get_MVC_BASE_PATH() . '/.maintenance'))
         {
-            Error::error('file does not exist: `' . $this->sCronYamlFile . '`');
+            Log::write('maintenance: ' . date('Y-m-d H:i:s', filemtime(Config::get_MVC_BASE_PATH() . '/.maintenance')), 'cron.log');
 
             return false;
         }
 
-        // delete caches explicitly
-        Cache::autoDeleteCache($this->sCacheToken, 0);
+        Lock::create();
 
-        // lock on runtime
-        \MVC\Lock::create($this->sCacheToken);
+        Event::run('mvc.view.render.off');
+        Event::run('mvc.view.echoOut.off');
 
-        while (true)
+        $aCron = get(Config::MODULE()['cron'], array());
+
+        if (Config::MODULE()['queue']['config']['iMaxProcessesOverall'] < count($aCron))
         {
-            if (false === file_exists($this->sCronYamlFile))
+            Log::write('WARNING' . "\t" . '(iMaxProcessesOverall) ' . Config::MODULE()['queue']['config']['iMaxProcessesOverall'] . ' < ' . count($aCron) . ' (number of CronJobs required)', 'cron.log');
+        }
+
+        foreach ($aCron as $sRoute)
+        {
+            $iPid = Process::callRouteAsync($sRoute);
+
+            // did not work, there is no PID
+            if (0 === $iPid)
             {
-                Error::error('file does not exist: `' . $this->sCronYamlFile . '`');
-                break;
+                continue;
             }
 
-            Log::$iCount = 0;
+            // save pidfile
+            Process::savePid($iPid, $sRoute);
 
-            $sMd5OfFile = md5_file($this->sCronYamlFile);
-
-            // content of file has changed (or is new to this process)
-            if (Cache::getCache($this->sCacheToken) !== $sMd5OfFile)
-            {
-                $aCron = Yaml::parseFile($this->sCronYamlFile);
-                Cache::saveCache($this->sCacheToken, $sMd5OfFile);
-            }
-
-            switch ($sAction) {
-                case 'routeIntervall':
-                    foreach ($aCron as $sRoute => $iIntervall)
-                    {
-                        $this->execute_routeIntervall(
-                            DTCronTask::create()
-                                ->set_sRoute($sRoute)
-                                ->set_iIntervall($iIntervall)
-                        );
-                    }
-                    break;
-            }
-
-            ('' !== session_id()) ? Session::deleteSessionFile(session_id()): false;
+            Log::write('pid: ' . $iPid . "\t" . $sRoute, 'cron.log');
         }
     }
 
     /**
-     * @param \MVC\DataType\DTCronTask $oDTCronTask
-     * @return bool
      * @throws \ReflectionException
      */
-    protected function execute_routeIntervall(DTCronTask $oDTCronTask) : bool
-    {
-        Event::run('mvc.cron.executeTask.before', $oDTCronTask);
-
-        if (true === empty($oDTCronTask->get_sRoute()))
-        {
-            return false;
-        }
-
-        // minimum is 1 Second for intervall
-        ($oDTCronTask->get_iIntervall() <= 1) ? $oDTCronTask->set_iIntervall(1) : false;
-        (true === empty($oDTCronTask->get_sStaging())) ? $oDTCronTask->set_sStaging(\MVC\Config::get_MVC_ENV()) : false;
-
-        // cli command
-        $oDTCronTask->set_sCommand('cd ' . \MVC\Config::get_MVC_PUBLIC_PATH() . '; '
-                                   . 'export MVC_ENV="' . $oDTCronTask->get_sStaging() . '"; '
-                                   . \MVC\Config::get_MVC_BIN_PHP_BINARY() . ' index.php ' . $oDTCronTask->get_sRoute()
-                                   . ' > /dev/null 2>/dev/null & echo $!');
-        $sCacheKey = $this->sCacheToken . '.' . md5($oDTCronTask->getPropertyJson() . $oDTCronTask->get_sCommand()) . '.' . Strings::seofy($oDTCronTask->get_sRoute());
-        $sCacheFilename = Config::get_MVC_CACHE_DIR() . '/' . $sCacheKey;
-
-        $iFilemTime = (file_exists($sCacheFilename)) ? (int) filemtime($sCacheFilename) : 0;     // 0 at 1. run
-        $iTimeAgo = (time() - $oDTCronTask->get_iIntervall());                                  // now - x Sec
-
-        if ($iFilemTime < $iTimeAgo)
-        {
-            $iPid = Emvicy::shellExecute(
-                $oDTCronTask->get_sCommand()
-            );
-            $oDTCronTask->set_iPid($iPid);
-
-            Event::run('mvc.cron.executeTask.after', $oDTCronTask);
-
-            Cache::saveCache(
-                $sCacheKey,
-                $oDTCronTask->get_sCommand()
-            );
-        }
-        else
-        {
-            /** @warning Be careful if listening to this; it would mean a huge amount of continuous data flow */
-            Event::run('mvc.cron.executeTask.skip', $oDTCronTask);
-        }
-
-        return true;
-    }
-
     public function __destruct()
     {
-        echo "\nScript executed with success" . "\n\n";
-
-        // delete caches explicitly
-        Cache::autoDeleteCache($this->sCacheToken, 0);
+        Event::run('mvc.cron.__destruct');
     }
 }
