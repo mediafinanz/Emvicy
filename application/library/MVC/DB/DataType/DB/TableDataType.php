@@ -5,9 +5,7 @@
  */
 namespace MVC\DB\DataType\DB;
 
-use Cdm\DataType\DTCdmModelTableContract;
 use MVC\DataType\DTValue;
-use MVC\Log;
 use MVC\MVCTrait\TraitDataType;
 
 class TableDataType
