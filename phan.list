@@ -1,10 +1,12 @@
 application/library/App/View.php
 application/library/App/Controller.php
+application/library/App/Table/Queue.php
 application/library/MVC/Dir.php
 application/library/MVC/Closure.php
 application/library/MVC/Error.php
 application/library/MVC/Debug.php
 application/library/MVC/Attr.php
+application/library/MVC/WorkerTrait.php
 application/library/MVC/Event.php
 application/library/MVC/Application.php
 application/library/MVC/Lock.php
@@ -32,6 +34,7 @@ application/library/MVC/DataType/DTArrayObject.php
 application/library/MVC/DataType/DTRoute.php
 application/library/MVC/DataType/DTConstant.php
 application/library/MVC/DataType/DTProperty.php
+application/library/MVC/DataType/DTAppTableQueue.php
 application/library/MVC/DataType/DTConfig.php
 application/library/MVC/DataType/DTValue.php
 application/library/MVC/DataType/DTFileUpload.php
@@ -40,6 +43,7 @@ application/library/MVC/DataType/._datatype.php
 application/library/MVC/Cache.php
 application/library/MVC/View.php
 application/library/MVC/Request.php
+application/library/MVC/Queue.php
 application/library/MVC/Log.php
 application/library/MVC/Convert.php
 application/library/MVC/MVCTrait/TraitDataType.php
@@ -50,6 +54,7 @@ application/library/MVC/Reflex.php
 application/library/MVC/RouteIntervall.php
 application/library/MVC/Route.php
 application/library/MVC/File.php
+application/library/MVC/Process.php
 application/library/MVC/ArrDot.php
 application/library/MVC/Config.php
 application/library/MVC/Generator/DataType.php
@@ -108,6 +113,7 @@ application/library/MVC/Asset.php
 application/library/MVC/Session.php
 application/library/MVC/Controller.php
 application/library/MVC/Cron.php
+application/library/MVC/Worker.php
 application/library/MVC/Strings.php
 application/library/Emvicy/Install.php
 application/library/Emvicy/_Emvicy.php

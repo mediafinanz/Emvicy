@@ -1,0 +1,13 @@
+<?php
+
+/**
+ * just list concrete Rooutes to be called
+ */
+$aConfig['MODULE']['{module}']['cron'] = [
+
+    #-------------------------------------------------------------------------------------------------------------------
+    # queue
+
+    # starts all Worker, listed in config `etc/config/{module}/config/_worker.php`
+    '/queue/worker',
+];

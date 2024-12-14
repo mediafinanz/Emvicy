@@ -1,0 +1,40 @@
+<?php
+
+/**
+ * queue key
+ * - no special chars
+ * - underscore `_`, dot `.` and double dot `:` are ok
+ *
+ * worker class
+ * - absolute address to method (likewise Routing; see /etc/routing/*.php files)
+ */
+$aConfig['MODULE']['{module}']['queue']['worker'] = [
+
+    // queue Key (Job)
+    //              worker class
+    'Email::new' => '\{module}\Model\Queue\Worker\Email',
+];
+
+/*
+ * @see \MVC\Worker
+ */
+$aConfig['MODULE']['{module}']['queue']['config'] = [
+
+    // prefix für AutoRouten
+    'sRoutePrefix' => '/mvc/queue/worker/',
+
+    #-------------
+    # Process
+
+    // Max processing time of an async process in seconds; cancellation if reached.
+    'iMaxRuntime' => (60 * 5),
+
+    // Maximum number of all job processes allowed in parallel
+    'iMaxProcessesOverall' => 30,
+
+    // kill ZombieFiles after Seconds
+    'iKillZombiesAfterSeconds' => (60 * 5),
+
+    // Folder for PidFiles
+    'sPidFileFolder' => $aConfig['MVC_APPLICATION_PATH'] . '/pid/',
+];

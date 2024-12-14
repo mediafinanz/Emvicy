@@ -15,14 +15,22 @@ use MVC\Config;
 use MVC\Debug;
 use MVC\Error;
 use MVC\Event;
+use MVC\MVCTrait\TraitDataType;
 use MVC\Registry;
 
 class DbInit
 {
+    use TraitDataType;
+
     /**
      * @var null
      */
     protected static $_oInstance = null;
+
+    /**
+     * @var mixed|\MVC\DB\Model\DbPDO|null
+     */
+    public $oDbPDO = null;
 
     /**
      * Constructor
@@ -35,18 +43,24 @@ class DbInit
         (true === empty($aConfig)) ? $aConfig = self::getConfig() : false;
 
         Cache::init(Config::get_MVC_CACHE_CONFIG());
+        (Registry::isRegistered(Db::$sRegistryKeyDbPDO)) ? $this->oDbPDO = Registry::get(Db::$sRegistryKeyDbPDO) : false;
 
-        try {
-            $oDbPDO = new DbPDO($aConfig);
-        } catch (\PDOException $oPDOException) {
-            Error::exception($oPDOException);
-            return false;
+        if (null === $this->oDbPDO)
+        {
+            try
+            {
+                $this->oDbPDO = new DbPDO($aConfig);
+                /** @todo getter/setter für Registry based on aConfig */
+                Registry::set(Db::$sRegistryKeyDbPDO, $this->oDbPDO);
+            } catch (\PDOException $oPDOException)
+            {
+                Error::exception($oPDOException);
+
+                return false;
+            }
         }
 
-        /** @todo getter/setter für Registry based on aConfig */
-        Registry::set('oDbPDO', $oDbPDO);
-
-        Event::run('mvc.db.model.dbinit.construct.after', $oDbPDO);
+        Event::run('mvc.db.model.dbinit.construct.after', Registry::get(Db::$sRegistryKeyDbPDO));
     }
 
     /**
@@ -54,7 +68,7 @@ class DbInit
      * @return array
      * @throws \ReflectionException
      */
-    protected static function getConfig(string $sModuleConfigKey = 'DB')
+    public static function getConfig(string $sModuleConfigKey = 'DB')
     {
         // try default fallback config; assuming it is called 'DB'
         // DB config key

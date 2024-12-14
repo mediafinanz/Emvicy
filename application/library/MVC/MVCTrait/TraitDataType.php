@@ -15,6 +15,28 @@ use MVC\DataType\DTValue;
 trait TraitDataType
 {
     /**
+     * @param string $sProperty
+     * @param string $sDocCommentKey default=@var
+     * @return string
+     * @throws \ReflectionException
+     */
+    function getDocCommentValueOfProperty2(string $sProperty = '', string $sDocCommentKey = '@var')
+    {
+        $oReflectionProperty = new \ReflectionProperty($this, $sProperty);
+        $sDocComment = $oReflectionProperty->getDocComment();
+        $sResult = trim(str_replace(['*', '/', $sDocCommentKey], '', current(array_filter(array_map(
+            function($sLine) use ($sDocCommentKey) {
+                if (stristr($sLine, $sDocCommentKey)) {
+                    return $sLine;
+                }
+            },
+            array_map('trim', explode("\n", $sDocComment))
+        )))));
+
+        return $sResult;
+    }
+
+    /**
      * returns the value from a DocCommentKey (such as @param string $sProperty
      * @param string $sDocCommentKey
      * @param string $sProperty

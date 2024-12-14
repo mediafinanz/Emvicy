@@ -40,7 +40,8 @@ class Openapi
 
         $sDTFolderPre = '\\' . Config::get_MVC_MODULE_PRIMARY_NAME() . '\\' . basename(Config::get_MVC_MODULE_PRIMARY_DATATYPE_DIR());
         $sYamlFile = Config::get_MVC_MODULE_PRIMARY_DATATYPE_DIR() . '/' . basename($sYamlFileName);
-        $aClassVar = get_class_vars(get_class($oDB));
+        $aClassVar = get_object_vars($oDB);
+
         $aTmp = [
             'components' => [
                 'schemas' => []
@@ -49,15 +50,15 @@ class Openapi
 
         foreach ($aClassVar as $sProperty => $mFoo)
         {
-            $bMethodExists = method_exists($oDB::$$sProperty, 'getFieldInfo');
+            $bMethodExists = method_exists($oDB->$sProperty, 'getFieldInfo');
 
             if (false === $bMethodExists)
             {
                 continue;
             }
 
-            $aFieldInfo = $oDB::$$sProperty->getFieldInfo();
-            $sClass = $oDB->getDocCommentValueOfProperty($sProperty);
+            $aFieldInfo = $oDB->$sProperty->getFieldInfo();
+            $sClass = $oDB->getDocCommentValueOfProperty2($sProperty);
             $sDtClassName = $sDtClassPrefix . str_replace('\\', '', $sClass);
             $sDTofClass = $sDTFolderPre . '\\' . $sDtClassName;
 

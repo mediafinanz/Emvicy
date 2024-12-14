@@ -76,6 +76,7 @@ class DbPDO extends \PDO
 
         $aResult = $oStmt->fetchAll(\PDO::FETCH_ASSOC);
         (false === $aResult) ? $aResult = [] : false;
+        $oStmt->closeCursor();
 
         return $aResult;
     }
@@ -90,6 +91,7 @@ class DbPDO extends \PDO
         Event::run('mvc.db.model.dbpdo.fetchRow.sql', $sSql . (' /* ' . Log::prepareDebug(debug_backtrace(limit: 1)) . ' */ ') . "\n");
         $oStmt = $this->query($sSql);
         $aRow = $oStmt->fetch(\PDO::FETCH_ASSOC);
+        $oStmt->closeCursor();
 
         return $aRow;
     }

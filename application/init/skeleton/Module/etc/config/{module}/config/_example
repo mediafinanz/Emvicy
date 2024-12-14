@@ -33,8 +33,11 @@ $aConfig['MVC_LOG_DEFAULT'] = true;
 $aConfig['MVC_LOG_AUTOLOADER'] = false;         // recommended to set to true for develop environments only: Log autoloader actions
 $aConfig['MVC_LOG_ROUTEINTERVALL'] = true;      // recommended to set to true for develop environments only: Log Route Intervall actions
 $aConfig['MVC_LOG_FORCE_LINEBREAK'] = true;     // force linebreaks in logfiles no matter what, improves readability of logs but blows up logfile
-
 $aConfig['MVC_INFOTOOL_ENABLE'] = true;         // recommended to set to true for develop environments only: show InfoTool bar
+
+// take MVC_UNIQUE_ID out of request Header
+$sUniqueId = preg_replace("/[^[:alnum:]]/ui", '', get(array_change_key_case(getallheaders(), CASE_LOWER)['mvc-unique-id']));
+(null !== $sUniqueId) ? $aConfig['MVC_UNIQUE_ID'] = $sUniqueId : false;
 
 
 //######################################################################################################################
@@ -44,13 +47,17 @@ $aConfig['MODULE']['{module}'] = array();
 
 // ...your config goes here...
 
-//----------------------------------------------------------------------------------------------------------------------
+//......................................................................................................................
 // DB
-// watch database log; e.g.:      cd /tmp; tail -f {module}*.log
 
 require_once realpath(__DIR__) . '/_db.php';
 // consider a logrotate mechanism for this logfile as it may grow quickly
 $aConfig['MODULE']['{module}']['DB']['logging']['general_log'] = 'ON'; // consider to set it to ON for develop or test environments only
+
+//......................................................................................................................
+// Queue
+
+require_once realpath(__DIR__) . '/_queue.php';
 
 
 //######################################################################################################################
@@ -60,3 +67,5 @@ require_once realpath(__DIR__) . '/_function.php';
 require_once realpath(__DIR__) . '/_datatype.php';
 require_once realpath(__DIR__) . '/_session.php';
 require_once realpath(__DIR__) . '/_csp.php';
+require_once realpath(__DIR__) . '/_cron.php';
+

@@ -6,6 +6,10 @@ trait DbInitTrait
 {
     protected static $_oInstance = null;
 
+    /**
+     * @param array $aConfig
+     * @return self
+     */
     public static function init(array $aConfig = array()) : self
     {
         if (null === self::$_oInstance)

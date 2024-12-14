@@ -1,0 +1,356 @@
+<?php
+
+namespace App\Table;
+
+use MVC\DataType\DTAppTableQueue;
+use MVC\DataType\DTDBOption;
+use MVC\DataType\DTDBWhere;
+use MVC\DataType\DTDBWhereRelation;
+use MVC\DB\Model\Db;
+use MVC\DB\Trait\DbInitTrait;
+use MVC\Event;
+
+class Queue extends Db
+{
+    use DbInitTrait;
+
+    /**
+     * @var array
+     */
+    protected $aField = array();
+
+    /**
+     * @param array $aDbConfig
+     * @throws \ReflectionException
+     */
+    public function __construct(array $aDbConfig = array())
+    {
+        $this->aField = array(
+            'key'           => "varchar(255)    DEFAULT 'default'   NOT NULL    COMMENT 'key'",
+            'key2'          => "varchar(255)    DEFAULT ''          NULL        COMMENT 'optional'",
+            'value'         => "text                                NOT NULL    COMMENT 'value'",
+            'valueMd5'      => "varchar(32)                         NOT NULL    COMMENT 'md5 on value'",
+            'expirySeconds' => "int(10)         DEFAULT             NULL NULL   COMMENT 'expiry seconds'",
+            'expiryStamp'   => "int(10)                             NULL        COMMENT 'expiry timestamp'",
+            "description"   => "tinytext        DEFAULT ''          NULL        COMMENT 'Description'",
+        );
+
+        // basic creation of the table
+        parent::__construct(
+            $this->aField,
+            $aDbConfig
+        );
+    }
+
+    /**
+     * stores a value on the specified key
+     * @param \MVC\DataType\DTAppTableQueue $oDTAppTableQueue
+     * @param bool                               $bPreventMultipleCreation
+     * @return \MVC\DataType\DTAppTableQueue|null
+     * @throws \ReflectionException
+     */
+    public function push(DTAppTableQueue $oDTAppTableQueue, bool $bPreventMultipleCreation = false)
+    {
+        if (true === empty($oDTAppTableQueue->get_key()) || true === empty($oDTAppTableQueue->get_value()))
+        {
+            return null;
+        }
+
+        $this->expire();
+        $sDateTime = date('Y-m-d H:i:s');
+
+        (true === empty($oDTAppTableQueue->get_stampCreate()))
+            ? $oDTAppTableQueue->set_stampCreate($sDateTime)
+            : false;
+        (true === empty($oDTAppTableQueue->get_stampChange()))
+            ? $oDTAppTableQueue->set_stampChange($sDateTime)
+            : false;
+
+        $iExpirySeconds = (
+            (abs($oDTAppTableQueue->get_expirySeconds()) > 0)
+            ? abs($oDTAppTableQueue->get_expirySeconds())
+            : null
+        );
+        // current timestamp + expire seconds
+        $iExpiryStamp = (
+            time() + (
+            ($iExpirySeconds > 0)
+                ? $iExpirySeconds
+                : 0
+            )
+        );
+        $oDTAppTableQueue
+            ->set_expiryStamp(
+                (false === empty($oDTAppTableQueue->get_expiryStamp()))
+                    // expiryStamp value given
+                    ? $oDTAppTableQueue->get_expiryStamp()
+                    // expiryStamp calculated
+                    : (
+                        ($iExpirySeconds > 0)
+                            ? $iExpiryStamp
+                            : null
+                    )
+            )
+            ->set_expirySeconds($iExpirySeconds)
+        ;
+        $oDTAppTableQueue->set_valueMd5(md5($oDTAppTableQueue->get_value()));
+
+        // "Prevention of duplicate creation" is wanted
+        if (true === $bPreventMultipleCreation)
+        {
+            // deny if such a job already exists (exactly same: key,key2,valueMd5)
+            if (true === $this->_jobAlreadyExists($oDTAppTableQueue))
+            {
+                return null;
+            }
+        }
+
+        Event::run('queue.push.before', $oDTAppTableQueue);
+
+        /** @var DTAppTableQueue $oDTAppTableQueue */
+        $oDTAppTableQueue = $this->create(
+            // queue data object
+            $oDTAppTableQueue,
+            // false: use recent id if there is any | true: auto increment
+            bAutoIncrementId: (true === empty($oDTAppTableQueue->get_id()))
+        );
+
+        Event::run('queue.push.after', $oDTAppTableQueue);
+
+        return $oDTAppTableQueue;
+    }
+
+    /**
+     * dequeues ONE (the oldest) value along to the given key; it returns the tupel, also deletes the tupel
+     * @param string $sKey
+     * @param string $sKey2 optional
+     * @return \MVC\DataType\DTAppTableQueue|false|null
+     * @throws \ReflectionException
+     */
+    public function pop(string $sKey = '', string $sKey2 = '')
+    {
+        Event::run('queue.pop.before', $sKey);
+
+        if (true === empty($sKey))
+        {
+            return null;
+        }
+
+        $this->expire();
+        $aDTDBWhere = array();
+
+        if (false === empty($sKey))
+        {
+            $aDTDBWhere = [DTDBWhere::create()->set_sKey(DTAppTableQueue::getPropertyName_key())->set_sValue($sKey)];
+        }
+
+        // Jobs mit ältesten change datum zuerst
+        $aDTDBOption = [DTDBOption::create()->set_sValue("ORDER BY `stampChange` ASC LIMIT 0, 1")];
+
+        // add key2 if so
+        if (false === empty($sKey2))
+        {
+            $aDTDBWhere[] = DTDBWhere::create()->set_sKey(DTAppTableQueue::getPropertyName_key2())->set_sValue($sKey2);
+        }
+
+        /** @var \MVC\DataType\DTAppTableQueue|false $oDTAppTableQueue */
+        $oDTAppTableQueue = current($this->retrieve(
+            $aDTDBWhere,
+            $aDTDBOption,
+        ));
+
+        (false === $oDTAppTableQueue) ? $oDTAppTableQueue = null : false;
+
+        if (false === empty($oDTAppTableQueue))
+        {
+            $this->deleteTupel($oDTAppTableQueue);
+        }
+
+        Event::run('queue.pop.after', $oDTAppTableQueue);
+
+        return $oDTAppTableQueue;
+    }
+
+    /**
+     * @param int                            $iLimit
+     * @param \MVC\DataType\DTDBWhere[]|null $aDTDBWhere
+     * @return \MVC\DataType\DTAppTableQueue[]
+     * @throws \ReflectionException
+     */
+    public function next(int $iLimit = 1, array $aDTDBWhere = array())
+    {
+        $this->expire();
+
+        /** @var \MVC\DataType\DTAppTableQueue[] $aDTAppTableQueue */
+        $aDTAppTableQueue = $this->retrieve(
+            $aDTDBWhere,
+            [DTDBOption::create()->set_sValue("ORDER BY `stampChange` ASC LIMIT 0, " . $iLimit)],
+        );
+
+        return $aDTAppTableQueue;
+    }
+
+    /**
+     * dequeues all values according to the specified keys; it returns all tuples, also deletes all tuples
+     * @param string $sKey
+     * @param string $sKey2
+     * @return \MVC\DataType\DTAppTableQueue[]|null
+     * @throws \ReflectionException
+     */
+    public function popAll(string $sKey = '', string $sKey2 = '')
+    {
+        Event::run('queue.popall.before', $sKey);
+
+        if (true === empty($sKey))
+        {
+            return null;
+        }
+
+        $this->expire();
+        $aDTDBWhere = [DTDBWhere::create()->set_sKey(DTAppTableQueue::getPropertyName_key())->set_sValue($sKey)];
+
+        // add key2 if so
+        if (false === empty($sKey2))
+        {
+            $aDTDBWhere[] = DTDBWhere::create()->set_sKey(DTAppTableQueue::getPropertyName_key2())->set_sValue($sKey2);
+        }
+
+        /** @var DTAppTableQueue[] $aDTAppTableQueue */
+        $aDTAppTableQueue = $this->retrieve(
+            $aDTDBWhere
+        );
+
+        foreach ($aDTAppTableQueue as $oDTAppTableQueue)
+        {
+            $this->deleteTupel($oDTAppTableQueue);
+        }
+
+        Event::run('queue.popall.after', $aDTAppTableQueue);
+
+        return $aDTAppTableQueue;
+    }
+
+    /**
+     * @return array
+     * @throws \ReflectionException
+     */
+    public function getAllKeys()
+    {
+        $this->expire();
+        $aResult = array_map(
+            function ($mValue) {
+                return$mValue[DTAppTableQueue::getPropertyName_key()];
+            },
+            $this->oDbPDO->fetchAll("
+                SELECT DISTINCT `" . DTAppTableQueue::getPropertyName_key() . "` 
+                FROM `" . $this->sTableName . "` 
+                WHERE 1 
+                ORDER BY `" . DTAppTableQueue::getPropertyName_key() . "` ASC"
+            )
+        );
+
+        return $aResult;
+    }
+
+    /**
+     * @param string $sKey
+     * @param string $sKey2 optional
+     * @return bool
+     * @throws \ReflectionException
+     */
+    public function keyExists(string $sKey, string $sKey2 = '')
+    {
+        if (true === empty($sKey))
+        {
+            return false;
+        }
+
+        $this->expire();
+
+        $aDTWhere = array(
+            DTDBWhere::create()->set_sKey(DTAppTableQueue::getPropertyName_key())->set_sValue($sKey),
+        );
+
+        if (false === empty($sKey2))
+        {
+            $aDTWhere[] = DTDBWhere::create()->set_sKey(DTAppTableQueue::getPropertyName_key2())->set_sValue($sKey2);
+        }
+
+        $aDTAppTableQueue = $this->retrieve($aDTWhere);
+
+        return (false === empty($aDTAppTableQueue));
+    }
+
+    /**
+     * @param string $sKey
+     * @return int
+     * @throws \ReflectionException
+     */
+    public function getAmount(string $sKey = '')
+    {
+        if (true === empty($sKey))
+        {
+            return 0;
+        }
+
+        $this->expire();
+        $iAmount = $this->count([
+            DTDBWhere::create()->set_sKey(DTAppTableQueue::getPropertyName_key())->set_sValue($sKey),
+        ]);
+
+        return $iAmount;
+    }
+
+    /**
+     * @return void
+     * @throws \ReflectionException
+     */
+    public function expire()
+    {
+        $iTime = time();
+        $iAmount = $this->count([
+            DTDBWhere::create()->set_sKey(DTAppTableQueue::getPropertyName_expiryStamp())->set_sRelation(DTDBWhereRelation::smallerThan)->set_sValue($iTime),
+        ]);
+
+        // nothing to do
+        if (0 === $iAmount)
+        {
+            return false;
+        }
+
+        Event::run('queue.expire.before', $iTime);
+
+        $sSql = "
+            DELETE FROM `" . $this->sTableName . "` 
+            WHERE 1 
+            AND `" . DTAppTableQueue::getPropertyName_expiryStamp() . "` < '" . $iTime . "'
+        ";
+
+        $this->oDbPDO->query($sSql);
+
+        Event::run('queue.expire.after', $iTime);
+    }
+
+    /**
+     * @param \MVC\DataType\DTAppTableQueue $oDTAppTableQueue
+     * @return bool
+     * @throws \ReflectionException
+     */
+    protected function _jobAlreadyExists (DTAppTableQueue $oDTAppTableQueue)
+    {
+        $sSql = '';
+        $sSql.= "SELECT COUNT(id) AS iAmount FROM `" . $this->sTableName . "` \n";
+        $sSql.= "WHERE 1\n";
+        $sSql.= "AND `key` = '" . $oDTAppTableQueue->get_key() . "' \n";
+
+        (true === empty($oDTAppTableQueue->get_key2()))
+            ? $sSql.= "AND (`key2` = '" . $oDTAppTableQueue->get_key2() . "' OR `key2` IS NULL) \n"
+            : $sSql.= "AND `key2` = '" . $oDTAppTableQueue->get_key2() . "' \n"
+        ;
+
+        $sSql.= "AND `valueMd5` = '" . $oDTAppTableQueue->get_valueMd5() . "' \n";
+        $iAmount = (int) $this->oDbPDO->fetchRow($sSql)['iAmount'];
+
+        return (bool) $iAmount;
+    }
+}
