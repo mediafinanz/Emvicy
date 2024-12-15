@@ -219,6 +219,7 @@ class Db
         try
         {
             $oStmt->execute();
+            $oStmt->closeCursor();
         }
         catch (\Exception $oException)
         {
@@ -269,6 +270,7 @@ class Db
             try
             {
                 $oStmt->execute();
+                $oStmt->closeCursor();
             }
             catch (\Exception $oException)
             {
@@ -746,6 +748,7 @@ class Db
         ('' !== $sFieldName) ? $oStmt->bindValue(':sFieldName', $sFieldName, \PDO::PARAM_STR) : false;
         $oStmt->execute();
         $aFieldName = $oStmt->fetchAll(\PDO::FETCH_ASSOC);
+        $oStmt->closeCursor();
 
         (false === $aFieldName) ? $aFieldName = [] : false;
 
@@ -886,6 +889,7 @@ class Db
             $oStmt->execute();
             $aConstraint = ('' === $sFieldName) ? $oStmt->fetchAll(\PDO::FETCH_ASSOC) : $oStmt->fetch(\PDO::FETCH_ASSOC);
             (false === is_array($aConstraint)) ? $aConstraint = array() : false;
+            $oStmt->closeCursor();
         }
         catch (\Exception $oException)
         {
@@ -1003,6 +1007,7 @@ class Db
             $oStmt->execute();
             $iId = $this->oDbPDO->lastInsertId();
             $oTableDataType->set_id($iId);
+            $oStmt->closeCursor();
         }
         catch (\Exception $oExc)
         {
@@ -1170,6 +1175,7 @@ class Db
         {
             $oStmt->execute();
             $aFetchAll = $oStmt->fetchAll(\PDO::FETCH_ASSOC);
+            $oStmt->closeCursor();
         }
         catch (\Exception $oException)
         {
@@ -1238,6 +1244,7 @@ class Db
         {
             $oStmt->execute();
             $aFetchAll = $oStmt->fetchAll(\PDO::FETCH_ASSOC);
+            $oStmt->closeCursor();
             $iAmount = (int) current($aFetchAll)['iAmount'];
         }
         catch (\Exception $oException)
@@ -1393,6 +1400,7 @@ class Db
         try
         {
             $oStmt->execute();
+            $oStmt->closeCursor();
         }
         catch (\Exception $oException)
         {
@@ -1580,6 +1588,7 @@ class Db
         try
         {
             $bDelete = $oStmt->execute();
+            $oStmt->closeCursor();
         }
         catch (\Exception $oExc)
         {
