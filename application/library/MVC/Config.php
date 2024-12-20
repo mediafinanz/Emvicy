@@ -1559,4 +1559,130 @@ class Config
 
         return array();
     }
+
+    #-------------------------------------------------------------------------------------------------------------------
+    # Queue
+
+    /**
+     * @return string
+     * @throws \ReflectionException
+     */
+    public static function get_MVC_QUEUE_ROUTE_PREFIX() : string
+    {
+        if (Registry::isRegistered('MVC_QUEUE_ROUTE_PREFIX'))
+        {
+            return (string) Registry::get('MVC_QUEUE_ROUTE_PREFIX');
+        }
+
+        return $GLOBALS['aConfig']['MVC_QUEUE_ROUTE_PREFIX'];
+    }
+
+    /**
+     * @param string $sPrefix
+     * @return void
+     */
+    public static function set_MVC_QUEUE_ROUTE_PREFIX(string $sPrefix = '') : void
+    {
+        Registry::set('MVC_QUEUE_ROUTE_PREFIX', $sPrefix);
+        $GLOBALS['aConfig']['MVC_QUEUE_ROUTE_PREFIX'] = $sPrefix;
+    }
+
+    /**
+     * @return int
+     * @throws \ReflectionException
+     */
+    public static function get_MVC_QUEUE_RUNTIME() : int
+    {
+        if (Registry::isRegistered('MVC_QUEUE_RUNTIME'))
+        {
+            return (int) Registry::get('MVC_QUEUE_RUNTIME');
+        }
+
+        return $GLOBALS['aConfig']['MVC_QUEUE_RUNTIME'];
+    }
+
+    /**
+     * @param int $iValue
+     * @return void
+     */
+    public static function set_MVC_QUEUE_RUNTIME(int $iValue = 300) : void
+    {
+        Registry::set('MVC_QUEUE_RUNTIME', $iValue);
+        $GLOBALS['aConfig']['MVC_QUEUE_RUNTIME'] = $iValue;
+    }
+
+    #-------------------------------------------------------------------------------------------------------------------
+    # Process
+
+    /**
+     * @return int
+     * @throws \ReflectionException
+     */
+    public static function get_MVC_PROCESS_MAX_PROCESSES_OVERALL() : int
+    {
+        if (Registry::isRegistered('MVC_PROCESS_MAX_PROCESSES_OVERALL'))
+        {
+            return (int) Registry::get('MVC_PROCESS_MAX_PROCESSES_OVERALL');
+        }
+
+        return $GLOBALS['aConfig']['MVC_PROCESS_MAX_PROCESSES_OVERALL'];
+    }
+
+    /**
+     * @param int $iValue
+     * @return void
+     */
+    public static function set_MVC_PROCESS_MAX_PROCESSES_OVERALL(int $iValue = 30) : void
+    {
+        Registry::set('MVC_PROCESS_MAX_PROCESSES_OVERALL', $iValue);
+        $GLOBALS['aConfig']['MVC_PROCESS_MAX_PROCESSES_OVERALL'] = $iValue;
+    }
+
+    /**
+     * @return int
+     * @throws \ReflectionException
+     */
+    public static function get_MVC_PROCESS_KILL_ZOMBIES_AFTER_SECONDS() : int
+    {
+        if (Registry::isRegistered('MVC_PROCESS_KILL_ZOMBIES_AFTER_SECONDS'))
+        {
+            return (int) Registry::get('MVC_PROCESS_KILL_ZOMBIES_AFTER_SECONDS');
+        }
+
+        return $GLOBALS['aConfig']['MVC_PROCESS_KILL_ZOMBIES_AFTER_SECONDS'];
+    }
+
+    /**
+     * @param int $iValue
+     * @return void
+     */
+    public static function set_MVC_PROCESS_KILL_ZOMBIES_AFTER_SECONDS(int $iValue = 300) : void
+    {
+        Registry::set('MVC_PROCESS_KILL_ZOMBIES_AFTER_SECONDS', $iValue);
+        $GLOBALS['aConfig']['MVC_PROCESS_KILL_ZOMBIES_AFTER_SECONDS'] = $iValue;
+    }
+
+    /**
+     * @return string
+     * @throws \ReflectionException
+     */
+    public static function get_MVC_PROCESS_PID_FILE_FOLDER() : string
+    {
+        if (Registry::isRegistered('MVC_PROCESS_PID_FILE_FOLDER'))
+        {
+            return (string) Registry::get('MVC_PROCESS_PID_FILE_FOLDER');
+        }
+
+        return $GLOBALS['aConfig']['MVC_PROCESS_PID_FILE_FOLDER'];
+    }
+
+    /**
+     * @param string $sPrefix
+     * @return void
+     */
+    public static function set_MVC_PROCESS_PID_FILE_FOLDER(string $sPrefix = '') : void
+    {
+        Registry::set('MVC_PROCESS_PID_FILE_FOLDER', $sPrefix);
+        $GLOBALS['aConfig']['MVC_PROCESS_PID_FILE_FOLDER'] = $sPrefix;
+    }
 }

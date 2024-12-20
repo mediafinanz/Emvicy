@@ -305,3 +305,25 @@ MVC_MISC: {
 
     $aConfig['MVC_UNIQUE_ID'] = date('YmdHis') . '' . uniqid();
 }
+
+MVC_QUEUE:
+{
+
+    // prefix for AutoRoutes
+    $aConfig['MVC_QUEUE_ROUTE_PREFIX'] = '/queue/worker/';
+
+    // Max processing time of an async process in seconds; cancellation if reached.
+    $aConfig['MVC_QUEUE_RUNTIME'] = (60 * 5);
+}
+
+MVC_PROCESS: {
+
+    // Maximum number of all job processes allowed in parallel
+    $aConfig['MVC_PROCESS_MAX_PROCESSES_OVERALL'] = 30;
+
+    // kill ZombieFiles after Seconds
+    $aConfig['MVC_PROCESS_KILL_ZOMBIES_AFTER_SECONDS'] = (60 * 5);
+
+    // folder for PidFiles
+    $aConfig['MVC_PROCESS_PID_FILE_FOLDER'] = $aConfig['MVC_APPLICATION_PATH'] . '/pid/';
+}

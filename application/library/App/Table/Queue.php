@@ -173,7 +173,7 @@ class Queue extends Db
 
     /**
      * @param int                            $iLimit
-     * @param \MVC\DataType\DTDBWhere[]|null $aDTDBWhere
+     * @param \MVC\DataType\DTDBWhere[]      $aDTDBWhere
      * @return \MVC\DataType\DTAppTableQueue[]
      * @throws \ReflectionException
      */
@@ -241,7 +241,7 @@ class Queue extends Db
             function ($mValue) {
                 return$mValue[DTAppTableQueue::getPropertyName_key()];
             },
-            $this->oDbPDO->fetchAll("
+            Db::getDbPdo()->fetchAll("
                 SELECT DISTINCT `" . DTAppTableQueue::getPropertyName_key() . "` 
                 FROM `" . $this->sTableName . "` 
                 WHERE 1 
@@ -258,7 +258,7 @@ class Queue extends Db
      * @return bool
      * @throws \ReflectionException
      */
-    public function keyExists(string $sKey, string $sKey2 = '')
+    public function keyExists(string $sKey = '', string $sKey2 = '')
     {
         if (true === empty($sKey))
         {
@@ -326,7 +326,7 @@ class Queue extends Db
             AND `" . DTAppTableQueue::getPropertyName_expiryStamp() . "` < '" . $iTime . "'
         ";
 
-        $this->oDbPDO->query($sSql);
+        Db::getDbPdo()->query($sSql);
 
         Event::run('queue.expire.after', $iTime);
     }
@@ -349,7 +349,7 @@ class Queue extends Db
         ;
 
         $sSql.= "AND `valueMd5` = '" . $oDTAppTableQueue->get_valueMd5() . "' \n";
-        $iAmount = (int) $this->oDbPDO->fetchRow($sSql)['iAmount'];
+        $iAmount = (int) Db::getDbPdo()->fetchRow($sSql)['iAmount'];
 
         return (bool) $iAmount;
     }

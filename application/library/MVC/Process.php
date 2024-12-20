@@ -18,8 +18,8 @@ class Process
             echo $sText . "\n\t" . '…pause… ';
         }
 
-        ($iSeconds < 1)
-            ? $iSeconds = 1
+        ($iSeconds < 0)
+            ? $iSeconds = 0
             : (($iSeconds > 60) ? $iSeconds = 60 : false)
         ;
 
@@ -60,6 +60,7 @@ class Process
         $sCommand = 'cd ' . Config::get_MVC_PUBLIC_PATH() . '; ' . Config::get_MVC_BIN_PHP_BINARY() . ' index.php "' . $sRoute . '"' . ' > /dev/null 2>/dev/null & echo $!';
         $iPid = (int) trim(shell_exec($sCommand));
 
+        /** @todo event logging */
         Log::write('pid: ' . $iPid . "\t" . 'CALL' . "\t" . $sRoute, 'process.log');
 
         return $iPid;
@@ -71,13 +72,8 @@ class Process
      */
     public static function getPidFileFolder()
     {
-        // pidfile folder; needs trailing slash
-        $sPidFileFolder = Strings::replaceMultipleForwardSlashesByOneFromString(
-            get(
-                Config::MODULE()['queue']['config']['sPidFileFolder'],
-                '/tmp/'
-            ) . '/'
-        );
+        // pidfile folder; make sure there is a trailing slash
+        $sPidFileFolder = Strings::replaceMultipleForwardSlashesByOneFromString(Config::get_MVC_PROCESS_PID_FILE_FOLDER() . '/');
 
         if (false === Dir::exists($sPidFileFolder))
         {
@@ -94,7 +90,7 @@ class Process
     public static function getAmountProcessesMax()
     {
         // Anzahl aller Job Prozesse maximal erlaubt
-        return (int) get(Config::MODULE()['queue']['config']['iMaxProcessesOverall'], 30);
+        return (int) Config::get_MVC_PROCESS_MAX_PROCESSES_OVERALL();
     }
 
     /**
@@ -156,6 +152,7 @@ class Process
 
         $sCmd = whereis('ps') . ' --pid ' . $iPid . '  > /dev/null; echo "$?";';
         exec($sCmd, $aOutput);
+
         return (current($aOutput) == 1) ? false : true;
     }
 
@@ -236,7 +233,7 @@ class Process
         $iTimePassed = (time() - $iCacheTime);
 
         // Allow action if never run before or after expiry of the waiting time
-        if (true === empty($iCacheTime) || $iTimePassed >= Config::MODULE()['queue']['config']['iKillZombiesAfterSeconds'])
+        if (true === empty($iCacheTime) || $iTimePassed >= Config::get_MVC_PROCESS_KILL_ZOMBIES_AFTER_SECONDS())
         {
             $aZombie = self::getZombiePidFileArray();
 
@@ -262,8 +259,7 @@ class Process
     public static function destruct()
     {
         $iPid = getmypid();
-        $sPidFileFolder = get(Config::MODULE()['queue']['config']['sPidFileFolder'], '/tmp/');
-        $sPidFile = $sPidFileFolder . $iPid;
+        $sPidFile = self::getPidFileFolder() . $iPid;
 
         $bUnlink = (true === file_exists($sPidFile))
             ? unlink($sPidFile)
@@ -272,6 +268,7 @@ class Process
 
         if (true === $bUnlink)
         {
+            /** @todo event logging */
             Log::write('pid: ' . $iPid . "\tDELETE", 'process.log');
         }
 

@@ -8,15 +8,6 @@ use MVC\DB\Model\DbInit;
 class Queue
 {
     /**
-     * @return array
-     * @throws \ReflectionException
-     */
-    public static function getConfig(): array
-    {
-        return get(Config::MODULE()['queue']['config'], array());
-    }
-
-    /**
      * pushes a job to the queue
      * @param \MVC\DataType\DTAppTableQueue $oDTAppTableQueue
      * @param bool                          $bPreventMultipleCreation
@@ -25,8 +16,7 @@ class Queue
      */
     public static function push(DTAppTableQueue $oDTAppTableQueue, bool $bPreventMultipleCreation = false)
     {
-        return \App\Table\Queue::init(DbInit::getConfig())
-            ->push($oDTAppTableQueue, $bPreventMultipleCreation);
+        return \App\Table\Queue::init( DbInit::getConfig() )->push($oDTAppTableQueue, $bPreventMultipleCreation);
     }
 
     /**
@@ -38,8 +28,7 @@ class Queue
      */
     public static function pop(string $sKey = '', string $sKey2 = '')
     {
-        return \App\Table\Queue::init(DbInit::getConfig())
-            ->pop($sKey, $sKey2);
+        return \App\Table\Queue::init( DbInit::getConfig() )->pop($sKey, $sKey2);
     }
 
     /**
@@ -51,13 +40,11 @@ class Queue
     public static function popOnId(?int $iIdQueue = null)
     {
         /** @var DTAppTableQueue $oDTAppTableQueue */
-        $oDTAppTableQueue = \App\Table\Queue::init(DbInit::getConfig())
-            ->getOnId($iIdQueue);
+        $oDTAppTableQueue = \App\Table\Queue::init( DbInit::getConfig() )->getOnId($iIdQueue);
 
         if (false === empty($oDTAppTableQueue->get_id()))
         {
-            \App\Table\Queue::init(DbInit::getConfig())
-                ->deleteTupel($oDTAppTableQueue);
+            \App\Table\Queue::init( DbInit::getConfig() )->deleteTupel($oDTAppTableQueue);
         }
 
         return $oDTAppTableQueue;
@@ -66,14 +53,13 @@ class Queue
     /**
      * get time based next job array object without deleting it (just inform)
      * @param int                            $iLimit
-     * @param \MVC\DataType\DTDBWhere[]|null $aDTDBWhere
+     * @param \MVC\DataType\DTDBWhere[]      $aDTDBWhere
      * @return \MVC\DataType\DTAppTableQueue[]
      * @throws \ReflectionException
      */
-    public static function next(int $iLimit = 1, ?array $aDTDBWhere = null)
+    public static function next(int $iLimit = 1, array $aDTDBWhere = array())
     {
-        return \App\Table\Queue::init(DbInit::getConfig())
-            ->next($iLimit, $aDTDBWhere);
+        return \App\Table\Queue::init( DbInit::getConfig() )->next($iLimit, $aDTDBWhere);
     }
 
     /**
@@ -82,10 +68,9 @@ class Queue
      * @return \MVC\DataType\DTAppTableQueue[]|null
      * @throws \ReflectionException
      */
-    public static function popAll(string $sKey, string $sKey2 = '')
+    public static function popAll(string $sKey = '', string $sKey2 = '')
     {
-        return \App\Table\Queue::init(DbInit::getConfig())
-            ->popAll($sKey, $sKey2);
+        return \App\Table\Queue::init( DbInit::getConfig() )->popAll($sKey, $sKey2);
     }
 
     /**
@@ -94,8 +79,7 @@ class Queue
      */
     public static function getAllKeys()
     {
-        return \App\Table\Queue::init(DbInit::getConfig())
-            ->getAllKeys();
+        return \App\Table\Queue::init( DbInit::getConfig() )->getAllKeys();
     }
 
     /**
@@ -104,10 +88,9 @@ class Queue
      * @return bool
      * @throws \ReflectionException
      */
-    public static function keyExists(string $sKey, string $sKey2 = '')
+    public static function keyExists(string $sKey = '', string $sKey2 = '')
     {
-        return \App\Table\Queue::init(DbInit::getConfig())
-            ->keyExists($sKey, $sKey2);
+        return \App\Table\Queue::init( DbInit::getConfig() )->keyExists($sKey, $sKey2);
     }
 
     /**
@@ -115,10 +98,9 @@ class Queue
      * @return int
      * @throws \ReflectionException
      */
-    public static function getAmount(string $sKey)
+    public static function getAmount(string $sKey = '')
     {
-        return \App\Table\Queue::init(DbInit::getConfig())
-            ->getAmount($sKey);
+        return \App\Table\Queue::init( DbInit::getConfig() )->getAmount($sKey);
     }
 
     /**
@@ -127,7 +109,6 @@ class Queue
      */
     public static function expire()
     {
-        \App\Table\Queue::init(DbInit::getConfig())
-            ->expire();
+        \App\Table\Queue::init( DbInit::getConfig() )->expire();
     }
 }

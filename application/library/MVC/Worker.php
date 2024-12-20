@@ -25,10 +25,9 @@ class Worker
     public static function run()
     {
         // get configs
-        $aQueueConfig = Queue::getConfig();
         $aWorkerConfig = self::getConfig();
         $sWorkerConfigKeys = '"' . implode('","', array_keys(array_filter($aWorkerConfig))) . '"';
-        $sRoutePrefix = get($aQueueConfig['sRoutePrefix']);
+        $sRoutePrefix = Config::get_MVC_QUEUE_ROUTE_PREFIX();
 
         if (true === empty($sRoutePrefix))
         {
@@ -55,11 +54,8 @@ class Worker
             // Start time; measure total processing time
             $iStart = time();
 
-            // Max processing time; cancellation when reached.
-            $iMaxRuntime = get($aQueueConfig['iMaxRuntime'], 60);
-
             // Maximum number of parallel processes
-            $iMaxProcessesParallel = get($aQueueConfig['iMaxProcessesOverall'], 30);
+            $iMaxProcessesParallel = Config::get_MVC_PROCESS_MAX_PROCESSES_OVERALL();
 
             // Number of routes to be called up
             $iAmountRoute = count($aDTAppTableQueue);
@@ -110,11 +106,11 @@ class Worker
 
                 if ($iProcessCounter === $iMaxProcessesParallel)
                 {
-                    Process::pause(iSeconds: 3, sText: "\t· max Anzahl Prozesse erreicht: " . $iMaxProcessesParallel);
+                    Process::pause(iSeconds: 3, sText: "\t· max Amount of Processes reached: " . $iMaxProcessesParallel);
                     $iProcessCounter = 0;
                 }
 
-                if ((time() - $iStart) >= $iMaxRuntime)
+                if ((time() - $iStart) >= Config::get_MVC_QUEUE_RUNTIME())
                 {
                     break;
                 }
@@ -136,8 +132,7 @@ class Worker
     {
         // get worker config
         $aWorker = self::getConfig();
-        $aQueueConfig = Queue::getConfig();
-        $sRoutePrefix = get($aQueueConfig['sRoutePrefix']);
+        $sRoutePrefix = Config::get_MVC_QUEUE_ROUTE_PREFIX();
 
         if (true === empty($sRoutePrefix))
         {
