@@ -46,9 +46,11 @@ class Request
         parse_str($oDTRequestCurrent->get_query(), $aQueryArray);
         $oDTRequestCurrent->set_queryArray($aQueryArray);
         $oDTRequestCurrent->set_headerArray(self::getHeaderArray());
-        $oDTRequestCurrent->set_pathParam(self::getPathParam());
+        $oDTRequestCurrent->set_pathParamArray(self::getPathParam());
         $oDTRequestCurrent->set_ip(self::getIpAddress());
-        $oDTRequestCurrent->set_coookieArray($_COOKIE);
+        $oDTRequestCurrent->set_cookieArray($_COOKIE);
+        $oDTRequestCurrent->set_isCli(self::isCli());
+        $oDTRequestCurrent->set_isHttp(self::isHttp());
 
         // if event ...
         Event::bind('mvc.controller.init.before', function(){
@@ -315,55 +317,8 @@ class Request
             : $oDTRequestCurrent = self::getCurrentRequest()
         ;
 
-        $oDTRequestCurrent->set_pathParam($aPathParam);
+        $oDTRequestCurrent->set_pathParamArray($aPathParam);
         Registry::set('oDTRequestCurrent', $oDTRequestCurrent);
-    }
-
-    /**
-     * enables using myMvc via commandline
-     * @example php index.php '/'
-     * @return void
-     * @throws \ReflectionException
-     */
-    public static function cliWrapper() : void
-    {
-        // check user/file permission
-        $sIndex = Config::get_MVC_PUBLIC_PATH() . '/index.php';
-
-        if (posix_getuid() != File::info($sIndex)->get_uid())
-        {
-            $aUser = posix_getpwuid(posix_getuid ());
-
-            die (
-                "\n\tERROR\tCLI - access granted for User `" . File::info($sIndex)->get_name() . "` only "
-                . "(User `" . $aUser['name'] . "`, uid:" . $aUser['uid'] . ", not granted).\t"
-                . __FILE__ . ', ' . __LINE__ . "\n\n"
-            );
-        }
-
-        self::setServerVarsForCli();
-    }
-
-    /**
-     * @return void
-     */
-    public static function setServerVarsForCli() : void
-    {
-        (!array_key_exists (1, $GLOBALS['argv'])) ? $GLOBALS['argv'][1] = '' : false;
-        $aParseUrl = parse_url(get($GLOBALS['argv'][1], ''));
-
-        (false === is_array($_SERVER)) ? $_SERVER = array () : false;
-        $_SERVER['REQUEST_METHOD'] = get($_SERVER['REQUEST_METHOD'], 'GET');
-        $_SERVER['REQUEST_URI'] = get($_SERVER['REQUEST_URI'], $GLOBALS['argv'][1]);
-        $_SERVER['REMOTE_ADDR'] = get($_SERVER['REMOTE_ADDR'], '0.0.0.0');
-        $_SERVER['HTTP_HOST'] = get($_SERVER['HTTP_HOST'], 'localhost');
-        $_SERVER['SERVER_PORT'] = get($_SERVER['SERVER_PORT'], 80);
-
-        if (array_key_exists ('query', $aParseUrl))
-        {
-            $_SERVER['QUERY_STRING'] = $aParseUrl['query'];
-            parse_str ($aParseUrl['query'], $_GET);
-        }
     }
 
     /**
@@ -379,17 +334,6 @@ class Request
         }
 
         return $aHeader;
-    }
-
-    /**
-     * @deprecated use instead: Request::getHeaderValueOnKey()
-     * @param string $sKey
-     * @param bool   $bCaseInsensitive default=true
-     * @return string
-     */
-    public static function getHeader(string $sKey = '', bool $bCaseInsensitive = true) : string
-    {
-        return self::getHeaderValueOnKey($sKey, $bCaseInsensitive);
     }
 
     /**

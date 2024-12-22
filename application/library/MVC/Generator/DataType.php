@@ -378,7 +378,7 @@ class DataType
     private function createDocHeader()
     {
         $sContent = '';
-        $sContent.= "<?php\r\n# " . date('Y-m-d H:i:s') . "\n\n";
+        $sContent.= "<?php\r\n\n";
 
         return $sContent;
     }

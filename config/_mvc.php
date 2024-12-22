@@ -306,8 +306,7 @@ MVC_MISC: {
     $aConfig['MVC_UNIQUE_ID'] = date('YmdHis') . '' . uniqid();
 }
 
-MVC_QUEUE:
-{
+MVC_QUEUE: {
 
     // prefix for AutoRoutes
     $aConfig['MVC_QUEUE_ROUTE_PREFIX'] = '/queue/worker/';

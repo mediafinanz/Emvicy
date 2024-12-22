@@ -103,7 +103,7 @@ FIRST_LOG_ENTRY_ON_NEW_REQUEST: {
 
     if ('cli' === php_sapi_name())
     {
-        \MVC\Request::setServerVarsForCli();
+        \MVC\Application::setServerVarsForCli();
     }
 
     $sMessage = str_repeat ('#', 10) . "\tnew Request"
