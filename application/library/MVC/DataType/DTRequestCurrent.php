@@ -349,9 +349,9 @@ class DTRequestCurrent
      * @return $this
      * @throws \ReflectionException
      */
-    public function set_coookieArray($aValue)
+    public function set_cookieArray($aValue)
     {
-        $oDTValue = DTValue::create()->set_mValue($aValue); \MVC\Event::RUN ('DTRequestCurrent.set_coookieArray.before', $oDTValue);
+        $oDTValue = DTValue::create()->set_mValue($aValue); \MVC\Event::RUN ('DTRequestCurrent.set_cookieArray.before', $oDTValue);
         $this->cookieArray = (array) $oDTValue->get_mValue();
 
         return $this;
@@ -361,9 +361,9 @@ class DTRequestCurrent
      * @return mixed|null
      * @throws \ReflectionException
      */
-    public function get_coookieArray()
+    public function get_cookieArray()
     {
-        $oDTValue = DTValue::create()->set_mValue($this->cookieArray); \MVC\Event::RUN ('DTRequestCurrent.get_coookieArray.before', $oDTValue);
+        $oDTValue = DTValue::create()->set_mValue($this->cookieArray); \MVC\Event::RUN ('DTRequestCurrent.get_cookieArray.before', $oDTValue);
 
         return $oDTValue->get_mValue();
     }
