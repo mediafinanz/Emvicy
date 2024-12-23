@@ -36,7 +36,12 @@ class DTClass
 	 */
 	protected $namespace;
 
-	/**
+    /**
+     * @var array
+     */
+    protected $trait;
+
+    /**
 	 * @var \MVC\DataType\DTConstant[]
 	 */
 	protected $constant;
@@ -65,6 +70,7 @@ class DTClass
 		$this->file = '';
 		$this->extends = '';
 		$this->namespace = '';
+        $this->trait = array();
 		$this->constant = array();
 		$this->property = array();
 		$this->createHelperMethods = true;
@@ -170,6 +176,21 @@ class DTClass
 
 		return $this;
 	}
+
+    /**
+     * @param array $aValue
+     * @return $this
+     * @throws \ReflectionException
+     */
+    public function set_trait(array $aValue)
+    {
+        $oDTValue = DTValue::create()->set_mValue($aValue); \MVC\Event::RUN ('DTClass.set_trait.before', $oDTValue);
+        $aValue = $oDTValue->get_mValue();
+
+        $this->trait = $aValue;
+
+        return $this;
+    }
 
     /**
      * @param \MVC\DataType\DTConstant $mValue
@@ -287,6 +308,17 @@ class DTClass
 
 		return $oDTValue->get_mValue();
 	}
+
+    /**
+     * @return array
+     * @throws \ReflectionException
+     */
+    public function get_trait() : array
+    {
+        $oDTValue = DTValue::create()->set_mValue($this->trait); \MVC\Event::RUN ('DTClass.get_trait.before', $oDTValue);
+
+        return $oDTValue->get_mValue();
+    }
 
 	/**
 	 * @return \MVC\DataType\DTProperty[]

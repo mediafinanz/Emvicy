@@ -84,6 +84,7 @@ class DataType
         {
             $oDTDataTypeGeneratorClass = DTClass::create();
             $oDTDataTypeGeneratorClass->set_name($aDTClass['name']);
+            $oDTDataTypeGeneratorClass->set_trait(get($aDTClass['trait'], array()));
 
             (0 == strlen($oDTDataTypeGeneratorClass->get_file()))
                 ? $oDTDataTypeGeneratorClass->set_file($oDTDataTypeGeneratorClass->get_name() . '.php')
@@ -445,6 +446,12 @@ class DataType
                 : false;
 
             $sContent.= "\r\n{\r\n";
+
+            // add traits
+            foreach ($oDTDataTypeGeneratorClass->get_trait() as $sTrait)
+            {
+                $sContent.= "\tuse " . $sTrait . ";\r\n\r\n";
+            }
 
             $sContent.= "\tuse TraitDataType;\r\n\r\n";
 
