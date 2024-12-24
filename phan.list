@@ -3,8 +3,11 @@ application/library/App/Controller.php
 application/library/App/Table/Queue.php
 application/library/MVC/Dir.php
 application/library/MVC/Closure.php
+application/library/MVC/Http/Status.php
+application/library/MVC/Http/._create.php
 application/library/MVC/Error.php
 application/library/MVC/Debug.php
+application/library/MVC/RequestHelper.php
 application/library/MVC/Attr.php
 application/library/MVC/WorkerTrait.php
 application/library/MVC/Event.php
@@ -17,6 +20,7 @@ application/library/MVC/InfoTool.php
 application/library/MVC/DataType/DTClass.php
 application/library/MVC/DataType/DTDBWhere.php
 application/library/MVC/DataType/DTKeyValue.php
+application/library/MVC/DataType/DTRequestIncoming.php
 application/library/MVC/DataType/DTRequestCurrent.php
 application/library/MVC/DataType/DTDBWhereRelation.php
 application/library/MVC/DataType/DTRoutingAdditional.php
@@ -41,8 +45,10 @@ application/library/MVC/Request.php
 application/library/MVC/Queue.php
 application/library/MVC/Log.php
 application/library/MVC/Convert.php
+application/library/MVC/MVCTrait/TraitRequestIncoming.php
 application/library/MVC/MVCTrait/TraitDataType.php
 application/library/MVC/MVCTrait/TraitAttribute.php
+application/library/MVC/Request2.php
 application/library/MVC/Minify.php
 application/library/MVC/Registry.php
 application/library/MVC/Reflex.php

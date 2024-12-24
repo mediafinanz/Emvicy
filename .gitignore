@@ -6,6 +6,8 @@ application/library/MVC/xarray.php
 .env
 .test
 *.sql
+._create.php
+.http-status-codes-1.csv
 .ddev
 ._datatype.php
 .phpstorm.meta.php

@@ -5,6 +5,7 @@ namespace MVC;
 
 use MVC\DataType\DTArrayObject;
 use MVC\DataType\DTKeyValue;
+use MVC\Http\Status;
 
 class RequestHelper
 {
@@ -93,7 +94,11 @@ class RequestHelper
                 ->set_sValue(Debug::prepareBacktraceArray((debug_backtrace(limit: 1)[0] ?? array())))));
 
         // redirect
-        header('Location: ' . $sLocation, $bReplace, $iResponseCode);
+        header(
+            header: 'Location: ' . $sLocation,
+            replace: $bReplace,
+            response_code: Status::CODE_TEMPORARY_REDIRECT
+        );
         exit();
     }
 
