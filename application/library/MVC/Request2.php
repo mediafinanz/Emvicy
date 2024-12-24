@@ -70,15 +70,15 @@ class Request2
     public static function outgoing(string $sUrl = '', array $aHeader = array(), array $aData = array(), array $aOption = array())
     {
         // headers, options
-        $oResponse = Requests::get('https://api.github.com/events', $aHeader, $aOption);
-//        Requests::delete('https://api.github.com/events', $aHeader, $aOption);
-//        Requests::trace('https://api.github.com/events', $aHeader, $aOption);
+//        $oResponse = Requests::get($sUrl, $aHeader, $aOption);
+//        Requests::delete($sUrl, $aHeader, $aOption);
+//        Requests::trace($sUrl, $aHeader, $aOption);
 //
 //        // headers, data, options
-//        Requests::put('https://api.github.com/events', $aHeader, $aData, $aOption);
-//        Requests::post('https://api.github.com/events', $aHeader, $aData, $aOption);
-//        Requests::patch('https://api.github.com/events', $aHeader, $aData, $aOption);
-//        Requests::options('https://api.github.com/events', $aHeader, $aData, $aOption);
+//        Requests::put($sUrl, $aHeader, $aData, $aOption);
+//        Requests::post($sUrl, $aHeader, $aData, $aOption);
+//        Requests::patch($sUrl, $aHeader, $aData, $aOption);
+//        Requests::options($sUrl, $aHeader, $aData, $aOption);
 
         return $oResponse;
     }
