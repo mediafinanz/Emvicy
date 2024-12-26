@@ -80,7 +80,7 @@ class Request2
 //        Requests::patch($sUrl, $aHeader, $aData, $aOption);
 //        Requests::options($sUrl, $aHeader, $aData, $aOption);
 
-        return $oResponse;
+//        return $oResponse;
     }
 
     #-------------------------------------------------------------------------------------------------------------------
