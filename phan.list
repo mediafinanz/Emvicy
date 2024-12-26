@@ -66,6 +66,7 @@ application/library/MVC/Http/._create.php
 application/library/MVC/Http/Status_Unsupported_Media_Type_415.php
 application/library/MVC/Http/Status_Multiple_Choices_300.php
 application/library/MVC/Http/Status_Precondition_Failed_412.php
+application/library/MVC/Http/Header.php
 application/library/MVC/Http/Status_Precondition_Required_428.php
 application/library/MVC/Http/Status_Found_302.php
 application/library/MVC/Http/Status_Processing_102.php
