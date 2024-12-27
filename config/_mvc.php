@@ -33,9 +33,8 @@ MVC_RUNTIME_SETTINGS: {
      * @see http://www.php.net/manual/en/timezones.php
      * @see http://stackoverflow.com/a/5559239/2487859
      * to get array of available timezones see result of timezone_identifiers_list()
-     * try to get timezone (ubuntu), or set to UTC
      */
-    date_default_timezone_set(((file_exists('/etc/timezone')) ? trim(file_get_contents('/etc/timezone')) : 'UTC'));
+    date_default_timezone_set('UTC');
     setlocale(LC_ALL, 'C');
 
     // show InfoTool bar

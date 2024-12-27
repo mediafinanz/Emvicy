@@ -21,6 +21,7 @@
     "ext-zip": "*",
     "smarty/smarty": "4.*",
     "rmccue/requests": "@stable",
+    "respect/validation": "@stable",
     "mrclay/jsmin-php": "2.*",
     "ezyang/htmlpurifier": "v4.*",
     "erusev/parsedown":"1.*",

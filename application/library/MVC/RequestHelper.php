@@ -5,7 +5,9 @@ namespace MVC;
 
 use MVC\DataType\DTArrayObject;
 use MVC\DataType\DTKeyValue;
-use MVC\Http\Status;
+use MVC\Http\Header;
+use MVC\Http\Status_Found_302;
+use MVC\Http\Status_Temporary_Redirect_307;
 
 class RequestHelper
 {
@@ -40,12 +42,12 @@ class RequestHelper
      * redirects to given Location URI
      * @param string $sLocation
      * @param bool   $bReplace
-     * @param int    $iResponseCode
+     * @param int    $iResponseCode default=302
      * @return void
      * @throws \ReflectionException
      */
     #[NoReturn]
-    public static function redirect(string $sLocation = '', bool $bReplace = true, int $iResponseCode = 0) : void
+    public static function redirect(string $sLocation = '', bool $bReplace = true, int $iResponseCode = 302) : void
     {
         // source
         $aBacktrace = debug_backtrace(limit: 1);
@@ -90,16 +92,31 @@ class RequestHelper
                 ->set_sKey('sLocation')
                 ->set_sValue($sLocation))
             ->add_aKeyValue(DTKeyValue::create()
+                ->set_sKey('bReplace')
+                ->set_sValue($bReplace))
+            ->add_aKeyValue(DTKeyValue::create()
+                ->set_sKey('iResponseCode')
+                ->set_sValue($iResponseCode))
+            ->add_aKeyValue(DTKeyValue::create()
                 ->set_sKey('aDebug')
                 ->set_sValue(Debug::prepareBacktraceArray((debug_backtrace(limit: 1)[0] ?? array())))));
 
-        // redirect
-        header(
-            header: 'Location: ' . $sLocation,
-            replace: $bReplace,
-            response_code: Status::CODE_TEMPORARY_REDIRECT
+        /*
+         * "Location:" header.
+         * Not only does it send this header back to the browser,
+         * but it also returns a REDIRECT (302) status code to the browser
+         * unless the 201 or a 3xx status code has already been set.
+         * - @see https://www.php.net/manual/en/function.header.php
+         *
+         * My note: (302) means "Found", not "redirect" due to IANA Standards.
+         * Instead, a "redirect" in its meaning would be code (307) or (308)
+         */
+        Header::init()->Location(
+            sLocation: $sLocation,
+            bReplace: $bReplace,
+            iResponseCode: $iResponseCode,
+            bExit: true
         );
-        exit();
     }
 
 //    /**
