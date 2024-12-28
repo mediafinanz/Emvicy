@@ -9,6 +9,8 @@
 
 namespace MVC\Http;
 
+use MVC\Enum\EnumHttpHeaderCacheControl;
+use MVC\Enum\EnumHttpHeaderRetryAfter;
 use MVC\Request2;
 use MVC\RequestHelper;
 use Respect\Validation\Validator;
@@ -126,12 +128,12 @@ class Header
     }
 
     /**
-     * @param \MVC\Http\EnumCacheControl|\MVC\Http\EnumCacheControl[] $mEnumCacheControl
+     * @param \MVC\Enum\EnumHttpHeaderCacheControl|\MVC\Enum\EnumHttpHeaderCacheControl[] $mEnumCacheControl
      * @return $this
      * @example Header::init()->Cache_Control(EnumCacheControl::NoCache);
-     *          Header::init()->Cache_Control(array(EnumCacheControl::NoCache, EnumCacheControl::MustRevalidate));
+     * *          Header::init()->Cache_Control(array(EnumCacheControl::NoCache, EnumCacheControl::MustRevalidate));
      */
-    public function Cache_Control(EnumCacheControl | array $mEnumCacheControl)
+    public function Cache_Control(EnumHttpHeaderCacheControl | array $mEnumCacheControl)
     {
         $sCacheControl = '';
 
@@ -321,33 +323,21 @@ class Header
     }
 
     /**
-     * @param int $iRetryAfterSeconds
+     * @param int                                $iValue
+     * @param \MVC\Enum\EnumHttpHeaderRetryAfter $eEnumRetryAfter
      * @return $this
      */
-    public function Retry_After(int $iRetryAfterSeconds = 0)
+    public function Retry_After(int $iValue = 0, EnumHttpHeaderRetryAfter $eEnumRetryAfter = EnumHttpHeaderRetryAfter::UnixTimestamp)
     {
-        header('Retry-After: ' . gmdate('D, d M Y H:i:s \G\M\T', time() + $iRetryAfterSeconds));
+        ('UnixTimestamp' === $eEnumRetryAfter->value())
+            ? header('Retry-After: ' . gmdate('D, d M Y H:i:s \G\M\T', $iValue))
+            : false
+        ;
+        ('RetryAfterSeconds' === $eEnumRetryAfter->value())
+            ? header('Retry-After: ' . gmdate('D, d M Y H:i:s \G\M\T', time() + $iValue))
+            : false
+        ;
 
         return $this;
-    }
-}
-
-#-----------------------------------------------------------------------------------------------------------------------
-# Enum
-
-enum EnumCacheControl
-{
-    case NoCache;
-    case NoStore;
-    case MustRevalidate;
-
-    public function value(): string
-    {
-        return match($this)
-        {
-            self::NoCache => 'no-cache',
-            self::NoStore => 'no-store',
-            self::MustRevalidate => 'must-revalidate',
-        };
     }
 }

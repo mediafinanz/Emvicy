@@ -1591,24 +1591,24 @@ class Config
      * @return int
      * @throws \ReflectionException
      */
-    public static function get_MVC_QUEUE_RUNTIME() : int
+    public static function get_MVC_QUEUE_RUNTIME_SECONDS() : int
     {
-        if (Registry::isRegistered('MVC_QUEUE_RUNTIME'))
+        if (Registry::isRegistered('MVC_QUEUE_RUNTIME_SECONDS'))
         {
-            return (int) Registry::get('MVC_QUEUE_RUNTIME');
+            return (int) Registry::get('MVC_QUEUE_RUNTIME_SECONDS');
         }
 
-        return $GLOBALS['aConfig']['MVC_QUEUE_RUNTIME'];
+        return $GLOBALS['aConfig']['MVC_QUEUE_RUNTIME_SECONDS'];
     }
 
     /**
      * @param int $iValue
      * @return void
      */
-    public static function set_MVC_QUEUE_RUNTIME(int $iValue = 300) : void
+    public static function set_MVC_QUEUE_RUNTIME_SECONDS(int $iValue = 300) : void
     {
-        Registry::set('MVC_QUEUE_RUNTIME', $iValue);
-        $GLOBALS['aConfig']['MVC_QUEUE_RUNTIME'] = $iValue;
+        Registry::set('MVC_QUEUE_RUNTIME_SECONDS', $iValue);
+        $GLOBALS['aConfig']['MVC_QUEUE_RUNTIME_SECONDS'] = $iValue;
     }
 
     #-------------------------------------------------------------------------------------------------------------------

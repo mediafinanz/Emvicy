@@ -311,7 +311,7 @@ MVC_QUEUE: {
     $aConfig['MVC_QUEUE_ROUTE_PREFIX'] = '/queue/worker/';
 
     // Max processing time of an async process in seconds; cancellation if reached.
-    $aConfig['MVC_QUEUE_RUNTIME'] = (60 * 5);
+    $aConfig['MVC_QUEUE_RUNTIME_SECONDS'] = (60 * 5);
 }
 
 MVC_PROCESS: {

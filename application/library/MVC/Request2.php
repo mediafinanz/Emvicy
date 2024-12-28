@@ -5,6 +5,9 @@ namespace MVC;
 use MVC\DataType\DTArrayObject;
 use MVC\DataType\DTKeyValue;
 use MVC\DataType\DTRequestIncoming;
+use MVC\DataType\DTResponse;
+use MVC\Enum\EnumRequestMethod;
+use MVC\Http\Status_Not_Found_404;
 use WpOrg\Requests\Requests;
 
 
@@ -44,14 +47,7 @@ class Request2
         // if event ...
         Event::bind('mvc.controller.init.before', function(){
             // ... run this event
-            Event::run(
-                'mvc.request.in.after',
-                DTArrayObject::create()->add_aKeyValue(
-                    DTKeyValue::create()
-                        ->set_sKey('oDTRequestIncoming')
-                        ->set_sValue(Registry::get('oDTRequestIncoming'))
-                )
-            );
+            Event::run('mvc.request.in.after', Registry::get('oDTRequestIncoming'));
         });
 
         // save to registry
@@ -61,26 +57,56 @@ class Request2
     }
 
     /**
-     * @param string $sUrl
-     * @param array  $aHeader
-     * @param array  $aData
-     * @param array  $aOption
-     * @return \WpOrg\Requests\Response
+     * @param \MVC\Enum\EnumRequestMethod $eEnumRequestMethod
+     * @param string                      $sUrl
+     * @param array                       $aHeader
+     * @param array                       $aData
+     * @param array                       $aOption
+     * @return \MVC\DataType\DTResponse
+     * @throws \ReflectionException
      */
-    public static function outgoing(string $sUrl = '', array $aHeader = array(), array $aData = array(), array $aOption = array())
+    public static function do(EnumRequestMethod $eEnumRequestMethod, string $sUrl = '', array $aHeader = array(), array $aData = array(), array $aOption = array())
     {
-        // headers, options
-//        $oResponse = Requests::get($sUrl, $aHeader, $aOption);
-//        Requests::delete($sUrl, $aHeader, $aOption);
-//        Requests::trace($sUrl, $aHeader, $aOption);
-//
-//        // headers, data, options
-//        Requests::put($sUrl, $aHeader, $aData, $aOption);
-//        Requests::post($sUrl, $aHeader, $aData, $aOption);
-//        Requests::patch($sUrl, $aHeader, $aData, $aOption);
-//        Requests::options($sUrl, $aHeader, $aData, $aOption);
+        if (true === empty($sUrl))
+        {
+            return DTResponse::create()->set_status_code(Status_Not_Found_404::CODE)->set_success(false);
+        }
 
-//        return $oResponse;
+        switch ($eEnumRequestMethod->value())
+        {
+            // headers, options
+            case EnumRequestMethod::GET->value():
+                $oResponse = Requests::get($sUrl, $aHeader, $aOption);
+                break;
+            case EnumRequestMethod::DELETE->value():
+                $oResponse = Requests::delete($sUrl, $aHeader, $aOption);
+                break;
+            case EnumRequestMethod::TRACE->value():
+                $oResponse = Requests::trace($sUrl, $aHeader, $aOption);
+                break;
+
+            // headers, data, options
+            case EnumRequestMethod::PUT->value():
+                $oResponse = Requests::put($sUrl, $aHeader, $aData, $aOption);
+                break;
+            case EnumRequestMethod::POST->value():
+                display();
+                $oResponse = Requests::post($sUrl, $aHeader, $aData, $aOption);
+                break;
+            case EnumRequestMethod::PATCH->value():
+                $oResponse = Requests::patch($sUrl, $aHeader, $aData, $aOption);
+                break;
+            case EnumRequestMethod::OPTIONS->value():
+                $oResponse = Requests::options($sUrl, $aHeader, $aData, $aOption);
+                break;
+        }
+
+        $aResponse = Convert::objectToArray($oResponse);
+        $oDTResponse = DTResponse::create($aResponse);
+
+        Event::run('mvc.request.do.after', $oDTResponse);
+
+        return $oDTResponse;
     }
 
     #-------------------------------------------------------------------------------------------------------------------
@@ -245,3 +271,34 @@ class Request2
         ;
     }
 }
+
+//#-----------------------------------------------------------------------------------------------------------------------
+//# Enum
+//
+//enum EnumRequestMethod
+//{
+//    case GET;
+//    case DELETE;
+//    case TRACE;
+//    case PUT;
+//    case POST;
+//    case PATCH;
+//    case OPTIONS;
+//
+//    /**
+//     * @return string
+//     */
+//    public function value(): string
+//    {
+//        return match($this)
+//        {
+//            self::GET => 'GET',
+//            self::DELETE => 'DELETE',
+//            self::TRACE => 'TRACE',
+//            self::PUT => 'PUT',
+//            self::POST => 'POST',
+//            self::PATCH => 'PATCH',
+//            self::OPTIONS => 'OPTIONS',
+//        };
+//    }
+//}

@@ -110,7 +110,7 @@ class Worker
                     $iProcessCounter = 0;
                 }
 
-                if ((time() - $iStart) >= Config::get_MVC_QUEUE_RUNTIME())
+                if ((time() - $iStart) >= Config::get_MVC_QUEUE_RUNTIME_SECONDS())
                 {
                     break;
                 }

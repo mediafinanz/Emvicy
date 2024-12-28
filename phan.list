@@ -72,6 +72,9 @@ application/library/MVC/Http/Status_Found_302.php
 application/library/MVC/Http/Status_Processing_102.php
 application/library/MVC/Http/Status_Already_Reported_208.php
 application/library/MVC/Error.php
+application/library/MVC/Enum/EnumHttpHeaderRetryAfter.php
+application/library/MVC/Enum/EnumHttpHeaderCacheControl.php
+application/library/MVC/Enum/EnumRequestMethod.php
 application/library/MVC/Debug.php
 application/library/MVC/RequestHelper.php
 application/library/MVC/Attr.php
@@ -94,6 +97,7 @@ application/library/MVC/DataType/DTContainer.php
 application/library/MVC/DataType/DTDBSet.php
 application/library/MVC/DataType/DTEventContext.php
 application/library/MVC/DataType/DTFileinfo.php
+application/library/MVC/DataType/DTResponse.php
 application/library/MVC/DataType/DTDBOption.php
 application/library/MVC/DataType/DTArrayObject.php
 application/library/MVC/DataType/DTRoute.php
