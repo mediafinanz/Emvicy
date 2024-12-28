@@ -91,6 +91,7 @@ application/library/MVC/DataType/DTDBWhere.php
 application/library/MVC/DataType/DTKeyValue.php
 application/library/MVC/DataType/DTRequestIncoming.php
 application/library/MVC/DataType/DTRequestCurrent.php
+application/library/MVC/DataType/DTRequestDo.php
 application/library/MVC/DataType/DTDBWhereRelation.php
 application/library/MVC/DataType/DTRoutingAdditional.php
 application/library/MVC/DataType/DTContainer.php

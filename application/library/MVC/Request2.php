@@ -4,6 +4,7 @@ namespace MVC;
 
 use MVC\DataType\DTArrayObject;
 use MVC\DataType\DTKeyValue;
+use MVC\DataType\DTRequestDo;
 use MVC\DataType\DTRequestIncoming;
 use MVC\DataType\DTResponse;
 use MVC\Enum\EnumRequestMethod;
@@ -57,52 +58,70 @@ class Request2
     }
 
     /**
-     * @param \MVC\Enum\EnumRequestMethod $eEnumRequestMethod
-     * @param string                      $sUrl
-     * @param array                       $aHeader
-     * @param array                       $aData
-     * @param array                       $aOption
+     * @param \MVC\DataType\DTRequestDo $oDTRequestDo
      * @return \MVC\DataType\DTResponse
      * @throws \ReflectionException
      */
-    public static function do(EnumRequestMethod $eEnumRequestMethod, string $sUrl = '', array $aHeader = array(), array $aData = array(), array $aOption = array())
+    public static function do(DTRequestDo $oDTRequestDo)
     {
-        if (true === empty($sUrl))
+        if (true === empty($oDTRequestDo->get_sUrl()))
         {
-            return DTResponse::create()->set_status_code(Status_Not_Found_404::CODE)->set_success(false);
+            return DTResponse::create()
+                ->set_status_code(Status_Not_Found_404::CODE)
+                ->set_success(false);
         }
 
-        switch ($eEnumRequestMethod->value())
+        // add missing if it is only local path
+        $aParseUrl = parse_url($oDTRequestDo->get_sUrl());
+
+        if (false === isset($aParseUrl['scheme']) || false === isset($aParseUrl['host']) || false === isset($aParseUrl['path']))
+        {
+            $sUrl = '';
+            $sUrl.= (false === isset($aParseUrl['scheme'])) ? self::getUriProtocol() : $aParseUrl['scheme'];
+            $sUrl.= (false === isset($aParseUrl['host'])) ? $_SERVER['HTTP_HOST'] : $aParseUrl['host'];
+            $sUrl.= (false === isset($aParseUrl['path'])) ? '/' : $aParseUrl['path'];
+            $oDTRequestDo->set_sUrl($sUrl);
+        }
+
+        Event::run('mvc.request.do.before', $oDTRequestDo);
+
+        switch ($oDTRequestDo->get_eRequestMethod()->value())
         {
             // headers, options
             case EnumRequestMethod::GET->value():
-                $oResponse = Requests::get($sUrl, $aHeader, $aOption);
+                $oResponse = Requests::get($oDTRequestDo->get_sUrl(), $oDTRequestDo->get_aHeader(), $oDTRequestDo->get_aOption());
                 break;
             case EnumRequestMethod::DELETE->value():
-                $oResponse = Requests::delete($sUrl, $aHeader, $aOption);
+                $oResponse = Requests::delete($oDTRequestDo->get_sUrl(), $oDTRequestDo->get_aHeader(), $oDTRequestDo->get_aOption());
                 break;
             case EnumRequestMethod::TRACE->value():
-                $oResponse = Requests::trace($sUrl, $aHeader, $aOption);
+                $oResponse = Requests::trace($oDTRequestDo->get_sUrl(), $oDTRequestDo->get_aHeader(), $oDTRequestDo->get_aOption());
                 break;
 
             // headers, data, options
             case EnumRequestMethod::PUT->value():
-                $oResponse = Requests::put($sUrl, $aHeader, $aData, $aOption);
+                $oResponse = Requests::put($oDTRequestDo->get_sUrl(), $oDTRequestDo->get_aHeader(), $oDTRequestDo->get_aData(), $oDTRequestDo->get_aOption());
                 break;
             case EnumRequestMethod::POST->value():
                 display();
-                $oResponse = Requests::post($sUrl, $aHeader, $aData, $aOption);
+                $oResponse = Requests::post($oDTRequestDo->get_sUrl(), $oDTRequestDo->get_aHeader(), $oDTRequestDo->get_aData(), $oDTRequestDo->get_aOption());
                 break;
             case EnumRequestMethod::PATCH->value():
-                $oResponse = Requests::patch($sUrl, $aHeader, $aData, $aOption);
+                $oResponse = Requests::patch($oDTRequestDo->get_sUrl(), $oDTRequestDo->get_aHeader(), $oDTRequestDo->get_aData(), $oDTRequestDo->get_aOption());
                 break;
             case EnumRequestMethod::OPTIONS->value():
-                $oResponse = Requests::options($sUrl, $aHeader, $aData, $aOption);
+                $oResponse = Requests::options($oDTRequestDo->get_sUrl(), $oDTRequestDo->get_aHeader(), $oDTRequestDo->get_aData(), $oDTRequestDo->get_aOption());
                 break;
         }
 
-        $aResponse = Convert::objectToArray($oResponse);
-        $oDTResponse = DTResponse::create($aResponse);
+        $oDTResponse = DTResponse::create(
+            Convert::objectToArray($oResponse)
+        );
+
+        // overwrite header array with parsed from raw
+        $oDTResponse->set_headers(
+            RequestHelper::parseRawHeader($oResponse->raw)
+        );
 
         Event::run('mvc.request.do.after', $oDTResponse);
 

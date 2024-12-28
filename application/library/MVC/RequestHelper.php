@@ -119,6 +119,34 @@ class RequestHelper
         );
     }
 
+    /**
+     * parses e.g. a raw Response Header string and returns an assoc array
+     * @param string $sHeader
+     * @param bool   $bReturnArrayKeysLowerCase default=true
+     * @return array
+     */
+    public static function parseRawHeader(string $sHeader = '', bool $bReturnArrayKeysLowerCase = true) : array
+    {
+        $aHeader = array();
+        $sHeader = preg_replace('/^\r\n/m', '', $sHeader);
+        $sHeader = preg_replace('/\r\n\s+/m', ' ', $sHeader);
+        preg_match_all(
+            '/^([^: ]+):\s(.+?(?:\r\n\s(?:.+?))*)?\r\n/m',
+            $sHeader . "\r\n",
+            $aMatch
+        );
+
+        foreach ($aMatch[1] as $sKey => $sValue)
+        {
+            $aHeader[$sValue] = (true === array_key_exists($sValue, $aHeader)) ? $aHeader[$sValue] . "\n" : '';
+            $aHeader[$sValue].= $aMatch[2][$sKey];
+        }
+
+        (true === $bReturnArrayKeysLowerCase) ? $aHeader = array_change_key_case($aHeader, CASE_LOWER) : false;
+
+        return $aHeader;
+    }
+
 //    /**
 //     * gets the http uri protocol
 //     * @param mixed $mSsl
