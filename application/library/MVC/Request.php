@@ -11,77 +11,37 @@
 namespace MVC;
 
 use JetBrains\PhpStorm\NoReturn;
-use MVC\DataType\DTArrayObject;
-use MVC\DataType\DTKeyValue;
-use MVC\DataType\DTRequestCurrent;
+use MVC\DataType\DTRequestIn;
 
 /**
+ * @deprecated
  * Request
  */
 class Request
 {
     /**
-     * gets current request
-     * @return \MVC\DataType\DTRequestCurrent
+     * @deprecated
+     * @return \MVC\DataType\DTRequestIn
      * @throws \ReflectionException
      */
-    public static function getCurrentRequest() : DTRequestCurrent
+    public static function getCurrentRequest()
     {
-        // run only once
-        if (true === Registry::isRegistered('oDTRequestCurrent'))
-        {
-            return Registry::get('oDTRequestCurrent');
-        }
-
-        $aUriInfo = parse_url(self::getUriProtocol() . $_SERVER['HTTP_HOST'] . self::getServerRequestUri());
-        (false === is_array($aUriInfo)) ? $aUriInfo = array() : false;
-
-        $oDTRequestCurrent = DTRequestCurrent::create($aUriInfo);
-        $oDTRequestCurrent->set_requesturi(self::getServerRequestUri());
-        $oDTRequestCurrent->set_protocol(self::getUriProtocol());
-        $oDTRequestCurrent->set_full(self::getUriProtocol() . $_SERVER['HTTP_HOST'] . self::getServerRequestUri());
-        $oDTRequestCurrent->set_requestmethod(Request::getServerRequestMethod());
-        $oDTRequestCurrent->set_input(file_get_contents("php://input"));
-        $oDTRequestCurrent->set_isSecure(Config::get_MVC_SECURE_REQUEST());
-        parse_str($oDTRequestCurrent->get_query(), $aQueryArray);
-        $oDTRequestCurrent->set_queryArray($aQueryArray);
-        $oDTRequestCurrent->set_headerArray(self::getHeaderArray());
-        $oDTRequestCurrent->set_pathParamArray(self::getPathParam());
-        $oDTRequestCurrent->set_ip(self::getIpAddress());
-        $oDTRequestCurrent->set_cookieArray($_COOKIE);
-        $oDTRequestCurrent->set_isCli(self::isCli());
-        $oDTRequestCurrent->set_isHttp(self::isHttp());
-
-        // if event ...
-        Event::bind('mvc.controller.init.before', function(){
-            // ... run this event
-            Event::run(
-                'mvc.request.getCurrentRequest.after',
-                DTArrayObject::create()->add_aKeyValue(
-                    DTKeyValue::create()
-                        ->set_sKey('oDTRequestCurrent')
-                        ->set_sValue(Registry::get('oDTRequestCurrent'))
-                )
-            );
-        });
-
-        // save to registry
-        Registry::set('oDTRequestCurrent', $oDTRequestCurrent);
-
-        return $oDTRequestCurrent;
+        return Request2::in();
     }
 
     /**
-     * @param \MVC\DataType\DTRequestCurrent $oDTRequestCurrent
+     * @param \MVC\DataType\DTRequestIn $oDTRequestIn
      * @return void
+     *@deprecated
      */
-    public static function setCurrentRequest(DTRequestCurrent $oDTRequestCurrent)
+    public static function setCurrentRequest(DTRequestIn $oDTRequestIn)
     {
         // save to registry
-        Registry::set('oDTRequestCurrent', $oDTRequestCurrent);
+        Registry::set('oDTRequestIn', $oDTRequestIn);
     }
 
     /**
+     * @deprecated
      * gets the http uri protocol
      * @param mixed $mSsl
      * @return string
@@ -89,62 +49,22 @@ class Request
      */
     public static function getUriProtocol(mixed $mSsl = null) : string
     {
-        // detect on ssl or not
-        if (isset($mSsl))
-        {
-            // http
-            if ((int) $mSsl === 0 || $mSsl == false)
-            {
-                return 'http://';
-            }
-            // https
-            elseif ((int) $mSsl === 1 || $mSsl == true)
-            {
-                return 'https://';
-            }
-        }
-        // autodetect
-        else
-        {
-            // http
-            if (self::detectSsl() === false)
-            {
-                return 'http://';
-            }
-            // http
-            elseif (self::detectSsl() === true)
-            {
-                return 'https://';
-            }
-        }
-
-        \MVC\Event::run('mvc.error', DTArrayObject::create()
-            ->add_aKeyValue(DTKeyValue::create()
-                ->set_sKey('sMessage')
-                ->set_sValue('could not detect protocol of requested page.')));
-
-        return '';
+        return Request2::in()->get_protocol();
     }
 
     /**
+     * @deprecated
      * check request is secure
      * @return bool
      * @throws \ReflectionException
      */
     public static function detectSsl() : bool
     {
-        if (!empty(Config::get_MVC_SECURE_REQUEST()))
-        {
-            return Config::get_MVC_SECURE_REQUEST();
-        }
-
-        return (
-            (array_key_exists('HTTPS', $_SERVER) && strtolower($_SERVER['HTTPS']) !== 'off')
-            || $_SERVER['SERVER_PORT'] == Config::get_MVC_SSL_PORT()
-        );
+        return Request2::in()->get_isSecure();
     }
 
     /**
+     * @deprecated
      * redirects to given Location URI
      * @param string $sLocation
      * @param bool   $bReplace
@@ -155,103 +75,53 @@ class Request
     #[NoReturn]
     public static function redirect(string $sLocation = '', bool $bReplace = true, int $iResponseCode = 0) : void
     {
-        // source
-        $aBacktrace = debug_backtrace(limit: 1);
-
-        (array_key_exists('file', $aBacktrace[0]))
-            ? $sFile = $aBacktrace[0]['file']
-            : $sFile = '';
-        (array_key_exists('line', $aBacktrace[0]))
-            ? $sLine = $aBacktrace[0]['line']
-            : $sLine = '';
-        (array_key_exists('line', $aBacktrace))
-            ? $sLine = $aBacktrace['line']
-            : false;
-
-        // standard
-        Log::write(
-            'Redirect to: ' . $sLocation . ' --> called in: ' . $sFile . ', ' . $sLine,
-            Config::get_MVC_LOG_FILE_DEFAULT(),
-            false
-        );
-
-        // CLI
-        if (true === self::isCli())
-        {
-            echo trim((string) shell_exec(Config::get_MVC_BIN_PHP_BINARY() . ' index.php "' . $sLocation . '"'));
-
-            // Event
-            \MVC\Event::run('mvc.request.redirect', DTArrayObject::create()
-                ->add_aKeyValue(DTKeyValue::create()
-                    ->set_sKey('sLocation')
-                    ->set_sValue('[CLI] php index.php "' . $sLocation . '"'))
-                ->add_aKeyValue(DTKeyValue::create()
-                    ->set_sKey('aDebug')
-                    ->set_sValue(Debug::prepareBacktraceArray((debug_backtrace(limit: 1)[0] ?? array())))));
-
-            exit ();
-        }
-
-        // Event
-        \MVC\Event::run('mvc.request.redirect', DTArrayObject::create()
-            ->add_aKeyValue(DTKeyValue::create()
-                ->set_sKey('sLocation')
-                ->set_sValue($sLocation))
-            ->add_aKeyValue(DTKeyValue::create()
-                ->set_sKey('aDebug')
-                ->set_sValue(Debug::prepareBacktraceArray((debug_backtrace(limit: 1)[0] ?? array())))));
-
-        header('Location: ' . $sLocation, $bReplace, $iResponseCode);
-        exit ();
+        RequestHelper::redirect($sLocation, $bReplace, $iResponseCode);
     }
 
     /**
+     * @deprecated
      * @info detection of cli takes place in /config/_mvc.php
      * @return bool
      * @throws \ReflectionException
      */
     public static function isCli() : bool
     {
-        if (true === Config::get_MVC_CLI())
-        {
-            return true;
-        }
-
-        return false;
+        return Request2::in()->get_isCli();
     }
 
     /**
+     * @deprecated
      * @info detection of cli takes place in /config/_mvc.php
      * @return bool
      * @throws \ReflectionException
      */
     public static function isHttp() : bool
     {
-        if (false === self::isCli())
-        {
-            return true;
-        }
-
-        return false;
+        return Request2::in()->get_isHttp();
     }
 
     /**
+     * @deprecated
      * @return string
+     * @throws \ReflectionException
      */
     public static function getServerRequestUri() : string
     {
-        return (array_key_exists('REQUEST_URI', $_SERVER) ? (string) $_SERVER['REQUEST_URI'] : '');
+        return Request2::in()->get_requestUri();
     }
 
     /**
+     * @deprecated
      * @return string
+     * @throws \ReflectionException
      */
     public static function getServerRequestMethod() : string
     {
-        return (array_key_exists('REQUEST_METHOD', $_SERVER) ? (string) $_SERVER['REQUEST_METHOD'] : '');
+        return Request2::in()->get_requestMethod();
     }
 
     /**
+     * @deprecated
      * @example '/foo/bar/baz/'
      *          array(3) {[0]=> string(3) "foo" [1]=> string(3) "bar" [2]=> string(3) "baz"}
      * @param string $sUrl
@@ -261,108 +131,65 @@ class Request
      */
     public static function getPathArray(string $sUrl = '', bool $bReverse = false) : array
     {
-        if ('' === $sUrl)
-        {
-            $sUrl = self::getCurrentRequest()->get_full();
-        }
-
-        $aUrl = parse_url($sUrl);
-        $mPath = preg_split('~/~', $aUrl['path'], 0, PREG_SPLIT_NO_EMPTY);
-        $aPath = (false === is_array($mPath)) ? array() : $mPath;
-
-        if (true === $bReverse)
-        {
-            $aPath = array_reverse($aPath);
-        }
-
-        /** @var array */
-        return $aPath;
+        return Request2::in()->get_pathArray();
     }
 
     /**
+     * @deprecated
      * @param string $sKey
      * @return array|string
      * @throws \ReflectionException
      */
     public static function getPathParam(string $sKey = '') : array|string
     {
-        if (Registry::isRegistered('aPathParam'))
+        if (false === empty($sKey))
         {
-            $aParam = (array) Registry::get('aPathParam');
-
-            if ('' === $sKey)
-            {
-                return $aParam;
-            }
-
-            return (string) get($aParam[$sKey], '');
+            return Request2::in()->get_pathParamArray()[$sKey];
         }
 
-        $mReturn = (empty($sKey)) ? array() : '';
-
-        return $mReturn;
+        return Request2::in()->get_pathParamArray();
     }
 
     /**
+     * @deprecated
      * @param array $aPathParam
      * @return void
      * @throws \ReflectionException
      */
     public static function setPathParam(array $aPathParam = array()) : void
     {
-        Registry::set('aPathParam', $aPathParam);
-
-        (true === Registry::isRegistered('oDTRequestCurrent'))
-            ? $oDTRequestCurrent = Registry::get('oDTRequestCurrent')
-            : $oDTRequestCurrent = self::getCurrentRequest()
-        ;
-
-        $oDTRequestCurrent->set_pathParamArray($aPathParam);
-        Registry::set('oDTRequestCurrent', $oDTRequestCurrent);
+        Request2::in()->set_pathParamArray($aPathParam);
     }
 
     /**
+     * @deprecated
      * @return array
+     * @throws \ReflectionException
      */
     public static function getHeaderArray() : array
     {
-        $aHeader = getallheaders();
-
-        if (false === $aHeader)
-        {
-            return array();
-        }
-
-        return $aHeader;
+        return Request2::in()->get_headerArray();
     }
 
     /**
+     * @deprecated
      * @param string $sKey
      * @param bool   $bCaseInsensitive
      * @return string
+     * @throws \ReflectionException
      */
     public static function getHeaderValueOnKey(string $sKey = '', bool $bCaseInsensitive = true) : string
     {
-        $aHeader = self::getHeaderArray();
-
-        // for comparison convert searched key and all header array keys to lowercase
-        if (true === $bCaseInsensitive)
-        {
-            $sKey = strtolower($sKey);
-            $aHeader = array_change_key_case($aHeader, CASE_LOWER);
-        }
-
-        return (string) get($aHeader[$sKey], '');
+        return RequestHelper::getHeaderValueOnKey($sKey, $bCaseInsensitive);
     }
 
     /**
+     * @deprecated
      * @return string
+     * @throws \ReflectionException
      */
     public static function getIpAddress() : string
     {
-        return (string) (true === isset($_SERVER['HTTP_CLIENT_IP']))
-            ? $_SERVER['HTTP_CLIENT_IP']
-            : get($_SERVER['HTTP_X_FORWARDED_FOR'], $_SERVER['REMOTE_ADDR'])
-        ;
+        return Request2::in()->get_ip();
     }
 }

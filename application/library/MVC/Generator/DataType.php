@@ -984,11 +984,11 @@ class DataType
             $sContent.= ')' . "\r\n" . "\t{\r\n\t\t";
             $sContent.= '$oDTValue = DTValue::create()->set_mValue($mValue); ' . "\n\t\t";
 
+            (true === $this->bCreateEvents) ? $sContent.= "\MVC\Event::run('" . $sClassName . ".set_" . $oProperty->get_key() . ".before', " . '$oDTValue' . ");\r\n" : false;
+
             // add ArrayType Instancer
             if (false === in_array(strtolower($sVar), $this->aType))
             {
-                (true === $this->bCreateEvents) ? $sContent.= "\MVC\Event::run('" . $sClassName . ".set_" . $oProperty->get_key() . ".before', " . '$oDTValue' . ");\r\n" : false;
-
                 $sContent.= "\r\n\t\t" . '$mValue = (array) $oDTValue->get_mValue();
                 
         foreach ($mValue as $mKey => $aData)
@@ -1002,7 +1002,7 @@ class DataType
 
             $sContent.= "\r\n\t\t" . '$this->' . $oProperty->get_key() . ' = $mValue;' . "\r\n\r\n" . "\t\treturn " . '$this;' . "\r\n\t}\r\n\r\n";
 
-            $sContent.= $this->createAddFunctionForArray($oProperty);
+            $sContent.= $this->createAddFunctionForArray($oProperty, $sClassName);
         }
 
         return $sContent;
@@ -1042,18 +1042,25 @@ class DataType
 
     /**
      * @param \MVC\DataType\DTProperty $oProperty
+     * @param string                   $sClassName
      * @return string
      * @throws \ReflectionException
      */
-    private function createAddFunctionForArray(DTProperty $oProperty)
+    private function createAddFunctionForArray(DTProperty $oProperty, string $sClassName)
     {
         $sVar = trim(preg_replace("/[^[:alnum:][:space:]_\\\]/ui", ' ', $oProperty->get_var()));
         $sContent = '';
         $sContent.= "\t/**\r\n\t * @param " . $sVar . ' $mValue' . "\r\n";
-        $sContent.= "\t * @return " . '$this' . "\r\n\t */\r\n";
+        $sContent.= "\t * @return " . '$this' . "\r\n";
+        $sContent.= "\t * @throws \ReflectionException " . "\r\n\t */\r\n";
         $sContent.= "\tpublic function add_" . $oProperty->get_key() . '(' . $sVar . ' $mValue)';
         $sContent.= "\r\n";
-        $sContent.= "\t{\r\n\t\t" . '$this->' . $oProperty->get_key() . '[] = $mValue;';
+        $sContent.= "\t{\r\n";
+
+        $sContent.= "\t\t" . '$oDTValue = DTValue::create()->set_mValue($this->' . $oProperty->get_key() . '); ' . "\n";
+        (true === $this->bCreateEvents) ? $sContent.= "\t\t\MVC\Event::run('" . $sClassName . ".add_" . $oProperty->get_key() . ".before', " . '$oDTValue' . ");" . "\r\n" : false; $sContent.="\r\n";
+
+        $sContent.= "\t\t" . '$this->' . $oProperty->get_key() . '[] = $mValue;';
         $sContent.= "\r\n";
         $sContent.= "\r\n\t\treturn " . '$this;';
         $sContent.= "\r\n\t}\r\n\r\n";

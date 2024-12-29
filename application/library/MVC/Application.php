@@ -38,7 +38,7 @@ class Application
         Cache::init();
 
 		// add a CLI wrapper to enable requests from command line
-		if (true === Request::isCli())
+		if (true === Config::get_MVC_CLI())
         {
             self::cliWrapper();
         }

@@ -181,8 +181,8 @@ class InfoTool
         $aConstants = get_defined_constants (true);
         $aToolbar['aConstant'] = self::buildMarkupListTree($aConstants['user']);
         $aToolbar['aServer'] = self::buildMarkupListTree($_SERVER);
-        $aToolbar['sPathParam'] = self::buildMarkupListTree(Request::getPathParam());
-        $aToolbar['aPathParam'] = Request::getPathParam();
+        $aToolbar['sPathParam'] = self::buildMarkupListTree(Request2::in()->get_pathParamArray());
+        $aToolbar['aPathParam'] = Request2::in()->get_pathParamArray();
         $aToolbar['aEvent'] = Config::get_MVC_EVENT();
         $aToolbar['aEventBIND'] = self::buildMarkupListTree($aToolbar['aEvent']['BIND']);
         $aToolbar['aEventBINDNAME'] = self::buildMarkupListTree(Event::$aEvent);
@@ -190,7 +190,7 @@ class InfoTool
 
         $aToolbar['aEventDELETE'] = (false === empty(get($aToolbar['aEvent']['DELETE'], array()))) ? self::buildMarkupListTree($aToolbar['aEvent']['DELETE']) : array();
         $aToolbar['aRouting'] = array(
-            'aRequest' => Request::getCurrentRequest()->getPropertyArray(),
+            'aRequest' => Request2::in()->getPropertyArray(),
             'sModule' => Route::getCurrent()->get_module(),
             'sController' => Route::getCurrent()->get_c(),
             'sMethod' => Route::getCurrent()->get_method(),
@@ -199,8 +199,8 @@ class InfoTool
             'aRoute' => self::buildMarkupListTree(array_keys(Route::$aRoute)),
         );
 
-        $aToolbar['sRoutingPath'] = Request::getCurrentRequest()->get_path();
-        $aToolbar['sRoutingQuery'] = Request::getCurrentRequest()->get_query(); # (isset(Request::getCurrentRequest()->get_query())) ? Request::getCurrentRequest()['query'] : '';
+        $aToolbar['sRoutingPath'] = Request2::in()->get_path();
+        $aToolbar['sRoutingQuery'] = Request2::in()->get_query(); # (isset(Request2::in()->get_query())) ? Request2::in()['query'] : '';
 
         $aToolbar['aPolicy']['aRule'] = self::buildMarkupListTree(Policy::getRules());
         $aPolicy = Policy::getRulesApplied();

@@ -28,8 +28,9 @@ class Index
      */
     public static function requestMethodHasToMatchRouteMethod ()
     {
+        
         $oDTArrayObject = DTArrayObject::create()
-            ->add_aKeyValue(DTKeyValue::create()->set_sKey('sRequestmethod')->set_sValue(\MVC\Request::getCurrentRequest()->get_requestmethod()))
+            ->add_aKeyValue(DTKeyValue::create()->set_sKey('sRequestmethod')->set_sValue(\MVC\Request2::in()->get_requestMethod()))
             ->add_aKeyValue(DTKeyValue::create()->set_sKey('aMethodsAssigned')->set_sValue(\MVC\Route::getCurrent()->get_methodsAssigned()))
             ->add_aKeyValue(DTKeyValue::create()->set_sKey('bGrant')->set_sValue(false))
             ->add_aKeyValue(DTKeyValue::create()->set_sKey('sMessage')->set_sValue('access denied'))
@@ -37,7 +38,7 @@ class Index
             ->add_aKeyValue(DTKeyValue::create()->set_sKey('sRedirect')->set_sValue('/404/'))
             ->add_aKeyValue(DTKeyValue::create()->set_sKey('sClosure')->set_sValue(
                 function(\MVC\DataType\DTArrayObject $oDTArrayObject) {
-                    \MVC\Request::redirect($oDTArrayObject->getDTKeyValueByKey('sRedirect')->get_sValue());
+                    \MVC\RequestHelper::redirect($oDTArrayObject->getDTKeyValueByKey('sRedirect')->get_sValue());
                 }
             ))
         ;
@@ -48,7 +49,7 @@ class Index
             '*' === \MVC\Route::getCurrent()->get_method()
             OR
             // Request and Route methods do match
-            true === in_array(\MVC\Request::getCurrentRequest()->get_requestmethod(), \MVC\Route::getCurrent()->get_methodsAssigned(), true)
+            true === in_array(\MVC\Request2::in()->get_requestMethod(), \MVC\Route::getCurrent()->get_methodsAssigned(), true)
         )
         {
             $oDTArrayObject->setDTKeyValueByKey(DTKeyValue::create()->set_sKey('bGrant')->set_sValue(true));

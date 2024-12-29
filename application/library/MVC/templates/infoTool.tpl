@@ -273,13 +273,13 @@ Config::MODULE('{MVC\Config::get_MVC_MODULE_PRIMARY_NAME()}')['SESSION']</pre>
 				</div>
 				<div class="subtab22">
 					<h6>Current Request Object</h6>
-					<pre>{MVC\Request::getCurrentRequest()|@print_r:true}</pre>
-					<pre>Request::getCurrentRequest()</pre>
+					<pre>{MVC\Request2::in()|@print_r:true}</pre>
+					<pre>Request2::in()</pre>
 					<br>
 
 					<h6>Path <small>requested</small><a id="myMvcToolbar_Path"></a> </h6>
 					<code>{$aToolbar.sRoutingPath|escape:"htmlall":"UTF-8"}</code>
-					<pre>Request::getCurrentRequest()->get_path()</pre>
+					<pre>Request2::in()->get_path()</pre>
 
 					<h6>Path Param Array</h6>
 					<code>
@@ -289,8 +289,8 @@ Config::MODULE('{MVC\Config::get_MVC_MODULE_PRIMARY_NAME()}')['SESSION']</pre>
 							{$aToolbar.sPathParam}
 						{/if}
 					</code>
-					<pre>Request::getPathParam();
-Request::getPathParam( $sKey )</pre>
+					<pre>Request2::in()->get_pathParamArray();
+Request2::in()->get_pathParamArray()[ $sKey ]</pre>
 
 					<h6>Query <small>requested</small><a id="myMvcToolbar_Query"></a> </h6>
 					<code>
@@ -300,7 +300,7 @@ Request::getPathParam( $sKey )</pre>
 							{$aToolbar.sRoutingQuery|unescape:"url"|escape:"htmlall":"UTF-8"}
 						{/if}
 					</code>
-					<pre>Request::getCurrentRequest()->get_query()</pre>
+					<pre>Request2::in()->get_query()</pre>
 					<br>
 				</div>
 

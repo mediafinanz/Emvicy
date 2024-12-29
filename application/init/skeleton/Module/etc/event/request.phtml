@@ -30,7 +30,7 @@
                 return false;
             }
 
-            /** @var \MVC\DataType\DTRequestCurrent $oDTRequestCurrent */
+            /** @var \MVC\DataType\DTRequestIn $oDTRequestCurrent */
             $oDTRequestCurrent = $oDTArrayObject->flatten()['oDTRequestCurrent'];
 
             \MVC\Log::write($oDTRequestCurrent, \MVC\Config::get_MVC_LOG_FILE_REQUEST());

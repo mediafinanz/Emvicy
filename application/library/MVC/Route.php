@@ -290,8 +290,8 @@ class Route
     public static function getCurrent() : DTRoute
     {
         // Request
-        $sPath = Request::getCurrentRequest()->get_path();
-        $sRequestMethod = Request::getCurrentRequest()->get_requestmethod();
+        $sPath = Request2::in()->get_path();
+        $sRequestMethod = Request2::in()->get_requestMethod();
 
         // Path 1:1 Match; e.g: /foo/bar/
         if (!is_null(get(self::$aMethodRoute[$sRequestMethod][$sPath]))) # concrete
@@ -347,7 +347,7 @@ class Route
             if (true === str_starts_with($sPath, $sIndexCutOff))
             {
                 $aPathParam['_tail'] = substr($sPath, strlen($sIndexCutOff));
-                Request::setPathParam($aPathParam);
+                self::setPathParam($aPathParam);
 
                 return (string) $sIndex;
             }
@@ -413,7 +413,7 @@ class Route
                 // now check if path and route do match
                 if ($sPath === $sRoute && $iLengthPath >= $iLengthRoute)
                 {
-                    (false === empty($aPathParam)) ? Request::setPathParam($aPathParam) : false;
+                    (false === empty($aPathParam)) ? self::setPathParam($aPathParam) : false;
 
                     return $sValue;
                 }
@@ -442,7 +442,7 @@ class Route
         Event::run (
             'mvc.route.handleFallback.after',
             DTArrayObject::create()
-                ->add_aKeyValue(DTKeyValue::create()->set_sKey('sRequest')->set_sValue(Request::getServerRequestUri()))
+                ->add_aKeyValue(DTKeyValue::create()->set_sKey('sRequest')->set_sValue(Request2::in()->get_requestUri()))
                 ->add_aKeyValue(DTKeyValue::create()->set_sKey('sForward')->set_sValue($sIndex))
         );
 
@@ -508,5 +508,23 @@ class Route
         }
 
         return $aTag;
+    }
+
+    /**
+     * @param array $aPathParam
+     * @return void
+     * @throws \ReflectionException
+     */
+    private static function setPathParam(array $aPathParam = array()) : void
+    {
+        Registry::set('aPathParam', $aPathParam);
+
+        (true === Registry::isRegistered('oDTRequestIn'))
+            ? $oDTRequestIn = Registry::get('oDTRequestIn')
+            : $oDTRequestIn = Request2::in()
+        ;
+
+        $oDTRequestIn->set_pathParamArray($aPathParam);
+        Registry::set('oDTRequestIn', $oDTRequestIn);
     }
 }

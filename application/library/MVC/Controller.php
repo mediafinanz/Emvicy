@@ -59,7 +59,7 @@ class Controller
                         . "Documentation\nhttps://emvicy.ueffing.net/\n\n"
             ;
 
-            if (true === Request::isHttp())
+            if (false === Config::get_MVC_CLI())
             {
                 $sMessage = nl2br($sMessage);
             }

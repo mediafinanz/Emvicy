@@ -18,7 +18,7 @@
             $sMessage = $oDTArrayObject->getDTKeyValueByKey('sMethod')->get_sValue()
                         . ', ' . ((true === $oDTArrayObject->getDTKeyValueByKey('bGrant')->get_sValue()) ? 'ALLOW' : 'DENY') . ', '
                         . 'Has to be: '. implode('|',\MVC\Route::getCurrent()->get_methodsAssigned())
-                        . ' - Is: ' . \MVC\Request::getCurrentRequest()->get_requestmethod();
+                        . ' - Is: ' . \MVC\Request2::in()->get_requestMethod();
 
             // write message back to object
             $oDTArrayObject->setDTKeyValueByKey(
@@ -31,8 +31,8 @@
             {
                 // log request
                 \MVC\Log::write(
-                    \MVC\Request::getCurrentRequest()->get_path()
-                    . ' (' . \MVC\Request::getCurrentRequest()->get_requestmethod() . ') => '
+                    \MVC\Request2::in()->get_path()
+                    . ' (' . \MVC\Request2::in()->get_requestMethod() . ') => '
                     . \MVC\Route::getCurrent()->get_method() . ' '
                     . \MVC\Route::getCurrent()->get_path(),
                     \MVC\Config::get_MVC_LOG_FILE_POLICY(),

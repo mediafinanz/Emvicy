@@ -236,8 +236,8 @@ class Debug
                 ->set_sKey('bOccurrence')
                 ->set_sValue($bShowWhereStop)));
 
-        (true === Request::isCli()) && Config::get_MVC_MODULE_PRIMARY_VIEW()::$bRender = false;
-        exit ();
+        (true === Config::get_MVC_CLI()) && Config::get_MVC_MODULE_PRIMARY_VIEW()::$bRender = false;
+        exit();
     }
 
     /**

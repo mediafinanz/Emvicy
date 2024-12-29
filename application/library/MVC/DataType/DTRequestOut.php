@@ -8,7 +8,7 @@ namespace MVC\DataType;
 use MVC\DataType\DTValue;
 use MVC\MVCTrait\TraitDataType;
 
-class DTRequestDo
+class DTRequestOut
 {
 	use TraitDataType;
 
@@ -45,13 +45,13 @@ class DTRequestDo
 	protected $aOption;
 
 	/**
-	 * DTRequestDo constructor.
+	 * DTRequestOut constructor.
 	 * @param DTValue $oDTValue
 	 * @throws \ReflectionException 
 	 */
 	protected function __construct(DTValue $oDTValue)
 	{
-		\MVC\Event::run('DTRequestDo.__construct.before', $oDTValue);
+		\MVC\Event::run('DTRequestOut.__construct.before', $oDTValue);
 		$aData = $oDTValue->get_mValue();
 
 		$this->eRequestMethod = null;
@@ -62,21 +62,21 @@ class DTRequestDo
 		$this->setProperties($oDTValue);
 
 		$oDTValue = DTValue::create()->set_mValue($aData); 
-		\MVC\Event::run('DTRequestDo.__construct.after', $oDTValue);
+		\MVC\Event::run('DTRequestOut.__construct.after', $oDTValue);
 	}
 
     /**
      * @param array|null $aData
-     * @return DTRequestDo
+     * @return DTRequestOut
      * @throws \ReflectionException
      */
     public static function create(?array $aData = array())
     {            
         (null === $aData) ? $aData = array() : false;
         $oDTValue = DTValue::create()->set_mValue($aData);
-		\MVC\Event::run('DTRequestDo.create.before', $oDTValue);
+		\MVC\Event::run('DTRequestOut.create.before', $oDTValue);
 		$oObject = new self($oDTValue);
-        $oDTValue = DTValue::create()->set_mValue($oObject); \MVC\Event::run('DTRequestDo.create.after', $oDTValue);
+        $oDTValue = DTValue::create()->set_mValue($oObject); \MVC\Event::run('DTRequestOut.create.after', $oDTValue);
 
         return $oDTValue->get_mValue();
     }
@@ -109,7 +109,7 @@ class DTRequestDo
 	public function set_eRequestMethod(\MVC\Enum\EnumRequestMethod $mValue)
 	{
 		$oDTValue = DTValue::create()->set_mValue($mValue); 
-		\MVC\Event::run('DTRequestDo.set_eRequestMethod.before', $oDTValue);
+		\MVC\Event::run('DTRequestOut.set_eRequestMethod.before', $oDTValue);
 		$this->eRequestMethod = $oDTValue->get_mValue();
 
 		return $this;
@@ -123,7 +123,7 @@ class DTRequestDo
 	public function set_sUrl(string $mValue)
 	{
 		$oDTValue = DTValue::create()->set_mValue($mValue); 
-		\MVC\Event::run('DTRequestDo.set_sUrl.before', $oDTValue);
+		\MVC\Event::run('DTRequestOut.set_sUrl.before', $oDTValue);
 		$this->sUrl = (string) $oDTValue->get_mValue();
 
 		return $this;
@@ -137,7 +137,8 @@ class DTRequestDo
 	public function set_aHeader(array $mValue)
 	{
 		$oDTValue = DTValue::create()->set_mValue($mValue); 
-		
+		\MVC\Event::run('DTRequestOut.set_aHeader.before', $oDTValue);
+
 		$this->aHeader = $mValue;
 
 		return $this;
@@ -146,9 +147,13 @@ class DTRequestDo
 	/**
 	 * @param array $mValue
 	 * @return $this
+	 * @throws \ReflectionException 
 	 */
 	public function add_aHeader(array $mValue)
 	{
+		$oDTValue = DTValue::create()->set_mValue($this->aHeader); 
+		\MVC\Event::run('DTRequestOut.add_aHeader.before', $oDTValue);
+
 		$this->aHeader[] = $mValue;
 
 		return $this;
@@ -162,7 +167,8 @@ class DTRequestDo
 	public function set_aData(array $mValue)
 	{
 		$oDTValue = DTValue::create()->set_mValue($mValue); 
-		
+		\MVC\Event::run('DTRequestOut.set_aData.before', $oDTValue);
+
 		$this->aData = $mValue;
 
 		return $this;
@@ -171,9 +177,13 @@ class DTRequestDo
 	/**
 	 * @param array $mValue
 	 * @return $this
+	 * @throws \ReflectionException 
 	 */
 	public function add_aData(array $mValue)
 	{
+		$oDTValue = DTValue::create()->set_mValue($this->aData); 
+		\MVC\Event::run('DTRequestOut.add_aData.before', $oDTValue);
+
 		$this->aData[] = $mValue;
 
 		return $this;
@@ -187,7 +197,8 @@ class DTRequestDo
 	public function set_aOption(array $mValue)
 	{
 		$oDTValue = DTValue::create()->set_mValue($mValue); 
-		
+		\MVC\Event::run('DTRequestOut.set_aOption.before', $oDTValue);
+
 		$this->aOption = $mValue;
 
 		return $this;
@@ -196,9 +207,13 @@ class DTRequestDo
 	/**
 	 * @param array $mValue
 	 * @return $this
+	 * @throws \ReflectionException 
 	 */
 	public function add_aOption(array $mValue)
 	{
+		$oDTValue = DTValue::create()->set_mValue($this->aOption); 
+		\MVC\Event::run('DTRequestOut.add_aOption.before', $oDTValue);
+
 		$this->aOption[] = $mValue;
 
 		return $this;
@@ -211,7 +226,7 @@ class DTRequestDo
 	public function get_eRequestMethod() : \MVC\Enum\EnumRequestMethod
 	{
 		$oDTValue = DTValue::create()->set_mValue($this->eRequestMethod); 
-		\MVC\Event::run('DTRequestDo.get_eRequestMethod.before', $oDTValue);
+		\MVC\Event::run('DTRequestOut.get_eRequestMethod.before', $oDTValue);
 
 		return $oDTValue->get_mValue();
 	}
@@ -223,7 +238,7 @@ class DTRequestDo
 	public function get_sUrl() : string
 	{
 		$oDTValue = DTValue::create()->set_mValue($this->sUrl); 
-		\MVC\Event::run('DTRequestDo.get_sUrl.before', $oDTValue);
+		\MVC\Event::run('DTRequestOut.get_sUrl.before', $oDTValue);
 
 		return $oDTValue->get_mValue();
 	}
@@ -235,7 +250,7 @@ class DTRequestDo
 	public function get_aHeader() : array
 	{
 		$oDTValue = DTValue::create()->set_mValue($this->aHeader); 
-		\MVC\Event::run('DTRequestDo.get_aHeader.before', $oDTValue);
+		\MVC\Event::run('DTRequestOut.get_aHeader.before', $oDTValue);
 
 		return $oDTValue->get_mValue();
 	}
@@ -247,7 +262,7 @@ class DTRequestDo
 	public function get_aData() : array
 	{
 		$oDTValue = DTValue::create()->set_mValue($this->aData); 
-		\MVC\Event::run('DTRequestDo.get_aData.before', $oDTValue);
+		\MVC\Event::run('DTRequestOut.get_aData.before', $oDTValue);
 
 		return $oDTValue->get_mValue();
 	}
@@ -259,7 +274,7 @@ class DTRequestDo
 	public function get_aOption() : array
 	{
 		$oDTValue = DTValue::create()->set_mValue($this->aOption); 
-		\MVC\Event::run('DTRequestDo.get_aOption.before', $oDTValue);
+		\MVC\Event::run('DTRequestOut.get_aOption.before', $oDTValue);
 
 		return $oDTValue->get_mValue();
 	}

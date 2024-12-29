@@ -6,9 +6,13 @@
 namespace MVC\DataType;
 
 use MVC\DataType\DTValue;
+use MVC\Debug;
 use MVC\MVCTrait\TraitDataType;
 
-class DTRequestCurrent
+/**
+ * @deprecated
+ */
+class DTRequestIn
 {
 	use TraitDataType;
 
@@ -150,12 +154,15 @@ class DTRequestCurrent
 	}
 
     /**
+     * @deprecated
      * @param array|null $aData
-     * @return DTRequestCurrent
+     * @return DTRequestIn
      * @throws \ReflectionException
      */
     public static function create(?array $aData = array())
-    {            
+    {
+        Debug::stop('this class is @deprecated');
+
         (null === $aData) ? $aData = array() : false;
         $oDTValue = DTValue::create()->set_mValue($aData);
 		\MVC\Event::run('DTRequestCurrent.create.before', $oDTValue);

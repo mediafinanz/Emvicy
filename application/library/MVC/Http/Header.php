@@ -233,7 +233,7 @@ class Header
         $sValue = rawurlencode($sValue);
         $sDate = date('D, d M Y H:i:s \G\M\T', $iExpireUnixTimestamp);
         $sHeader = 'Set-Cookie: ' . $sName . '=' . $sValue . ';';
-        (true === empty($sDomain)) ? $sDomain = Request2::incoming()->get_host() : false;
+        (true === empty($sDomain)) ? $sDomain = Request2::in()->get_host() : false;
 
         (false === empty($iExpireUnixTimestamp))
             ? $sHeader.= 'expires=' . $sDate . '; Max-Age=' . ($iExpireUnixTimestamp - time()) . ';'

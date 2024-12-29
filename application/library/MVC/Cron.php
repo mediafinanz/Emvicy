@@ -6,33 +6,33 @@
 namespace MVC;
 
 use App\Controller;
-use MVC\DataType\DTRequestCurrent;
+use MVC\DataType\DTRequestIn;
 use MVC\DataType\DTRoute;
 
 class Cron extends Controller
 {
     /**
-     * @param \MVC\DataType\DTRequestCurrent $oDTRequestCurrent
-     * @param \MVC\DataType\DTRoute          $oDTRoute
+     * @param \MVC\DataType\DTRequestIn $oDTRequestIn
+     * @param \MVC\DataType\DTRoute     $oDTRoute
      * @throws \ReflectionException
      */
-    public function __construct(DTRequestCurrent $oDTRequestCurrent, DTRoute $oDTRoute)
+    public function __construct(DTRequestIn $oDTRequestIn, DTRoute $oDTRoute)
     {
-        parent::__construct($oDTRequestCurrent, $oDTRoute);
+        parent::__construct($oDTRequestIn, $oDTRoute);
 
-        if (false === Request::isCli())
+        if (false === Config::get_MVC_CLI())
         {
             exit();
         }
     }
 
     /**
-     * @param \MVC\DataType\DTRequestCurrent $oDTRequestCurrent
-     * @param \MVC\DataType\DTRoute          $oDTRoute
+     * @param \MVC\DataType\DTRequestIn $oDTRequestCurrent
+     * @param \MVC\DataType\DTRoute     $oDTRoute
      * @return void
      * @throws \ReflectionException
      */
-    public function run(DTRequestCurrent $oDTRequestCurrent, DTRoute $oDTRoute)
+    public function run(DTRequestIn $oDTRequestCurrent, DTRoute $oDTRoute)
     {
         // maintenance modus
         if (true === file_exists(Config::get_MVC_BASE_PATH() . '/.maintenance'))

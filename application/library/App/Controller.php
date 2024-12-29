@@ -11,7 +11,7 @@
 namespace App;
 
 use MVC\Config;
-use MVC\DataType\DTRequestCurrent;
+use MVC\DataType\DTRequestIn;
 use MVC\DataType\DTRoute;
 use MVC\Event;
 
@@ -29,13 +29,13 @@ class Controller implements \MVC\MVCInterface\Controller
     }
 
     /**
-     * @param \MVC\DataType\DTRequestCurrent $oDTRequestCurrent
-     * @param \MVC\DataType\DTRoute          $oDTRoute
+     * @param \MVC\DataType\DTRequestIn $oDTRequestIn
+     * @param \MVC\DataType\DTRoute     $oDTRoute
      * @throws \ReflectionException
      */
-    public function __construct(DTRequestCurrent $oDTRequestCurrent, DTRoute $oDTRoute)
+    public function __construct(DTRequestIn $oDTRequestIn, DTRoute $oDTRoute)
     {
-        Event::run('app.controller.__construct.before', $oDTRequestCurrent);
+        Event::run('app.controller.__construct.before', $oDTRequestIn);
 
         // get .version of Emvicy Framework
         mvcStoreEnv(realpath(Config::get_MVC_APPLICATION_PATH() . '/../') . '/.version');

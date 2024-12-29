@@ -13,7 +13,7 @@
  */
 namespace  MVC\MVCInterface;
 
-use MVC\DataType\DTRequestCurrent;
+use MVC\DataType\DTRequestIn;
 use MVC\DataType\DTRoute;
 
 /**
@@ -29,10 +29,10 @@ interface Controller
 	public static function __preconstruct();
 
     /**
-     * @param \MVC\DataType\DTRequestCurrent $oDTRequestCurrent
-     * @param \MVC\DataType\DTRoute          $oDTRoute
+     * @param \MVC\DataType\DTRequestIn $oDTRequestIn
+     * @param \MVC\DataType\DTRoute     $oDTRoute
      */
-	public function __construct(DTRequestCurrent $oDTRequestCurrent, DTRoute $oDTRoute);
+	public function __construct(DTRequestIn $oDTRequestIn, DTRoute $oDTRoute);
 	
 	/**
 	 * Destructor
