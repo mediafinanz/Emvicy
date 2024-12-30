@@ -103,6 +103,9 @@ class DataType
             // Constant
             if (isset($aDTClass['constant']) && !empty($aDTClass['constant']))
             {
+                // sort
+                usort($aDTClass['constant'], function ($a, $b) {return $a['key'] <=> $b['key'];});
+
                 foreach ($aDTClass['constant'] as $aConstant)
                 {
                     $oDTDataTypeGeneratorConstant = DTConstant::create();

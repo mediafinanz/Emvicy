@@ -113,15 +113,6 @@ class Log
      */
     public static function write(mixed $mMessage, string $sLogfile = '', bool $bNewline = true) : void
     {
-        $sMessage = self::prepareMessage(
-            $mMessage,
-            self::prepareDebug(debug_backtrace(limit: 2))
-        );
-
-        (false == $bNewline && false == Config::get_MVC_LOG_FORCE_LINEBREAK())
-            ? $sMessage = str_replace("\n", '\n', $sMessage) . "\n"
-            : false;
-
         $sLogfile = self::prepareLogfile($sLogfile);
 
         if (true === empty($sLogfile)) {return;}
@@ -136,6 +127,16 @@ class Log
         if ($sLogfile === Config::get_MVC_LOG_FILE_REQUEST() && false === Config::get_MVC_LOG_REQUEST()) {return;}
         if ($sLogfile === Config::get_MVC_LOG_FILE_DEFAULT() && false === Config::get_MVC_LOG_DEFAULT()) {return;}
         if ($sLogfile === Config::get_MVC_LOG_FILE_ROUTEINTERVALL() && false === Config::get_MVC_LOG_ROUTEINTERVALL()) {return;}
+        if ($sLogfile === Config::get_MVC_LOG_FILE_PROCESS() && false === Config::get_MVC_LOG_PROCESS()) {return;}
+
+        $sMessage = self::prepareMessage(
+            $mMessage,
+            self::prepareDebug(debug_backtrace(limit: 2))
+        );
+
+        (false == $bNewline && false == Config::get_MVC_LOG_FORCE_LINEBREAK())
+            ? $sMessage = str_replace("\n", '\n', $sMessage) . "\n"
+            : false;
 
         file_put_contents(
             $sLogfile,

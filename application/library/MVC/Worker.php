@@ -73,7 +73,7 @@ class Worker
                 // No free processes
                 if (0 === $iAmountProcessesAvailable)
                 {
-                    Process::pause(iSeconds: 3, sText: "\t· keine weiteren Prozesse frei");
+                    Process::pause(iSeconds: 3, sPreText: "\t· keine weiteren Prozesse frei");
                     $iProcessCounter = 0;
                 }
                 // Process free; processing can take place
@@ -106,7 +106,7 @@ class Worker
 
                 if ($iProcessCounter === $iMaxProcessesParallel)
                 {
-                    Process::pause(iSeconds: 3, sText: "\t· max Amount of Processes reached: " . $iMaxProcessesParallel);
+                    Process::pause(iSeconds: 3, sPreText: "\t· max Amount of Processes reached: " . $iMaxProcessesParallel);
                     $iProcessCounter = 0;
                 }
 

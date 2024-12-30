@@ -5,8 +5,8 @@
  * - add a doctype to each static property
  * - these doctypes must contain the vartype information about the certain class
  * @example
- *      @var Foo\Model\Table\User
- *      public static $oFooModelTableUser;
+ *      @var {module}\Model\Table\Example
+ *      public static $oFooModelTableExample;
  * ---
  * [!]  it is important to declare the vartype expanded with a full path
  *      avoid to make use of `use ...` support
@@ -25,13 +25,23 @@ class DB extends DbInit
 {
     use DbInitTrait;
 
-    /**
-     * @var \{module}\Model\Table\Group
+    /*
+     * To instantiate all DTTables:
+     * It is sufficient to read all properties once with `get_object_vars($oDB)`.
      */
-    #public static $o{module}ModelTableGroup;
 
     /**
-     * @var \{module}\Model\Table\User
+     * @var \App\Table\Queue
      */
-    #public static $o{module}ModelTableUser;
+    public $oAppTableQueue {get => $this->activate(__PROPERTY__);}
+
+    /**
+     * @var \App\Table\User
+     */
+    public $oAppTableUser {get => $this->activate(__PROPERTY__);}
+
+    /**
+     * @var \App\Table\Group
+     */
+    public $oAppTableGroup {get => $this->activate(__PROPERTY__);}
 }

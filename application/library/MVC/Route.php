@@ -60,171 +60,216 @@ class Route
 
     /**
      * @param string $sPath
-     * @param string $sQuery
+     * @param string $sClassMethod
      * @param mixed  $mOptional
      * @param string $sTag
      * @return void
      * @throws \ReflectionException
      */
-    public static function any(string $sPath = '', string $sQuery = '', mixed $mOptional = '', string $sTag = '') : void
+    public static function any(string $sPath = '', string $sClassMethod = '', mixed $mOptional = '', string $sTag = '') : void
     {
-        self::add('*', $sPath, $sQuery, $mOptional, $sTag);
+        self::add('*', $sPath, $sClassMethod, $mOptional, $sTag);
     }
 
     /**
      * @param array  $aMethod
      * @param string $sPath
-     * @param string $sQuery
+     * @param string $sClassMethod
      * @param mixed  $mOptional
      * @param string $sTag
      * @return void
      * @throws \ReflectionException
      */
-    public static function mix(array $aMethod = array(), string $sPath = '', string $sQuery = '', mixed $mOptional = '', string $sTag = '') : void
+    public static function mix(array $aMethod = array(), string $sPath = '', string $sClassMethod = '', mixed $mOptional = '', string $sTag = '') : void
     {
         foreach ($aMethod as $sMethod)
         {
-            self::add(strtoupper($sMethod), $sPath, $sQuery, $mOptional, $sTag);
+            self::add(strtoupper($sMethod), $sPath, $sClassMethod, $mOptional, $sTag);
         }
     }
 
     /**
      * @param string $sPath
-     * @param string $sQuery
+     * @param string $sClassMethod
      * @param mixed  $mOptional
      * @param string $sTag
      * @return void
      * @throws \ReflectionException
      */
-    public static function get(string $sPath = '', string $sQuery = '', mixed $mOptional = '', string $sTag = '') : void
+    public static function get(string $sPath = '', string $sClassMethod = '', mixed $mOptional = '', string $sTag = '') : void
     {
-        self::add('GET', $sPath, $sQuery, $mOptional, $sTag);
+        self::add('GET', $sPath, $sClassMethod, $mOptional, $sTag);
     }
 
     /**
      * @param string $sPath
-     * @param string $sQuery
+     * @param string $sClassMethod
      * @param mixed  $mOptional
      * @param string $sTag
      * @return void
      * @throws \ReflectionException
      */
-    public static function post(string $sPath = '', string $sQuery = '', mixed $mOptional = '', string $sTag = '') : void
+    public static function post(string $sPath = '', string $sClassMethod = '', mixed $mOptional = '', string $sTag = '') : void
     {
-        self::add('POST', $sPath, $sQuery, $mOptional, $sTag);
+        self::add('POST', $sPath, $sClassMethod, $mOptional, $sTag);
     }
 
     /**
      * @param string $sPath
-     * @param string $sQuery
+     * @param string $sClassMethod
      * @param mixed  $mOptional
      * @param string $sTag
      * @return void
      * @throws \ReflectionException
      */
-    public static function put(string $sPath = '', string $sQuery = '', mixed $mOptional = '', string $sTag = '') : void
+    public static function put(string $sPath = '', string $sClassMethod = '', mixed $mOptional = '', string $sTag = '') : void
     {
-        self::add('PUT', $sPath, $sQuery, $mOptional, $sTag);
+        self::add('PUT', $sPath, $sClassMethod, $mOptional, $sTag);
     }
 
     /**
      * @param string $sPath
-     * @param string $sQuery
+     * @param string $sClassMethod
      * @param mixed  $mOptional
      * @param string $sTag
      * @return void
      * @throws \ReflectionException
      */
-    public static function patch(string $sPath = '', string $sQuery = '', mixed $mOptional = '', string $sTag = '') : void
+    public static function patch(string $sPath = '', string $sClassMethod = '', mixed $mOptional = '', string $sTag = '') : void
     {
-        self::add('PATCH', $sPath, $sQuery, $mOptional, $sTag);
+        self::add('PATCH', $sPath, $sClassMethod, $mOptional, $sTag);
     }
 
     /**
      * @param string $sPath
-     * @param string $sQuery
+     * @param string $sClassMethod
      * @param mixed  $mOptional
      * @param string $sTag
      * @return void
      * @throws \ReflectionException
      */
-    public static function options(string $sPath = '', string $sQuery = '', mixed $mOptional = '', string $sTag = '') : void
+    public static function options(string $sPath = '', string $sClassMethod = '', mixed $mOptional = '', string $sTag = '') : void
     {
-        self::add('OPTIONS', $sPath, $sQuery, $mOptional, $sTag);
+        self::add('OPTIONS', $sPath, $sClassMethod, $mOptional, $sTag);
     }
 
     /**
      * @param string $sPath
-     * @param string $sQuery
+     * @param string $sClassMethod
      * @param mixed  $mOptional
      * @param string $sTag
      * @return void
      * @throws \ReflectionException
      */
-    public static function delete(string $sPath = '', string $sQuery = '', mixed $mOptional = '', string $sTag = ''): void
+    public static function delete(string $sPath = '', string $sClassMethod = '', mixed $mOptional = '', string $sTag = ''): void
     {
-        self::add('DELETE', $sPath, $sQuery, $mOptional, $sTag);
+        self::add('DELETE', $sPath, $sClassMethod, $mOptional, $sTag);
     }
 
     /**
-     * @param string $sMethod
+     * @param string $sRequestMethod
      * @param string $sPath
-     * @param string $sQuery
+     * @param string $sClassMethod
      * @param mixed  $mOptional
      * @param string $sTag
      * @return void
      * @throws \ReflectionException
      */
-    protected static function add(string $sMethod = '*', string $sPath = '', string $sQuery = '', mixed $mOptional = '', string $sTag = '') : void
+    protected static function add(string $sRequestMethod = '*', string $sPath = '', string $sClassMethod = '', mixed $mOptional = '', string $sTag = '') : void
     {
-        $sMethodOrigin = $sMethod;
-        parse_str(get($sQuery), $aQuery);
+        $sClassMethodOrigin = $sClassMethod;
+
+        #-----------
+
+        $sRequestMethodOrigin = $sRequestMethod;
+        parse_str(get($sClassMethod), $aQuery);
 
         // allows schema '\Foo\Controller\Api::bar' next to 'module=Foo&c=Api&m=bar'
         if (null === get($aQuery['m']))
         {
             $aQuery = array();
-            list($aQuery[Config::get_MVC_ROUTE_QUERY_PARAM_MODULE()], $sTmp, $aQuery[Config::get_MVC_ROUTE_QUERY_PARAM_C()]) = array_values(array_filter(explode('\\', strtok($sQuery, ':'))));
-            $aQuery[Config::get_MVC_ROUTE_QUERY_PARAM_M()] = substr($sQuery, (strrpos($sQuery, ':') + 1));
-            $sQuery = 'module=' . $aQuery[Config::get_MVC_ROUTE_QUERY_PARAM_MODULE()] .'&c=' . $aQuery[Config::get_MVC_ROUTE_QUERY_PARAM_C()] . '&m=' . $aQuery[Config::get_MVC_ROUTE_QUERY_PARAM_M()];
+            list($aQuery[Config::get_MVC_ROUTE_QUERY_PARAM_MODULE()], $sTmp, $aQuery[Config::get_MVC_ROUTE_QUERY_PARAM_C()]) = array_values(array_filter(explode('\\', strtok($sClassMethod, ':'))));
+            $aQuery[Config::get_MVC_ROUTE_QUERY_PARAM_M()] = substr($sClassMethod, (strrpos($sClassMethod, ':') + 1));
+            $sClassMethod = 'module=' . $aQuery[Config::get_MVC_ROUTE_QUERY_PARAM_MODULE()] . '&c=' . $aQuery[Config::get_MVC_ROUTE_QUERY_PARAM_C()] . '&m=' . $aQuery[Config::get_MVC_ROUTE_QUERY_PARAM_M()];
         }
 
         $sClass = ucfirst(get($aQuery[Config::get_MVC_ROUTE_QUERY_PARAM_MODULE()], '')) . '\\Controller\\' . ucfirst(get($aQuery[Config::get_MVC_ROUTE_QUERY_PARAM_C()], ''));
-        $aMethodAssigned = array(strtoupper($sMethod));
+        $aRequestMethodAssigned = array(strtoupper($sRequestMethod));
 
         if (isset(self::$aRoute[$sPath]))
         {
-            $aMethodAssigned = self::$aRoute[$sPath]->get_methodsAssigned();
+            $aRequestMethodAssigned = self::$aRoute[$sPath]->get_methodsAssigned();
 
-            if (false === in_array($sMethod, $aMethodAssigned, true))
+            if (false === in_array($sRequestMethod, $aRequestMethodAssigned, true))
             {
                 array_push(
-                    $aMethodAssigned,
-                    $sMethod
+                    $aRequestMethodAssigned,
+                    $sRequestMethod
                 );
             }
         }
 
         // tag
-        ((true === empty($sTag)) ? $sTag = Strings::seofy((('*' === $sMethodOrigin) ? 'any' : $sMethodOrigin) . '.' . $sPath) : false);
-        ((true === empty($sTag)) ? $sTag = Strings::seofy((('*' === $sMethodOrigin) ? 'any' : $sMethodOrigin) . '.' . $sClass . '-' . $aQuery[Config::get_MVC_ROUTE_QUERY_PARAM_M()] . '-' . implode('-', $aMethodAssigned)) : false);
+        ((true === empty($sTag)) ? $sTag = Strings::seofy((('*' === $sRequestMethodOrigin) ? 'any' : $sRequestMethodOrigin) . '.' . $sPath) : false);
+        ((true === empty($sTag)) ? $sTag = Strings::seofy((('*' === $sRequestMethodOrigin) ? 'any' : $sRequestMethodOrigin) . '.' . $sClass . '-' . $aQuery[Config::get_MVC_ROUTE_QUERY_PARAM_M()] . '-' . implode('-', $aRequestMethodAssigned)) : false);
+
+//        display($sClassMethodOrigin);
+//        display($sClassMethod);
 
         $oDTRoute = DTRoute::create()
             ->set_path($sPath)
-            ->set_method(strtoupper($sMethodOrigin))
-            ->set_methodsAssigned($aMethodAssigned)
-            ->set_query($sQuery)
-            ->set_class($sClass)
-            ->set_classFile(Config::get_MVC_MODULES_DIR() . '/' . str_replace ('\\', '/', $sClass) . '.php')
-            ->set_module(get($aQuery[Config::get_MVC_ROUTE_QUERY_PARAM_MODULE()]))
-            ->set_c(get($aQuery[Config::get_MVC_ROUTE_QUERY_PARAM_C()]))
-            ->set_m(get($aQuery[Config::get_MVC_ROUTE_QUERY_PARAM_M()]))
+            ->set_method(strtoupper($sRequestMethodOrigin))
+            ->set_methodsAssigned($aRequestMethodAssigned)
+
+            #->set_class($sClass)
+            ->set_class(strtok($sClassMethodOrigin,'::'))
+
+            #->set_classFile(Config::get_MVC_MODULES_DIR() . '/' . str_replace ('\\', '/', $sClass) . '.php')
+            ->set_classFile(Config::get_MVC_MODULES_DIR() . str_replace ('\\', '/', strtok($sClassMethodOrigin,'::')) . '.php')
+
+            ->set_query($sClassMethod)
+            #->set_query($sClassMethodOrigin)
+
+            ->set_module(get($aQuery[Config::get_MVC_ROUTE_QUERY_PARAM_MODULE()], ''))
+            ->set_c(get($aQuery[Config::get_MVC_ROUTE_QUERY_PARAM_C()], ''))
+
+            #->set_m(get($aQuery[Config::get_MVC_ROUTE_QUERY_PARAM_M()], ''))
+            ->set_m(substr($sClassMethodOrigin, (strrpos($sClassMethodOrigin, ':') + 1)))
+
             ->set_additional($mOptional)
             ->set_tag($sTag)
         ;
+//        /*
+//         * overwrite during development
+//         */
+//        if (stristr($sPath, 'example'))
+//        {
+////            display($sClassMethodOrigin);
+////            display( # class
+////                strtok($sClassMethodOrigin,'::')
+////            );
+////            display( # method
+////                substr($sClassMethodOrigin, (strrpos($sClassMethodOrigin, ':') + 1))
+////            );
+////            $oDTRoute->set_class(
+////                strtok($sClassMethodOrigin,'::')
+////            );
+////            $oDTRoute->set_classFile(
+////                Config::get_MVC_MODULES_DIR() . str_replace ('\\', '/', strtok($sClassMethodOrigin,'::')) . '.php'
+////            );
+//            $oDTRoute->set_m(
+//                substr($sClassMethodOrigin, (strrpos($sClassMethodOrigin, ':') + 1))
+//            );
+//            info(
+//                $oDTRoute
+//            );
+//        }
+
         self::$aRoute[$sPath] = $oDTRoute;
 
-        foreach ($aMethodAssigned as $sMethodAssigned)
+        #--------------------------
+
+        foreach ($aRequestMethodAssigned as $sMethodAssigned)
         {
             if (false === isset(self::$aMethod[strtolower($sMethodAssigned)]))
             {

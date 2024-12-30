@@ -405,6 +405,30 @@ class Config
     }
 
     /**
+     * @return bool
+     * @throws \ReflectionException
+     */
+    public static function get_MVC_LOG_PROCESS() : bool
+    {
+        if (Registry::isRegistered('MVC_LOG_PROCESS'))
+        {
+            return (boolean) filter_var(Registry::get('MVC_LOG_PROCESS'), FILTER_VALIDATE_BOOLEAN);
+        }
+
+        return true;
+    }
+
+    /**
+     * @param bool $bVar
+     * @return void
+     */
+    public static function set_MVC_LOG_PROCESS(bool $bVar = false) : void
+    {
+        Registry::set('MVC_LOG_PROCESS', $bVar);
+        $GLOBALS['aConfig']['MVC_LOG_PROCESS'] = $bVar;
+    }
+
+    /**
      * @return string
      * @throws \ReflectionException
      */
@@ -1279,6 +1303,30 @@ class Config
     {
         Registry::set('MVC_LOG_FILE_REQUEST', $sLogFileName);
         $GLOBALS['aConfig']['MVC_LOG_FILE_REQUEST'] = $sLogFileName;
+    }
+
+    /**
+     * @return string
+     * @throws \ReflectionException
+     */
+    public static function get_MVC_LOG_FILE_PROCESS() : string
+    {
+        if (Registry::isRegistered('MVC_LOG_FILE_PROCESS'))
+        {
+            return (string) Registry::get('MVC_LOG_FILE_PROCESS');
+        }
+
+        return '';
+    }
+
+    /**
+     * @param string $sLogFileName
+     * @return void
+     */
+    public static function set_MVC_LOG_FILE_PROCESS(string $sLogFileName = '') : void
+    {
+        Registry::set('MVC_LOG_FILE_PROCESS', $sLogFileName);
+        $GLOBALS['aConfig']['MVC_LOG_FILE_PROCESS'] = $sLogFileName;
     }
 
     /**

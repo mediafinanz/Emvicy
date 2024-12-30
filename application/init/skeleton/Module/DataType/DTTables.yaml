@@ -1,0 +1,144 @@
+openapi: 3.0.1
+components:
+  schemas:
+    DTAppTableQueue:
+      type: object
+      properties:
+        id:
+          type: integer
+          default: 0
+        stampChange:
+          type: string
+          default: ''
+        stampCreate:
+          type: string
+          default: ''
+        key:
+          type: string
+          maxLength: 255
+          default: ''
+          description: varchar(255)
+        key2:
+          type: string
+          nullable: true
+          maxLength: 255
+          default: ''
+          description: varchar(255)
+        value:
+          type: string
+          default: ''
+          description: text
+        valueMd5:
+          type: string
+          maxLength: 32
+          default: ''
+          description: varchar(32)
+        expirySeconds:
+          type: integer
+          nullable: true
+          default: ''
+          description: int(10)
+        expiryStamp:
+          type: integer
+          nullable: true
+          default: ''
+          description: int(10)
+        description:
+          type: string
+          nullable: true
+          default: ''
+          description: tinytext
+    DTAppTableUser:
+      type: object
+      properties:
+        id:
+          type: integer
+          default: 0
+        stampChange:
+          type: string
+          default: ''
+        stampCreate:
+          type: string
+          default: ''
+        id_AppTableGroup:
+          type: integer
+          nullable: true
+          default: ''
+          description: int(11)
+        email:
+          type: string
+          maxLength: 255
+          default: ''
+          description: varchar(255)
+        active:
+          type: integer
+          default: 0
+          description: int(1)
+        uuid:
+          type: string
+          maxLength: 36
+          default: ''
+          description: varchar(36)
+        uuidtmp:
+          type: string
+          maxLength: 36
+          default: ''
+          description: varchar(36)
+        password:
+          type: string
+          maxLength: 60
+          default: ''
+          description: varchar(60)
+        nickname:
+          type: string
+          maxLength: 10
+          default: ''
+          description: varchar(10)
+        forename:
+          type: string
+          maxLength: 25
+          default: ''
+          description: varchar(25)
+        lastname:
+          type: string
+          maxLength: 25
+          default: ''
+          description: varchar(25)
+        description:
+          type: string
+          default: ''
+          description: tinytext
+    DTAppTableGroup:
+      type: object
+      properties:
+        id:
+          type: integer
+          default: 0
+        stampChange:
+          type: string
+          default: ''
+        stampCreate:
+          type: string
+          default: ''
+        name:
+          type: string
+          maxLength: 255
+          default: ''
+          description: varchar(255)
+        gid:
+          type: integer
+          default: 0
+          description: int(6)
+        active:
+          type: integer
+          default: 0
+          description: int(1)
+        uuid:
+          type: string
+          maxLength: 36
+          default: ''
+          description: varchar(36)
+        description:
+          type: string
+          default: ''
+          description: tinytext

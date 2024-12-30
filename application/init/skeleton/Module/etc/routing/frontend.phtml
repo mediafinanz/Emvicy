@@ -34,14 +34,12 @@ $oDTRoutingAdditional = \{module}\DataType\DTRoutingAdditional::create()
  */
 \MVC\Route::mix(
     aMethod: ['GET', 'POST'],
-    sPath: '/',
-    sQuery: '\{module}\Controller\Index::index',
+    sPath: '/', sClassMethod: '\{module}\Controller\Index::index',
     mOptional: clone $oDTRoutingAdditional,
     sTag: 'home',
 );
 \MVC\Route::get(
-    sPath: '/404/',
-    sQuery: '\{module}\Controller\Index::notFound',
+    sPath: '/404/', sClassMethod: '\{module}\Controller\Index::notFound',
     mOptional: clone $oDTRoutingAdditional
         ->set_sTitle('404')
         ->set_sContent('Frontend/content/404.tpl'),

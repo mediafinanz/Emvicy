@@ -13,6 +13,7 @@
  */
 namespace MVC\DB\Model;
 
+use MVC\Config;
 use MVC\DataType\DTDBSet;
 use MVC\DataType\DTDBWhere;
 use MVC\DataType\DTDBWhereRelation;
@@ -336,7 +337,7 @@ class Db
      */
     protected function generateDataType() : bool
     {
-        list($sModulename) = explode('\\', get_class($this));
+        $sModulename = Config::get_MVC_MODULE_PRIMARY_NAME();
         $sClassName = $this->getGenerateDataTypeClassName();
 
         $aDTConfig = array(

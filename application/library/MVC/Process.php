@@ -7,21 +7,20 @@ class Process
 {
     /**
      * @param int    $iSeconds
-     * @param string $sText
+     * @param string $sPreText
      * @param bool   $bEchoOut
      * @return void
      */
-    public static function pause(int $iSeconds = 1, string $sText = '', bool $bEchoOut = false)
+    public static function pause(int $iSeconds = 1, string $sPreText = '', bool $bEchoOut = false)
     {
-        if (false === empty($sText) && true === $bEchoOut)
+        $iMaxExecutionTime = ini_get('max_execution_time');
+
+        if (false === empty($sPreText) && true === $bEchoOut)
         {
-            echo $sText . "\n\t" . '…pause… ';
+            echo $sPreText . "\n\t" . ' …pause… ';
         }
 
-        ($iSeconds < 0)
-            ? $iSeconds = 0
-            : (($iSeconds > 60) ? $iSeconds = 60 : false)
-        ;
+        ($iSeconds < 0) ? $iSeconds = 0: false;
 
         for ($i = 0; $i < $iSeconds; $i++)
         {
@@ -46,6 +45,8 @@ class Process
      */
     public static function callRouteAsync(string $sRoute = '')
     {
+        Event::run('mvc.process.callRouteAsync.before', $sRoute);
+
         if (true === empty($sRoute))
         {
             return 0;
@@ -61,7 +62,7 @@ class Process
         $iPid = (int) trim(shell_exec($sCommand));
 
         /** @todo event logging */
-        Log::write('pid: ' . $iPid . "\t" . 'CALL' . "\t" . $sRoute, 'process.log');
+        Event::run('mvc.process.callRouteAsync.after', array('sRoute' => $sRoute, 'iPid' => $iPid));
 
         return $iPid;
     }
@@ -89,7 +90,7 @@ class Process
      */
     public static function getAmountProcessesMax()
     {
-        // Anzahl aller Job Prozesse maximal erlaubt
+        // Maximum number of all job processes allowed
         return (int) Config::get_MVC_PROCESS_MAX_PROCESSES_OVERALL();
     }
 

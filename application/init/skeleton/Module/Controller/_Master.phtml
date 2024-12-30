@@ -1,12 +1,4 @@
 <?php
-/**
- * _Master.php
- *
- * @package Emvicy
- * @copyright ueffing.net
- * @author Guido K.B.W. Üffing <emvicy@ueffing.net>
- * @license GNU GENERAL PUBLIC LICENSE Version 3. See application/doc/COPYING
- */
 
 /**
  * @name ${module}Controller
@@ -14,8 +6,7 @@
 namespace {module}\Controller;
 
 use App\Controller;
-use {module}\Model\DB;
-use MVC\DataType\DTRequestIn;
+    use MVC\DataType\DTRequestIn;
 use MVC\DataType\DTRoute;
 use MVC\MVCTrait\TraitDataType;
 
@@ -59,9 +50,6 @@ class _Master extends Controller
         {
             \{module}\View\Index::init();
         }
-
-        // Init Database
-        DB::init();
     }
 
     public function __destruct()

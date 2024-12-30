@@ -1,12 +1,4 @@
 <?php
-/**
- * Index.php
- *
- * @package Emvicy
- * @copyright ueffing.net
- * @author Guido K.B.W. Üffing <emvicy@ueffing.net>
- * @license GNU GENERAL PUBLIC LICENSE Version 3. See application/doc/COPYING
- */
 
 /**
  * @name ${module}Controller
@@ -48,7 +40,7 @@ class Index extends _Master
      */
 	public function index(DTRequestIn $oDTRequestCurrent, DTRoute $oDTRoute)
 	{
-        view()->autoAssign();
+        \{module}\View\Index::init()->autoAssign();
 	}
 
     /**
@@ -59,8 +51,8 @@ class Index extends _Master
      */
     public function notFound(DTRequestIn $oDTRequestCurrent, DTRoute $oDTRoute)
     {
-        http_response_code(404);
-        view()->autoAssign();
+        \MVC\Http\Status_Not_Found_404::header();
+        \{module}\View\Index::init()->autoAssign();
     }
 
     /**
@@ -69,6 +61,6 @@ class Index extends _Master
      */
     public function __destruct ()
     {
-        view()->render();
+        \{module}\View\Index::init()->render();
     }
 }

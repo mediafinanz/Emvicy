@@ -27,6 +27,7 @@ $aConfig['MVC_LOG_EVENT_RUN'] = false;
 $aConfig['MVC_LOG_ERROR'] = true;               // recommended to set to true for ALL environments
 $aConfig['MVC_LOG_NOTICE'] = true;
 $aConfig['MVC_LOG_POLICY'] = true;
+$aConfig['MVC_LOG_PROCESS'] = true;
 $aConfig['MVC_LOG_WARNING'] = true;
 $aConfig['MVC_LOG_REQUEST'] = true;
 $aConfig['MVC_LOG_DEFAULT'] = true;
@@ -36,8 +37,8 @@ $aConfig['MVC_LOG_FORCE_LINEBREAK'] = true;     // force linebreaks in logfiles 
 $aConfig['MVC_INFOTOOL_ENABLE'] = true;         // recommended to set to true for develop environments only: show InfoTool bar
 
 // take MVC_UNIQUE_ID out of request Header
-$sUniqueId = preg_replace("/[^[:alnum:]]/ui", '', get(array_change_key_case(getallheaders(), CASE_LOWER)['mvc-unique-id']));
-(null !== $sUniqueId) ? $aConfig['MVC_UNIQUE_ID'] = $sUniqueId : false;
+$sUniqueId = preg_replace("/[^[:alnum:]]/ui", '', get(array_change_key_case(getallheaders(), CASE_LOWER)['mvc-unique-id'], ''));
+(false === empty($sUniqueId)) ? $aConfig['MVC_UNIQUE_ID'] = $sUniqueId : false;
 
 
 //######################################################################################################################
@@ -67,5 +68,6 @@ require_once realpath(__DIR__) . '/_function.php';
 require_once realpath(__DIR__) . '/_datatype.php';
 require_once realpath(__DIR__) . '/_session.php';
 require_once realpath(__DIR__) . '/_csp.php';
+require_once realpath(__DIR__) . '/_menu.php';
 require_once realpath(__DIR__) . '/_cron.php';
 

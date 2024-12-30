@@ -403,3 +403,34 @@ function parse_str_clean($querystr, &$arr): array
 
     return $arr;
 }
+
+/**
+ * @return array
+ */
+function phpinfo_array()
+{
+    ob_start();
+    phpinfo();
+    $aInfo = array();
+    $aInfoLine = explode("\n", strip_tags(ob_get_clean(), "<tr><td><h2>"));
+    $sCategory = "General";
+
+    foreach ($aInfoLine as $sLine)
+    {
+        preg_match("~<h2>(.*)</h2>~", $sLine, $sTitle)
+            ? $sCategory = $sTitle[1]
+            : null
+        ;
+
+        if (preg_match("~<tr><td[^>]+>([^<]*)</td><td[^>]+>([^<]*)</td></tr>~", $sLine, $aValue))
+        {
+            $aInfo[$sCategory][$aValue[1]] = $aValue[2];
+        }
+        elseif (preg_match("~<tr><td[^>]+>([^<]*)</td><td[^>]+>([^<]*)</td><td[^>]+>([^<]*)</td></tr>~", $sLine, $aValue))
+        {
+            $aInfo[$sCategory][$aValue[1]] = array("local" => $aValue[2], "master" => $aValue[3]);
+        }
+    }
+
+    return $aInfo;
+}

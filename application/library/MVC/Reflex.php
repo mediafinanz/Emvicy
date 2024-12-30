@@ -42,17 +42,18 @@ class Reflex
                 )
         );
 
-        // Fallback Target
-		if ($sModule == '' && $sClass == '')
-		{
-			parse_str (Config::get_MVC_ROUTING_FALLBACK(), $aParse);
-			$sControllerClassName = '\\' . ucfirst ($aParse[Config::get_MVC_ROUTE_QUERY_PARAM_MODULE()]) . '\\Controller\\' . ucfirst ($aParse[Config::get_MVC_ROUTE_QUERY_PARAM_C()]);
-		}
-		// Regular Target
-		else
-		{
-			$sControllerClassName = '\\' . ucfirst ($sModule) . '\\Controller\\' . ucfirst ($sClass);
-		}
+//        // Fallback Target
+//		if ($sModule == '' && $sClass == '')
+//		{
+//			parse_str (Config::get_MVC_ROUTING_FALLBACK(), $aParse);
+//			$sControllerClassName = '\\' . ucfirst ($aParse[Config::get_MVC_ROUTE_QUERY_PARAM_MODULE()]) . '\\Controller\\' . ucfirst ($aParse[Config::get_MVC_ROUTE_QUERY_PARAM_C()]);
+//		}
+//		// Regular Target
+//		else
+//		{
+//			$sControllerClassName = '\\' . ucfirst ($sModule) . '\\Controller\\' . ucfirst ($sClass);
+//		}
+        $sControllerClassName = $oDTRoute->get_class();
 
 		$sControllerFilename = $oDTRoute->get_classFile();
 

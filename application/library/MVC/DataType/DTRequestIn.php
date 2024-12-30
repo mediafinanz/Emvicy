@@ -14,7 +14,25 @@ class DTRequestIn
 
 	use TraitDataType;
 
-	public const DTHASH = '8e846064051a34b09138e7210aac2d24';
+	public const DTHASH = 'ba46d67729355303434061541b1f1fba';
+
+	/**
+	 * @required false
+	 * @var string
+	 */
+	protected $requestMethod;
+
+	/**
+	 * @required false
+	 * @var string
+	 */
+	protected $full;
+
+	/**
+	 * @required false
+	 * @var string
+	 */
+	protected $protocol;
 
 	/**
 	 * @required false
@@ -26,7 +44,7 @@ class DTRequestIn
 	 * @required false
 	 * @var string
 	 */
-	protected $host;
+	protected $requestUri;
 
 	/**
 	 * @required false
@@ -36,9 +54,21 @@ class DTRequestIn
 
 	/**
 	 * @required false
+	 * @var string
+	 */
+	protected $host;
+
+	/**
+	 * @required false
 	 * @var array
 	 */
 	protected $pathArray;
+
+	/**
+	 * @required false
+	 * @var array
+	 */
+	protected $pathParamArray;
 
 	/**
 	 * @required false
@@ -54,33 +84,27 @@ class DTRequestIn
 
 	/**
 	 * @required false
-	 * @var string
+	 * @var array
 	 */
-	protected $requestUri;
-
-	/**
-	 * @required false
-	 * @var string
-	 */
-	protected $requestMethod;
-
-	/**
-	 * @required false
-	 * @var string
-	 */
-	protected $protocol;
-
-	/**
-	 * @required false
-	 * @var string
-	 */
-	protected $full;
+	protected $headerArray;
 
 	/**
 	 * @required false
 	 * @var string
 	 */
 	protected $input;
+
+	/**
+	 * @required false
+	 * @var string
+	 */
+	protected $ip;
+
+	/**
+	 * @required false
+	 * @var array
+	 */
+	protected $cookieArray;
 
 	/**
 	 * @required false
@@ -101,30 +125,6 @@ class DTRequestIn
 	protected $isHttp;
 
 	/**
-	 * @required false
-	 * @var array
-	 */
-	protected $headerArray;
-
-	/**
-	 * @required false
-	 * @var array
-	 */
-	protected $pathParamArray;
-
-	/**
-	 * @required false
-	 * @var string
-	 */
-	protected $ip;
-
-	/**
-	 * @required false
-	 * @var array
-	 */
-	protected $cookieArray;
-
-	/**
 	 * DTRequestIn constructor.
 	 * @param DTValue $oDTValue
 	 * @throws \ReflectionException 
@@ -134,24 +134,24 @@ class DTRequestIn
 		\MVC\Event::run('DTRequestIn.__construct.before', $oDTValue);
 		$aData = $oDTValue->get_mValue();
 
+		$this->requestMethod = '';
+		$this->full = '';
+		$this->protocol = '';
 		$this->scheme = '';
-		$this->host = '';
+		$this->requestUri = '';
 		$this->path = '';
+		$this->host = '';
 		$this->pathArray = [];
+		$this->pathParamArray = [];
 		$this->query = '';
 		$this->queryArray = [];
-		$this->requestUri = '';
-		$this->requestMethod = '';
-		$this->protocol = '';
-		$this->full = '';
+		$this->headerArray = [];
 		$this->input = '';
+		$this->ip = '';
+		$this->cookieArray = [];
 		$this->isSecure = false;
 		$this->isCli = false;
 		$this->isHttp = false;
-		$this->headerArray = [];
-		$this->pathParamArray = [];
-		$this->ip = '';
-		$this->cookieArray = [];
 		$this->setProperties($oDTValue);
 
 		$oDTValue = DTValue::create()->set_mValue($aData); 
@@ -199,6 +199,48 @@ class DTRequestIn
 	 * @return $this
 	 * @throws \ReflectionException
 	 */
+	public function set_requestMethod(string $mValue)
+	{
+		$oDTValue = DTValue::create()->set_mValue($mValue); 
+		\MVC\Event::run('DTRequestIn.set_requestMethod.before', $oDTValue);
+		$this->requestMethod = (string) $oDTValue->get_mValue();
+
+		return $this;
+	}
+
+	/**
+	 * @param string $mValue 
+	 * @return $this
+	 * @throws \ReflectionException
+	 */
+	public function set_full(string $mValue)
+	{
+		$oDTValue = DTValue::create()->set_mValue($mValue); 
+		\MVC\Event::run('DTRequestIn.set_full.before', $oDTValue);
+		$this->full = (string) $oDTValue->get_mValue();
+
+		return $this;
+	}
+
+	/**
+	 * @param string $mValue 
+	 * @return $this
+	 * @throws \ReflectionException
+	 */
+	public function set_protocol(string $mValue)
+	{
+		$oDTValue = DTValue::create()->set_mValue($mValue); 
+		\MVC\Event::run('DTRequestIn.set_protocol.before', $oDTValue);
+		$this->protocol = (string) $oDTValue->get_mValue();
+
+		return $this;
+	}
+
+	/**
+	 * @param string $mValue 
+	 * @return $this
+	 * @throws \ReflectionException
+	 */
 	public function set_scheme(string $mValue)
 	{
 		$oDTValue = DTValue::create()->set_mValue($mValue); 
@@ -213,11 +255,11 @@ class DTRequestIn
 	 * @return $this
 	 * @throws \ReflectionException
 	 */
-	public function set_host(string $mValue)
+	public function set_requestUri(string $mValue)
 	{
 		$oDTValue = DTValue::create()->set_mValue($mValue); 
-		\MVC\Event::run('DTRequestIn.set_host.before', $oDTValue);
-		$this->host = (string) $oDTValue->get_mValue();
+		\MVC\Event::run('DTRequestIn.set_requestUri.before', $oDTValue);
+		$this->requestUri = (string) $oDTValue->get_mValue();
 
 		return $this;
 	}
@@ -232,6 +274,20 @@ class DTRequestIn
 		$oDTValue = DTValue::create()->set_mValue($mValue); 
 		\MVC\Event::run('DTRequestIn.set_path.before', $oDTValue);
 		$this->path = (string) $oDTValue->get_mValue();
+
+		return $this;
+	}
+
+	/**
+	 * @param string $mValue 
+	 * @return $this
+	 * @throws \ReflectionException
+	 */
+	public function set_host(string $mValue)
+	{
+		$oDTValue = DTValue::create()->set_mValue($mValue); 
+		\MVC\Event::run('DTRequestIn.set_host.before', $oDTValue);
+		$this->host = (string) $oDTValue->get_mValue();
 
 		return $this;
 	}
@@ -262,6 +318,36 @@ class DTRequestIn
 		\MVC\Event::run('DTRequestIn.add_pathArray.before', $oDTValue);
 
 		$this->pathArray[] = $mValue;
+
+		return $this;
+	}
+
+	/**
+	 * @param array  $mValue 
+	 * @return $this
+	 * @throws \ReflectionException
+	 */
+	public function set_pathParamArray(array $mValue)
+	{
+		$oDTValue = DTValue::create()->set_mValue($mValue); 
+		\MVC\Event::run('DTRequestIn.set_pathParamArray.before', $oDTValue);
+
+		$this->pathParamArray = $mValue;
+
+		return $this;
+	}
+
+	/**
+	 * @param array $mValue
+	 * @return $this
+	 * @throws \ReflectionException 
+	 */
+	public function add_pathParamArray(array $mValue)
+	{
+		$oDTValue = DTValue::create()->set_mValue($this->pathParamArray); 
+		\MVC\Event::run('DTRequestIn.add_pathParamArray.before', $oDTValue);
+
+		$this->pathParamArray[] = $mValue;
 
 		return $this;
 	}
@@ -311,118 +397,6 @@ class DTRequestIn
 	}
 
 	/**
-	 * @param string $mValue 
-	 * @return $this
-	 * @throws \ReflectionException
-	 */
-	public function set_requestUri(string $mValue)
-	{
-		$oDTValue = DTValue::create()->set_mValue($mValue); 
-		\MVC\Event::run('DTRequestIn.set_requestUri.before', $oDTValue);
-		$this->requestUri = (string) $oDTValue->get_mValue();
-
-		return $this;
-	}
-
-	/**
-	 * @param string $mValue 
-	 * @return $this
-	 * @throws \ReflectionException
-	 */
-	public function set_requestMethod(string $mValue)
-	{
-		$oDTValue = DTValue::create()->set_mValue($mValue); 
-		\MVC\Event::run('DTRequestIn.set_requestMethod.before', $oDTValue);
-		$this->requestMethod = (string) $oDTValue->get_mValue();
-
-		return $this;
-	}
-
-	/**
-	 * @param string $mValue 
-	 * @return $this
-	 * @throws \ReflectionException
-	 */
-	public function set_protocol(string $mValue)
-	{
-		$oDTValue = DTValue::create()->set_mValue($mValue); 
-		\MVC\Event::run('DTRequestIn.set_protocol.before', $oDTValue);
-		$this->protocol = (string) $oDTValue->get_mValue();
-
-		return $this;
-	}
-
-	/**
-	 * @param string $mValue 
-	 * @return $this
-	 * @throws \ReflectionException
-	 */
-	public function set_full(string $mValue)
-	{
-		$oDTValue = DTValue::create()->set_mValue($mValue); 
-		\MVC\Event::run('DTRequestIn.set_full.before', $oDTValue);
-		$this->full = (string) $oDTValue->get_mValue();
-
-		return $this;
-	}
-
-	/**
-	 * @param string $mValue 
-	 * @return $this
-	 * @throws \ReflectionException
-	 */
-	public function set_input(string $mValue)
-	{
-		$oDTValue = DTValue::create()->set_mValue($mValue); 
-		\MVC\Event::run('DTRequestIn.set_input.before', $oDTValue);
-		$this->input = (string) $oDTValue->get_mValue();
-
-		return $this;
-	}
-
-	/**
-	 * @param bool $mValue 
-	 * @return $this
-	 * @throws \ReflectionException
-	 */
-	public function set_isSecure(bool $mValue)
-	{
-		$oDTValue = DTValue::create()->set_mValue($mValue); 
-		\MVC\Event::run('DTRequestIn.set_isSecure.before', $oDTValue);
-		$this->isSecure = (bool) $oDTValue->get_mValue();
-
-		return $this;
-	}
-
-	/**
-	 * @param bool $mValue 
-	 * @return $this
-	 * @throws \ReflectionException
-	 */
-	public function set_isCli(bool $mValue)
-	{
-		$oDTValue = DTValue::create()->set_mValue($mValue); 
-		\MVC\Event::run('DTRequestIn.set_isCli.before', $oDTValue);
-		$this->isCli = (bool) $oDTValue->get_mValue();
-
-		return $this;
-	}
-
-	/**
-	 * @param bool $mValue 
-	 * @return $this
-	 * @throws \ReflectionException
-	 */
-	public function set_isHttp(bool $mValue)
-	{
-		$oDTValue = DTValue::create()->set_mValue($mValue); 
-		\MVC\Event::run('DTRequestIn.set_isHttp.before', $oDTValue);
-		$this->isHttp = (bool) $oDTValue->get_mValue();
-
-		return $this;
-	}
-
-	/**
 	 * @param array  $mValue 
 	 * @return $this
 	 * @throws \ReflectionException
@@ -453,31 +427,15 @@ class DTRequestIn
 	}
 
 	/**
-	 * @param array  $mValue 
+	 * @param string $mValue 
 	 * @return $this
 	 * @throws \ReflectionException
 	 */
-	public function set_pathParamArray(array $mValue)
+	public function set_input(string $mValue)
 	{
 		$oDTValue = DTValue::create()->set_mValue($mValue); 
-		\MVC\Event::run('DTRequestIn.set_pathParamArray.before', $oDTValue);
-
-		$this->pathParamArray = $mValue;
-
-		return $this;
-	}
-
-	/**
-	 * @param array $mValue
-	 * @return $this
-	 * @throws \ReflectionException 
-	 */
-	public function add_pathParamArray(array $mValue)
-	{
-		$oDTValue = DTValue::create()->set_mValue($this->pathParamArray); 
-		\MVC\Event::run('DTRequestIn.add_pathParamArray.before', $oDTValue);
-
-		$this->pathParamArray[] = $mValue;
+		\MVC\Event::run('DTRequestIn.set_input.before', $oDTValue);
+		$this->input = (string) $oDTValue->get_mValue();
 
 		return $this;
 	}
@@ -527,6 +485,84 @@ class DTRequestIn
 	}
 
 	/**
+	 * @param bool $mValue 
+	 * @return $this
+	 * @throws \ReflectionException
+	 */
+	public function set_isSecure(bool $mValue)
+	{
+		$oDTValue = DTValue::create()->set_mValue($mValue); 
+		\MVC\Event::run('DTRequestIn.set_isSecure.before', $oDTValue);
+		$this->isSecure = (bool) $oDTValue->get_mValue();
+
+		return $this;
+	}
+
+	/**
+	 * @param bool $mValue 
+	 * @return $this
+	 * @throws \ReflectionException
+	 */
+	public function set_isCli(bool $mValue)
+	{
+		$oDTValue = DTValue::create()->set_mValue($mValue); 
+		\MVC\Event::run('DTRequestIn.set_isCli.before', $oDTValue);
+		$this->isCli = (bool) $oDTValue->get_mValue();
+
+		return $this;
+	}
+
+	/**
+	 * @param bool $mValue 
+	 * @return $this
+	 * @throws \ReflectionException
+	 */
+	public function set_isHttp(bool $mValue)
+	{
+		$oDTValue = DTValue::create()->set_mValue($mValue); 
+		\MVC\Event::run('DTRequestIn.set_isHttp.before', $oDTValue);
+		$this->isHttp = (bool) $oDTValue->get_mValue();
+
+		return $this;
+	}
+
+	/**
+	 * @return string
+	 * @throws \ReflectionException
+	 */
+	public function get_requestMethod() : string
+	{
+		$oDTValue = DTValue::create()->set_mValue($this->requestMethod); 
+		\MVC\Event::run('DTRequestIn.get_requestMethod.before', $oDTValue);
+
+		return $oDTValue->get_mValue();
+	}
+
+	/**
+	 * @return string
+	 * @throws \ReflectionException
+	 */
+	public function get_full() : string
+	{
+		$oDTValue = DTValue::create()->set_mValue($this->full); 
+		\MVC\Event::run('DTRequestIn.get_full.before', $oDTValue);
+
+		return $oDTValue->get_mValue();
+	}
+
+	/**
+	 * @return string
+	 * @throws \ReflectionException
+	 */
+	public function get_protocol() : string
+	{
+		$oDTValue = DTValue::create()->set_mValue($this->protocol); 
+		\MVC\Event::run('DTRequestIn.get_protocol.before', $oDTValue);
+
+		return $oDTValue->get_mValue();
+	}
+
+	/**
 	 * @return string
 	 * @throws \ReflectionException
 	 */
@@ -542,10 +578,10 @@ class DTRequestIn
 	 * @return string
 	 * @throws \ReflectionException
 	 */
-	public function get_host() : string
+	public function get_requestUri() : string
 	{
-		$oDTValue = DTValue::create()->set_mValue($this->host); 
-		\MVC\Event::run('DTRequestIn.get_host.before', $oDTValue);
+		$oDTValue = DTValue::create()->set_mValue($this->requestUri); 
+		\MVC\Event::run('DTRequestIn.get_requestUri.before', $oDTValue);
 
 		return $oDTValue->get_mValue();
 	}
@@ -563,6 +599,18 @@ class DTRequestIn
 	}
 
 	/**
+	 * @return string
+	 * @throws \ReflectionException
+	 */
+	public function get_host() : string
+	{
+		$oDTValue = DTValue::create()->set_mValue($this->host); 
+		\MVC\Event::run('DTRequestIn.get_host.before', $oDTValue);
+
+		return $oDTValue->get_mValue();
+	}
+
+	/**
 	 * @return array
 	 * @throws \ReflectionException
 	 */
@@ -570,6 +618,18 @@ class DTRequestIn
 	{
 		$oDTValue = DTValue::create()->set_mValue($this->pathArray); 
 		\MVC\Event::run('DTRequestIn.get_pathArray.before', $oDTValue);
+
+		return $oDTValue->get_mValue();
+	}
+
+	/**
+	 * @return array
+	 * @throws \ReflectionException
+	 */
+	public function get_pathParamArray() : array
+	{
+		$oDTValue = DTValue::create()->set_mValue($this->pathParamArray); 
+		\MVC\Event::run('DTRequestIn.get_pathParamArray.before', $oDTValue);
 
 		return $oDTValue->get_mValue();
 	}
@@ -599,49 +659,13 @@ class DTRequestIn
 	}
 
 	/**
-	 * @return string
+	 * @return array
 	 * @throws \ReflectionException
 	 */
-	public function get_requestUri() : string
+	public function get_headerArray() : array
 	{
-		$oDTValue = DTValue::create()->set_mValue($this->requestUri); 
-		\MVC\Event::run('DTRequestIn.get_requestUri.before', $oDTValue);
-
-		return $oDTValue->get_mValue();
-	}
-
-	/**
-	 * @return string
-	 * @throws \ReflectionException
-	 */
-	public function get_requestMethod() : string
-	{
-		$oDTValue = DTValue::create()->set_mValue($this->requestMethod); 
-		\MVC\Event::run('DTRequestIn.get_requestMethod.before', $oDTValue);
-
-		return $oDTValue->get_mValue();
-	}
-
-	/**
-	 * @return string
-	 * @throws \ReflectionException
-	 */
-	public function get_protocol() : string
-	{
-		$oDTValue = DTValue::create()->set_mValue($this->protocol); 
-		\MVC\Event::run('DTRequestIn.get_protocol.before', $oDTValue);
-
-		return $oDTValue->get_mValue();
-	}
-
-	/**
-	 * @return string
-	 * @throws \ReflectionException
-	 */
-	public function get_full() : string
-	{
-		$oDTValue = DTValue::create()->set_mValue($this->full); 
-		\MVC\Event::run('DTRequestIn.get_full.before', $oDTValue);
+		$oDTValue = DTValue::create()->set_mValue($this->headerArray); 
+		\MVC\Event::run('DTRequestIn.get_headerArray.before', $oDTValue);
 
 		return $oDTValue->get_mValue();
 	}
@@ -654,6 +678,30 @@ class DTRequestIn
 	{
 		$oDTValue = DTValue::create()->set_mValue($this->input); 
 		\MVC\Event::run('DTRequestIn.get_input.before', $oDTValue);
+
+		return $oDTValue->get_mValue();
+	}
+
+	/**
+	 * @return string
+	 * @throws \ReflectionException
+	 */
+	public function get_ip() : string
+	{
+		$oDTValue = DTValue::create()->set_mValue($this->ip); 
+		\MVC\Event::run('DTRequestIn.get_ip.before', $oDTValue);
+
+		return $oDTValue->get_mValue();
+	}
+
+	/**
+	 * @return array
+	 * @throws \ReflectionException
+	 */
+	public function get_cookieArray() : array
+	{
+		$oDTValue = DTValue::create()->set_mValue($this->cookieArray); 
+		\MVC\Event::run('DTRequestIn.get_cookieArray.before', $oDTValue);
 
 		return $oDTValue->get_mValue();
 	}
@@ -695,51 +743,27 @@ class DTRequestIn
 	}
 
 	/**
-	 * @return array
-	 * @throws \ReflectionException
+	 * @return string
 	 */
-	public function get_headerArray() : array
+	public static function getPropertyName_requestMethod()
 	{
-		$oDTValue = DTValue::create()->set_mValue($this->headerArray); 
-		\MVC\Event::run('DTRequestIn.get_headerArray.before', $oDTValue);
-
-		return $oDTValue->get_mValue();
-	}
-
-	/**
-	 * @return array
-	 * @throws \ReflectionException
-	 */
-	public function get_pathParamArray() : array
-	{
-		$oDTValue = DTValue::create()->set_mValue($this->pathParamArray); 
-		\MVC\Event::run('DTRequestIn.get_pathParamArray.before', $oDTValue);
-
-		return $oDTValue->get_mValue();
+        return 'requestMethod';
 	}
 
 	/**
 	 * @return string
-	 * @throws \ReflectionException
 	 */
-	public function get_ip() : string
+	public static function getPropertyName_full()
 	{
-		$oDTValue = DTValue::create()->set_mValue($this->ip); 
-		\MVC\Event::run('DTRequestIn.get_ip.before', $oDTValue);
-
-		return $oDTValue->get_mValue();
+        return 'full';
 	}
 
 	/**
-	 * @return array
-	 * @throws \ReflectionException
+	 * @return string
 	 */
-	public function get_cookieArray() : array
+	public static function getPropertyName_protocol()
 	{
-		$oDTValue = DTValue::create()->set_mValue($this->cookieArray); 
-		\MVC\Event::run('DTRequestIn.get_cookieArray.before', $oDTValue);
-
-		return $oDTValue->get_mValue();
+        return 'protocol';
 	}
 
 	/**
@@ -753,9 +777,9 @@ class DTRequestIn
 	/**
 	 * @return string
 	 */
-	public static function getPropertyName_host()
+	public static function getPropertyName_requestUri()
 	{
-        return 'host';
+        return 'requestUri';
 	}
 
 	/**
@@ -769,9 +793,25 @@ class DTRequestIn
 	/**
 	 * @return string
 	 */
+	public static function getPropertyName_host()
+	{
+        return 'host';
+	}
+
+	/**
+	 * @return string
+	 */
 	public static function getPropertyName_pathArray()
 	{
         return 'pathArray';
+	}
+
+	/**
+	 * @return string
+	 */
+	public static function getPropertyName_pathParamArray()
+	{
+        return 'pathParamArray';
 	}
 
 	/**
@@ -793,33 +833,9 @@ class DTRequestIn
 	/**
 	 * @return string
 	 */
-	public static function getPropertyName_requestUri()
+	public static function getPropertyName_headerArray()
 	{
-        return 'requestUri';
-	}
-
-	/**
-	 * @return string
-	 */
-	public static function getPropertyName_requestMethod()
-	{
-        return 'requestMethod';
-	}
-
-	/**
-	 * @return string
-	 */
-	public static function getPropertyName_protocol()
-	{
-        return 'protocol';
-	}
-
-	/**
-	 * @return string
-	 */
-	public static function getPropertyName_full()
-	{
-        return 'full';
+        return 'headerArray';
 	}
 
 	/**
@@ -828,6 +844,22 @@ class DTRequestIn
 	public static function getPropertyName_input()
 	{
         return 'input';
+	}
+
+	/**
+	 * @return string
+	 */
+	public static function getPropertyName_ip()
+	{
+        return 'ip';
+	}
+
+	/**
+	 * @return string
+	 */
+	public static function getPropertyName_cookieArray()
+	{
+        return 'cookieArray';
 	}
 
 	/**
@@ -852,38 +884,6 @@ class DTRequestIn
 	public static function getPropertyName_isHttp()
 	{
         return 'isHttp';
-	}
-
-	/**
-	 * @return string
-	 */
-	public static function getPropertyName_headerArray()
-	{
-        return 'headerArray';
-	}
-
-	/**
-	 * @return string
-	 */
-	public static function getPropertyName_pathParamArray()
-	{
-        return 'pathParamArray';
-	}
-
-	/**
-	 * @return string
-	 */
-	public static function getPropertyName_ip()
-	{
-        return 'ip';
-	}
-
-	/**
-	 * @return string
-	 */
-	public static function getPropertyName_cookieArray()
-	{
-        return 'cookieArray';
 	}
 
 	/**

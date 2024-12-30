@@ -1,6 +1,5 @@
 <?php
 
-
 /**
  * @package   Emvicy
  * @copyright ueffing.net

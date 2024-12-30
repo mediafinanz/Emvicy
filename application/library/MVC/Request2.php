@@ -26,27 +26,27 @@ class Request2
             return Registry::get('oDTRequestIn');
         }
 
-        $aUriInfo = parse_url(self::getUriProtocol() . $_SERVER['HTTP_HOST'] . self::getServerRequestUri());
+        $aUriInfo = parse_url(self::getTheUriProtocol() . $_SERVER['HTTP_HOST'] . self::getTheServerRequestUri());
         (false === is_array($aUriInfo)) ? $aUriInfo = array() : false;
 
         $oDTRequestIn = DTRequestIn::create($aUriInfo);
-        $oDTRequestIn->set_requestUri(self::getServerRequestUri());
-        $oDTRequestIn->set_protocol(self::getUriProtocol());
+        $oDTRequestIn->set_requestUri(self::getTheServerRequestUri());
+        $oDTRequestIn->set_protocol(self::getTheUriProtocol());
 
-        $oDTRequestIn->set_full(self::getUriProtocol() . $_SERVER['HTTP_HOST'] . self::getServerRequestUri());
+        $oDTRequestIn->set_full(self::getTheUriProtocol() . $_SERVER['HTTP_HOST'] . self::getTheServerRequestUri());
         $oDTRequestIn->set_pathArray(RequestHelper::getPathArrayOnUrl($oDTRequestIn->get_full()));
 
-        $oDTRequestIn->set_requestMethod(Request2::getServerRequestMethod());
+        $oDTRequestIn->set_requestMethod(Request2::getTheServerRequestMethod());
         $oDTRequestIn->set_input(file_get_contents("php://input"));
         $oDTRequestIn->set_isSecure(Config::get_MVC_SECURE_REQUEST());
         parse_str($oDTRequestIn->get_query(), $aQueryArray);
         $oDTRequestIn->set_queryArray($aQueryArray);
-        $oDTRequestIn->set_headerArray(self::getHeaderArray());
-        $oDTRequestIn->set_pathParamArray(self::getPathParam());
-        $oDTRequestIn->set_ip(self::getIpAddress());
+        $oDTRequestIn->set_headerArray(self::getTheHeaderArray());
+        $oDTRequestIn->set_pathParamArray(self::getThePathParam());
+        $oDTRequestIn->set_ip(self::getTheIpAddress());
         $oDTRequestIn->set_cookieArray($_COOKIE);
-        $oDTRequestIn->set_isCli(self::isCli());
-        $oDTRequestIn->set_isHttp(self::isHttp());
+        $oDTRequestIn->set_isCli(self::itIsCli());
+        $oDTRequestIn->set_isHttp(false === (false === stristr($oDTRequestIn->get_scheme(), 'http')));
 
         // if event ...
         Event::bind('mvc.controller.init.before', function(){
@@ -80,7 +80,7 @@ class Request2
         if (false === isset($aParseUrl['scheme']) || false === isset($aParseUrl['host']) || false === isset($aParseUrl['path']))
         {
             $sUrl = '';
-            $sUrl.= (false === isset($aParseUrl['scheme'])) ? self::getUriProtocol() : $aParseUrl['scheme'];
+            $sUrl.= (false === isset($aParseUrl['scheme'])) ? self::getTheUriProtocol() : $aParseUrl['scheme'];
             $sUrl.= (false === isset($aParseUrl['host'])) ? $_SERVER['HTTP_HOST'] : $aParseUrl['host'];
             $sUrl.= (false === isset($aParseUrl['path'])) ? '/' : $aParseUrl['path'];
             $oDTRequestOut->set_sUrl($sUrl);
@@ -135,7 +135,7 @@ class Request2
      * @return string
      * @throws \ReflectionException
      */
-    private static function getUriProtocol(mixed $mSsl = null) : string
+    private static function getTheUriProtocol(mixed $mSsl = null) : string
     {
         // detect on ssl or not
         if (isset($mSsl))
@@ -155,12 +155,12 @@ class Request2
         else
         {
             // http
-            if (self::detectSsl() === false)
+            if (self::itIsSsl() === false)
             {
                 return 'http://';
             }
             // http
-            elseif (self::detectSsl() === true)
+            elseif (self::itIsSsl() === true)
             {
                 return 'https://';
             }
@@ -179,7 +179,7 @@ class Request2
      * @return bool
      * @throws \ReflectionException
      */
-    private static function detectSsl() : bool
+    private static function itIsSsl() : bool
     {
         if (!empty(Config::get_MVC_SECURE_REQUEST()))
         {
@@ -197,7 +197,7 @@ class Request2
      * @return bool
      * @throws \ReflectionException
      */
-    private static function isCli() : bool
+    private static function itIsCli() : bool
     {
         if (true === Config::get_MVC_CLI())
         {
@@ -208,24 +208,9 @@ class Request2
     }
 
     /**
-     * @info detection of cli takes place in /config/_mvc.php
-     * @return bool
-     * @throws \ReflectionException
-     */
-    private static function isHttp() : bool
-    {
-        if (false === self::isCli())
-        {
-            return true;
-        }
-
-        return false;
-    }
-
-    /**
      * @return string
      */
-    private static function getServerRequestUri() : string
+    private static function getTheServerRequestUri() : string
     {
         return (array_key_exists('REQUEST_URI', $_SERVER) ? (string) $_SERVER['REQUEST_URI'] : '');
     }
@@ -233,7 +218,7 @@ class Request2
     /**
      * @return string
      */
-    private static function getServerRequestMethod() : string
+    private static function getTheServerRequestMethod() : string
     {
         return (array_key_exists('REQUEST_METHOD', $_SERVER) ? (string) $_SERVER['REQUEST_METHOD'] : '');
     }
@@ -243,7 +228,7 @@ class Request2
      * @return array|string
      * @throws \ReflectionException
      */
-    private static function getPathParam(string $sKey = '') : array|string
+    private static function getThePathParam(string $sKey = '') : array|string
     {
         if (Registry::isRegistered('aPathParam'))
         {
@@ -265,7 +250,7 @@ class Request2
     /**
      * @return array
      */
-    private static function getHeaderArray() : array
+    private static function getTheHeaderArray() : array
     {
         $aHeader = getallheaders();
 
@@ -280,7 +265,7 @@ class Request2
     /**
      * @return string
      */
-    private static function getIpAddress() : string
+    private static function getTheIpAddress() : string
     {
         return (string) (true === isset($_SERVER['HTTP_CLIENT_IP']))
             ? $_SERVER['HTTP_CLIENT_IP']

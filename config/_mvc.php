@@ -118,6 +118,7 @@ MVC_APPLICATION_SETTINGS_I: {
     $aConfig['MVC_LOG_EVENT_RUN'] = false;          // logging enabled true|false
     $aConfig['MVC_EVENT_LOG_RUN'] = $aConfig['MVC_LOG_EVENT_RUN']; /** @deprecated use instead: MVC_LOG_EVENT_RUN */
     $aConfig['MVC_LOG_POLICY'] = true;              // logging enabled true|false
+    $aConfig['MVC_LOG_PROCESS'] = true;              // logging enabled true|false
     $aConfig['MVC_LOG_ERROR'] = true;               // logging enabled true|false
     $aConfig['MVC_LOG_NOTICE'] = true;              // logging enabled true|false
     $aConfig['MVC_LOG_WARNING'] = true;             // logging enabled true|false
@@ -138,6 +139,7 @@ MVC_APPLICATION_SETTINGS_I: {
     $aConfig['MVC_LOG_FILE_REQUEST'] = $aConfig['MVC_LOG_FILE_DIR'] . 'request.log';
     $aConfig['MVC_LOG_FILE_SQL'] = $aConfig['MVC_LOG_FILE_DIR'] . 'sql.log';
     $aConfig['MVC_LOG_FILE_ROUTEINTERVALL'] = $aConfig['MVC_LOG_FILE_DIR'] . 'route_intervall.log';
+    $aConfig['MVC_LOG_FILE_PROCESS'] = $aConfig['MVC_LOG_FILE_DIR'] . 'process.log';
 
     // 1) make sure write access is given to the folder
     // as long as the db user is going to write and not the webserver user

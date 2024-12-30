@@ -118,6 +118,22 @@ class InfoTool
     protected function collectInfo(\Smarty $oView) : array
     {
         $aToolbar = array ();
+        $aGetEnv = getenv();
+        $aConstants = get_defined_constants (true);
+        $aRegistry = Registry::getStorageArray();
+        $a_MVC_SESSION_OPTIONS = Config::get_MVC_SESSION_OPTIONS();
+
+        ksort($aConstants['user'], SORT_STRING|SORT_FLAG_CASE);
+        ksort($aGetEnv, SORT_STRING|SORT_FLAG_CASE);
+        ksort($_SERVER, SORT_STRING|SORT_FLAG_CASE);
+        ksort($_REQUEST, SORT_STRING|SORT_FLAG_CASE);
+        ksort($_COOKIE, SORT_STRING|SORT_FLAG_CASE);
+        ksort($_POST, SORT_STRING|SORT_FLAG_CASE);
+        ksort($_GET, SORT_STRING|SORT_FLAG_CASE);
+        ksort($_SESSION, SORT_STRING|SORT_FLAG_CASE);
+        ksort($_ENV, SORT_STRING|SORT_FLAG_CASE);
+        ksort($aRegistry, SORT_STRING|SORT_FLAG_CASE);
+        ksort($a_MVC_SESSION_OPTIONS, SORT_STRING|SORT_FLAG_CASE);
 
         $aMethod = get_class_methods('MVC\Config');
         $aTmp = array();
@@ -149,7 +165,7 @@ class InfoTool
         $aToolbar['sMyMvcVersion'] = Config::get_MVC_VERSION();
         $aToolbar['sMyMVCCore'] = self::buildMarkupListTree(Config::get_MVC_CORE());
         $aToolbar['sEnv'] = getenv('MVC_ENV');
-        $aToolbar['aEnvGetenv'] = self::buildMarkupListTree(getenv());
+        $aToolbar['aEnvGetenv'] = self::buildMarkupListTree($aGetEnv);
         $aToolbar['aEnvEnv'] = self::buildMarkupListTree($_ENV);
         $aToolbar['sEnvOfRequest'] = php_sapi_name();
         $aToolbar['aGet'] = self::buildMarkupListTree($_GET);
@@ -160,12 +176,12 @@ class InfoTool
         $aToolbar['aSessionSettings'] = array(
             'MVC_SESSION_ENABLE' => Config::get_MVC_SESSION_ENABLE(),
             'MVC_SESSION_PATH' => Config::get_MVC_SESSION_PATH(),
-            'MVC_SESSION_OPTIONS' => self::buildMarkupListTree(Config::get_MVC_SESSION_OPTIONS()),
+            'MVC_SESSION_OPTIONS' => self::buildMarkupListTree($a_MVC_SESSION_OPTIONS),
             'oSession' => Session::is(),
         );
         $aToolbar['aSessionKeyValues'] = self::buildMarkupListTree(Session::is()->getAll());
         $aToolbar['aSessionFiles'] = self::buildMarkupListTree(
-            preg_grep('/^([^.])/', scandir(Config::get_MVC_SESSION_OPTIONS()['save_path']))
+            preg_grep('/^([^.])/', scandir($a_MVC_SESSION_OPTIONS['save_path']))
         );
         $aToolbar['aSessionRules']['aEnableSessionForController'] = (false === empty(Config::MODULE()['SESSION']['aEnableSessionForController']))
             ? self::buildMarkupListTree(Config::MODULE()['SESSION']['aEnableSessionForController'])
@@ -178,7 +194,6 @@ class InfoTool
 
         $aToolbar['aSmartyTemplateVars'] = $oView->getTemplateVars();
         $aToolbar['sSmartyTemplateVars'] = self::buildMarkupListTree($oView->getTemplateVars());
-        $aConstants = get_defined_constants (true);
         $aToolbar['aConstant'] = self::buildMarkupListTree($aConstants['user']);
         $aToolbar['aServer'] = self::buildMarkupListTree($_SERVER);
         $aToolbar['sPathParam'] = self::buildMarkupListTree(Request2::in()->get_pathParamArray());
@@ -223,7 +238,7 @@ class InfoTool
             , 'dMemoryUsage' => (memory_get_usage () / 1024)
             , 'dMemoryPeakUsage' => (memory_get_peak_usage () / 1024)
         );
-        $aToolbar['aRegistry'] = Registry::getStorageArray();
+        $aToolbar['aRegistry'] = $aRegistry;
         $aToolbar['sRegistry'] = self::buildMarkupListTree($aToolbar['aRegistry']);
         $aToolbar['aCache'] = self::buildMarkupListTree($this->getCaches());
         $aToolbar['aError'] = Error::get(bConvertToArray: false);
