@@ -941,7 +941,9 @@ class DataType
         {
             $sContent.= "\t/**\r\n" . "\t * @param " . $sVar . (('null' === $oProperty->get_value() || false === $oProperty->get_forceCasting()) ? '|null' : false) .' $mValue ' . "\r\n" . "\t * @return " . '$this' . "\r\n" . "\t * @throws \ReflectionException\r\n" . "\t */" . "\r\n";
             $sContent.= "\tpublic function set_" . $oProperty->get_key() . '(';
-            $sContent.= ( (false === $oProperty->get_forceCasting()) ? '?' : false );
+
+            $sContent.= ( (false === $oProperty->get_forceCasting() && ($sVar !== 'mixed')) ? '?' : false );
+
             $sContent.= $sVar . ' ';
             $sContent.= '$mValue';
             (('null' === $oProperty->get_value()) ? $sContent.= ' = null' : false);

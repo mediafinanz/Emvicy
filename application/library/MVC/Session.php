@@ -262,7 +262,7 @@ class Session
 
         $bEnable = (
             // current controller
-            in_array(Route::getCurrent()->get_c(), $aEnableSessionForController)
+            in_array(Route::getCurrent()->get_class(), $aEnableSessionForController)
             ||
             // any
             in_array('*', $aEnableSessionForController)
@@ -270,7 +270,7 @@ class Session
 
         $bDisable = (
             // current controller
-            in_array(Route::getCurrent()->get_c(), $aDisableSessionForController)
+            in_array(Route::getCurrent()->get_class(), $aDisableSessionForController)
             ||
             // any
             in_array('*', $aDisableSessionForController)

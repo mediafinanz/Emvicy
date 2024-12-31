@@ -38,7 +38,7 @@ class Index
         // grant access
         if (
             // Route is of type ANY
-            '*' === \MVC\Route::getCurrent()->get_method()
+            '*' === \MVC\Route::getCurrent()->get_requestMethod()
             OR
             // Request and Route methods do match
             true === in_array(\MVC\Request2::in()->get_requestMethod(), \MVC\Route::getCurrent()->get_methodsAssigned(), true)

@@ -12,40 +12,40 @@ class DTResponse
 {
 	use TraitDataType;
 
-	public const DTHASH = 'fa87eac44e1b63d57ad1ee9baac6eb3f';
+	public const DTHASH = 'f7fe3713bbfa085d906e1e66e292f75c';
 
 	/**
-	 * @required false
+	 * @required true
 	 * @var string
 	 */
 	protected $body;
 
 	/**
-	 * @required false
+	 * @required true
 	 * @var string
 	 */
 	protected $raw;
 
 	/**
-	 * @required false
+	 * @required true
 	 * @var array
 	 */
 	protected $headers;
 
 	/**
-	 * @required false
+	 * @required true
 	 * @var int
 	 */
 	protected $status_code;
 
 	/**
-	 * @required false
+	 * @required true
 	 * @var float
 	 */
 	protected $protocol_version;
 
 	/**
-	 * @required false
+	 * @required true
 	 * @var bool
 	 */
 	protected $success;
@@ -57,7 +57,7 @@ class DTResponse
 	protected $redirects;
 
 	/**
-	 * @required false
+	 * @required true
 	 * @var string
 	 */
 	protected $url;
@@ -172,7 +172,8 @@ class DTResponse
 	public function set_headers(array $mValue)
 	{
 		$oDTValue = DTValue::create()->set_mValue($mValue); 
-		
+		\MVC\Event::run('DTResponse.set_headers.before', $oDTValue);
+
 		$this->headers = $mValue;
 
 		return $this;
@@ -181,9 +182,13 @@ class DTResponse
 	/**
 	 * @param array $mValue
 	 * @return $this
+	 * @throws \ReflectionException 
 	 */
 	public function add_headers(array $mValue)
 	{
+		$oDTValue = DTValue::create()->set_mValue($this->headers); 
+		\MVC\Event::run('DTResponse.add_headers.before', $oDTValue);
+
 		$this->headers[] = $mValue;
 
 		return $this;
@@ -267,7 +272,8 @@ class DTResponse
 	public function set_history(array $mValue)
 	{
 		$oDTValue = DTValue::create()->set_mValue($mValue); 
-		
+		\MVC\Event::run('DTResponse.set_history.before', $oDTValue);
+
 		$this->history = $mValue;
 
 		return $this;
@@ -276,9 +282,13 @@ class DTResponse
 	/**
 	 * @param array $mValue
 	 * @return $this
+	 * @throws \ReflectionException 
 	 */
 	public function add_history(array $mValue)
 	{
+		$oDTValue = DTValue::create()->set_mValue($this->history); 
+		\MVC\Event::run('DTResponse.add_history.before', $oDTValue);
+
 		$this->history[] = $mValue;
 
 		return $this;
@@ -292,7 +302,8 @@ class DTResponse
 	public function set_cookies(array $mValue)
 	{
 		$oDTValue = DTValue::create()->set_mValue($mValue); 
-		
+		\MVC\Event::run('DTResponse.set_cookies.before', $oDTValue);
+
 		$this->cookies = $mValue;
 
 		return $this;
@@ -301,9 +312,13 @@ class DTResponse
 	/**
 	 * @param array $mValue
 	 * @return $this
+	 * @throws \ReflectionException 
 	 */
 	public function add_cookies(array $mValue)
 	{
+		$oDTValue = DTValue::create()->set_mValue($this->cookies); 
+		\MVC\Event::run('DTResponse.add_cookies.before', $oDTValue);
+
 		$this->cookies[] = $mValue;
 
 		return $this;

@@ -75,34 +75,6 @@ class Config
      * @return string
      * @throws \ReflectionException
      */
-    public static function get_MVC_ROUTE_QUERY_PARAM_C() : string
-    {
-        if (Registry::isRegistered('MVC_ROUTE_QUERY_PARAM_C'))
-        {
-            return (string) Registry::get('MVC_ROUTE_QUERY_PARAM_C');
-        }
-
-        return '';
-    }
-
-    /**
-     * @return string
-     * @throws \ReflectionException
-     */
-    public static function get_MVC_ROUTE_QUERY_PARAM_M() : string
-    {
-        if (Registry::isRegistered('MVC_ROUTE_QUERY_PARAM_M'))
-        {
-            return (string) Registry::get('MVC_ROUTE_QUERY_PARAM_M');
-        }
-
-        return '';
-    }
-
-    /**
-     * @return string
-     * @throws \ReflectionException
-     */
     public static function get_MVC_MODULE_PRIMARY_DIR() : string
     {
         if (Registry::isRegistered('MVC_MODULE_PRIMARY_DIR'))

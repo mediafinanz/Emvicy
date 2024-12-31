@@ -18,9 +18,7 @@
 // MVC
 
 // override default fallback routing
-$aConfig['MVC_ROUTING_FALLBACK'] = $aConfig['MVC_ROUTE_QUERY_PARAM_MODULE'] . '=' . $aConfig['MVC_MODULE_PRIMARY_NAME'] . '&'
-                                   . $aConfig['MVC_ROUTE_QUERY_PARAM_C'] . '=index&'
-                                   . $aConfig['MVC_ROUTE_QUERY_PARAM_M'] . '=notFound';
+$aConfig['MVC_ROUTING_FALLBACK'] = '\\' . $aConfig['MVC_MODULE_PRIMARY_NAME'] . '\\Controller\\Index::notFound';
 
 // Add Location of Smarty PlugIns
 $aConfig['MVC_SMARTY_PLUGINS_DIR'][] = realpath(__DIR__ . '/../../') . '/etc/smartyPlugins';

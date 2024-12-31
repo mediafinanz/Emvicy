@@ -16,12 +16,34 @@ class Menu
     protected static $sRegistryKeyPrefix = __CLASS__ . '.';
 
     /**
+     * @param \MVC\ArrDot $oArrDot
+     * @param bool        $bGetProptertiesFromRouteOnTag default=false
+     * @param string      $sCallback default='\App\Model\Menu::buildBootstrap5Menu'
+     * @return void
+     * @throws \ReflectionException
+     */
+    public static function buildAllMenus(ArrDot $oArrDot, bool $bGetProptertiesFromRouteOnTag = false, string $sCallback = '\App\Model\Menu::buildBootstrap5Menu')
+    {
+        Event::run('app.model.menu.build.before', $oArrDot);
+
+        // walk config array and build menus
+        foreach ($oArrDot->get() as $sMenuName => $aMenu)
+        {
+            self::set(
+                $sMenuName,
+                call_user_func($sCallback, $aMenu, false, $bGetProptertiesFromRouteOnTag)
+            );
+        }
+
+        Event::run('app.model.menu.build.after', $oArrDot);
+    }
+
+    /**
      * @param string $sMenuName
-     * @param bool   $bGetProptertiesFromRouteOnTag
      * @return string
      * @throws \ReflectionException
      */
-    public static function get(string $sMenuName = '', bool $bGetProptertiesFromRouteOnTag = false)
+    public static function get(string $sMenuName = '')
     {
         $sMenuName = self::$sRegistryKeyPrefix . Strings::seofy($sMenuName);
 
@@ -31,30 +53,6 @@ class Menu
         }
 
         return '';
-    }
-
-    /**
-     * @todo add callback as parameter for concrete creation of menu
-     * @param \MVC\ArrDot $oArrDot
-     * @param             $bGetProptertiesFromRouteOnTag
-     * @return void
-     * @throws \ReflectionException
-     */
-    public static function buildAllMenus(ArrDot $oArrDot, $bGetProptertiesFromRouteOnTag = false)
-    {
-        Event::run('app.model.menu.build.before', $oArrDot);
-
-        // walk config array and build menus
-        foreach ($oArrDot->get() as $sMenuName => $aMenu)
-        {
-            self::set(
-                $sMenuName,
-                /** @todo callback function here */
-                self::buildBootstrap5Menu($aMenu, false, $bGetProptertiesFromRouteOnTag)
-            );
-        }
-
-        Event::run('app.model.menu.build.after', $oArrDot);
     }
 
     /**
@@ -68,6 +66,9 @@ class Menu
 
         Registry::set($sMenuName, $sMarkup);
     }
+
+    #-------------------------------------------------------------------------------------------------------------------
+    # menu builder
 
     /**
      * @param $aMenu

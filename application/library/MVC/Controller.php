@@ -19,24 +19,6 @@ use MVC\DataType\DTKeyValue;
 class Controller
 {
     /**
-     * Controller constructor.
-     * @return bool
-     * @throws \ReflectionException
-     */
-	public static function init() : bool
-	{
-		Event::run('mvc.controller.init.before');
-
-		// start requested Module/Class/Method
-		$oReflex = new Reflex();
-		$bSuccess = $oReflex->reflect ();
-
-        Event::run('mvc.controller.init.after', $bSuccess);
-
-        return $bSuccess;
-	}
-
-    /**
      * calls the "__preconstruct()" method
      * at the requested Controller
      * @return void
@@ -44,16 +26,18 @@ class Controller
      */
     public static function runTargetClassPreconstruct () : void
     {
-        $sTargetModule = Config::get_MVC_MODULES_DIR() . '/' . Route::getCurrent()->get_module();
-        $sTargetClass = Route::getCurrent()->get_class();
-        $sTargetClassFile = Route::getCurrent()->get_classFile();
+        // may be false
+        $oDTRoute = Route::getCurrent();
+        $sTargetModule = Config::get_MVC_MODULES_DIR() . '/' . $oDTRoute->get_module();
+        $sTargetClass = $oDTRoute->get_class();
+        $sTargetClassFile = $oDTRoute->get_classFile();
         $sMethodNamePreconstruct = Config::get_MVC_METHODNAME_PRECONSTRUCT();
 
-        if (false === file_exists($sTargetModule))
+        if (false === file_exists($sTargetModule) || false === file_exists ($sTargetClassFile))
         {
             $sMessage = "\n"
-                        . "Module missing\n" . Route::getCurrent()->get_module() . "\n\n"
-                        . "Expected Filepath Target Controller\n" . $sTargetClassFile . "\n\n"
+                        . "Module or Classfile missing\n\n- Expected Module: " . $oDTRoute->get_module() . "\n"
+                        . "- Expected Classfile\n" . $sTargetClassFile . "\n"
                         . "Abort.\n\n"
                         . str_repeat('-', 80) . "\n\n"
                         . "Documentation\nhttps://emvicy.com/\n\n"
@@ -67,12 +51,6 @@ class Controller
             echo $sMessage;
             Error::error(trim($sMessage));
             die();
-        }
-
-        if (!file_exists ($sTargetClassFile))
-        {
-            parse_str (Config::get_MVC_ROUTING_FALLBACK(), $aParse);
-            $sTargetClass = '\\' . ucfirst ($aParse[Config::get_MVC_ROUTE_QUERY_PARAM_MODULE()]) . '\\' . ucfirst ($aParse[Config::get_MVC_ROUTE_QUERY_PARAM_C()]);
         }
 
         if (class_exists ($sTargetClass))
@@ -104,6 +82,24 @@ class Controller
                     DTKeyValue::create()->set_sKey('sMethod')->set_sValue($sMethodNamePreconstruct)
                 )
         );
+    }
+
+    /**
+     * Controller constructor.
+     * @return bool
+     * @throws \ReflectionException
+     */
+    public static function init() : bool
+    {
+        Event::run('mvc.controller.init.before');
+
+        // start requested Module/Class/Method
+        $oReflex = new Reflex();
+        $bSuccess = $oReflex->reflect ();
+
+        Event::run('mvc.controller.init.after', $bSuccess);
+
+        return $bSuccess;
     }
 
     /**

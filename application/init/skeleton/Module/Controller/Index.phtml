@@ -5,6 +5,9 @@
  */
 namespace {module}\Controller;
 
+use App\Model\Menu;
+use MVC\ArrDot;
+use MVC\Config;
 use MVC\DataType\DTRequestIn;
 use MVC\DataType\DTRoute;
 
@@ -30,6 +33,12 @@ class Index extends _Master
     public function __construct(DTRequestIn $oDTRequestIn, DTRoute $oDTRoute)
     {
         parent::__construct($oDTRequestIn, $oDTRoute);
+
+        Menu::buildAllMenus(
+            new ArrDot(Config::MODULE()['Menu']),
+            bGetProptertiesFromRouteOnTag: true,
+            sCallback: '\App\Model\Menu::buildBootstrap5Menu'
+        );
     }
 
     /**

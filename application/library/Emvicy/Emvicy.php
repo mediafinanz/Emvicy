@@ -632,7 +632,7 @@ class Emvicy
                         'sMethod' => $sMethod,
                         'aMethodsAssigned' => Route::$aRoute[$sRoute]->get_methodsAssigned(),
                         'sRoute' => $sRoute,
-                        'sTarget' => $oDTRoute->get_class() . '::' .$oDTRoute->get_m(),
+                        'sTarget' => $oDTRoute->get_class() . '::' .$oDTRoute->get_method(),
                         'sTag' => $oDTRoute->get_tag(),
                     ];
                 }

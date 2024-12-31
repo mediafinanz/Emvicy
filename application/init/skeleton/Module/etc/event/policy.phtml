@@ -33,7 +33,7 @@
                 \MVC\Log::write(
                     \MVC\Request2::in()->get_path()
                     . ' (' . \MVC\Request2::in()->get_requestMethod() . ') => '
-                    . \MVC\Route::getCurrent()->get_method() . ' '
+                    . \MVC\Route::getCurrent()->get_requestMethod() . ' '
                     . \MVC\Route::getCurrent()->get_path(),
                     \MVC\Config::get_MVC_LOG_FILE_POLICY(),
                     false

@@ -207,8 +207,8 @@ class InfoTool
         $aToolbar['aRouting'] = array(
             'aRequest' => Request2::in()->getPropertyArray(),
             'sModule' => Route::getCurrent()->get_module(),
-            'sController' => Route::getCurrent()->get_c(),
-            'sMethod' => Route::getCurrent()->get_method(),
+            'sController' => Route::getCurrent()->get_class(),
+            'sMethod' => Route::getCurrent()->get_requestMethod(),
             'aRoutingCurrent' => Route::getCurrent()->getPropertyArray(),
             'sRoutingCurrent' => self::buildMarkupListTree(Route::getCurrent()->getPropertyArray()),
             'aRoute' => self::buildMarkupListTree(array_keys(Route::$aRoute)),

@@ -271,10 +271,10 @@ class Policy
                 );
             }
 
-            if (array_key_exists($oDTRoute->get_m(), $aPolicyRule[$sClass]))
+            if (array_key_exists($oDTRoute->get_method(), $aPolicyRule[$sClass]))
             {
                 $aPolicy = array_merge(
-                    $aPolicyRule[$sClass][$oDTRoute->get_m()],
+                    $aPolicyRule[$sClass][$oDTRoute->get_method()],
                     $aPolicy
                 );
             }
@@ -310,7 +310,7 @@ class Policy
     {
         self::set(
             '\\' . $oDTRoute->get_class(),
-            $oDTRoute->get_m(),
+            $oDTRoute->get_method(),
             $mTarget
         );
     }
@@ -325,7 +325,7 @@ class Policy
     {
         self::unset(
             '\\' . $oDTRoute->get_class(),
-            $oDTRoute->get_m(),
+            $oDTRoute->get_method(),
             $mTarget
         );
     }

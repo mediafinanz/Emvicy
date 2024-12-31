@@ -177,25 +177,10 @@ class Route
      */
     protected static function add(string $sRequestMethod = '*', string $sPath = '', string $sClassMethod = '', mixed $mOptional = '', string $sTag = '') : void
     {
-        $sClassMethodOrigin = $sClassMethod;
-
-        #-----------
-
-        $sRequestMethodOrigin = $sRequestMethod;
-        parse_str(get($sClassMethod), $aQuery);
-
-        // allows schema '\Foo\Controller\Api::bar' next to 'module=Foo&c=Api&m=bar'
-        if (null === get($aQuery['m']))
-        {
-            $aQuery = array();
-            list($aQuery[Config::get_MVC_ROUTE_QUERY_PARAM_MODULE()], $sTmp, $aQuery[Config::get_MVC_ROUTE_QUERY_PARAM_C()]) = array_values(array_filter(explode('\\', strtok($sClassMethod, ':'))));
-            $aQuery[Config::get_MVC_ROUTE_QUERY_PARAM_M()] = substr($sClassMethod, (strrpos($sClassMethod, ':') + 1));
-            $sClassMethod = 'module=' . $aQuery[Config::get_MVC_ROUTE_QUERY_PARAM_MODULE()] . '&c=' . $aQuery[Config::get_MVC_ROUTE_QUERY_PARAM_C()] . '&m=' . $aQuery[Config::get_MVC_ROUTE_QUERY_PARAM_M()];
-        }
-
-        $sClass = ucfirst(get($aQuery[Config::get_MVC_ROUTE_QUERY_PARAM_MODULE()], '')) . '\\Controller\\' . ucfirst(get($aQuery[Config::get_MVC_ROUTE_QUERY_PARAM_C()], ''));
+        list($sClass, $sMethod) = explode('::', $sClassMethod);
         $aRequestMethodAssigned = array(strtoupper($sRequestMethod));
 
+        // save all assigned Request Methods
         if (isset(self::$aRoute[$sPath]))
         {
             $aRequestMethodAssigned = self::$aRoute[$sPath]->get_methodsAssigned();
@@ -209,66 +194,29 @@ class Route
             }
         }
 
-        // tag
-        ((true === empty($sTag)) ? $sTag = Strings::seofy((('*' === $sRequestMethodOrigin) ? 'any' : $sRequestMethodOrigin) . '.' . $sPath) : false);
-        ((true === empty($sTag)) ? $sTag = Strings::seofy((('*' === $sRequestMethodOrigin) ? 'any' : $sRequestMethodOrigin) . '.' . $sClass . '-' . $aQuery[Config::get_MVC_ROUTE_QUERY_PARAM_M()] . '-' . implode('-', $aRequestMethodAssigned)) : false);
+        // save tag
+        ((true === empty($sTag)) ? $sTag = Strings::seofy((('*' === $sRequestMethod) ? 'any' : $sRequestMethod) . '.' . $sPath) : false);
+        ((true === empty($sTag)) ? $sTag = Strings::seofy((('*' === $sRequestMethod) ? 'any' : $sRequestMethod) . '.' . $sClass . '-' . $sMethod . '-' . implode('-', $aRequestMethodAssigned)) : false);
 
-//        display($sClassMethodOrigin);
-//        display($sClassMethod);
-
+        // create DTRoute object
         $oDTRoute = DTRoute::create()
             ->set_path($sPath)
-            ->set_method(strtoupper($sRequestMethodOrigin))
+            ->set_requestMethod(strtoupper($sRequestMethod))
             ->set_methodsAssigned($aRequestMethodAssigned)
-
-            #->set_class($sClass)
-            ->set_class(strtok($sClassMethodOrigin,'::'))
-
-            #->set_classFile(Config::get_MVC_MODULES_DIR() . '/' . str_replace ('\\', '/', $sClass) . '.php')
-            ->set_classFile(Config::get_MVC_MODULES_DIR() . str_replace ('\\', '/', strtok($sClassMethodOrigin,'::')) . '.php')
-
             ->set_query($sClassMethod)
-            #->set_query($sClassMethodOrigin)
-
-            ->set_module(get($aQuery[Config::get_MVC_ROUTE_QUERY_PARAM_MODULE()], ''))
-            ->set_c(get($aQuery[Config::get_MVC_ROUTE_QUERY_PARAM_C()], ''))
-
-            #->set_m(get($aQuery[Config::get_MVC_ROUTE_QUERY_PARAM_M()], ''))
-            ->set_m(substr($sClassMethodOrigin, (strrpos($sClassMethodOrigin, ':') + 1)))
-
+            ->set_module(current(preg_split('%\\\%', $sClass, -1, PREG_SPLIT_NO_EMPTY)))
+            ->set_class($sClass)
+            ->set_classFile(Config::get_MVC_MODULES_DIR() . str_replace ('\\', '/', $sClass) . '.php')
+            ->set_method($sMethod)
             ->set_additional($mOptional)
             ->set_tag($sTag)
         ;
-//        /*
-//         * overwrite during development
-//         */
-//        if (stristr($sPath, 'example'))
-//        {
-////            display($sClassMethodOrigin);
-////            display( # class
-////                strtok($sClassMethodOrigin,'::')
-////            );
-////            display( # method
-////                substr($sClassMethodOrigin, (strrpos($sClassMethodOrigin, ':') + 1))
-////            );
-////            $oDTRoute->set_class(
-////                strtok($sClassMethodOrigin,'::')
-////            );
-////            $oDTRoute->set_classFile(
-////                Config::get_MVC_MODULES_DIR() . str_replace ('\\', '/', strtok($sClassMethodOrigin,'::')) . '.php'
-////            );
-//            $oDTRoute->set_m(
-//                substr($sClassMethodOrigin, (strrpos($sClassMethodOrigin, ':') + 1))
-//            );
-//            info(
-//                $oDTRoute
-//            );
-//        }
 
         self::$aRoute[$sPath] = $oDTRoute;
 
         #--------------------------
 
+        // add Route to classVar infos
         foreach ($aRequestMethodAssigned as $sMethodAssigned)
         {
             if (false === isset(self::$aMethod[strtolower($sMethodAssigned)]))
@@ -409,14 +357,14 @@ class Route
     public static function getPathOnPlaceholderIndex(string $sPath = '') : string
     {
         // Request
-        $aPartPath = preg_split('@/@', $sPath, 0, PREG_SPLIT_NO_EMPTY);
+        $aPartPath = preg_split('@/@', $sPath, -1, PREG_SPLIT_NO_EMPTY);
         $iLengthPath = count($aPartPath);
         $aIndex = self::getIndices();
 
         // iterate routes
         foreach ($aIndex as $sValue)
         {
-            $aRoute = preg_split('@/@', $sValue, 0, PREG_SPLIT_NO_EMPTY);
+            $aRoute = preg_split('@/@', $sValue, -1, PREG_SPLIT_NO_EMPTY);
             $iLengthRoute = count($aRoute);
 
             // skip routes without * at the end if they are shorter than the requested path

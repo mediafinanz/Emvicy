@@ -31,9 +31,7 @@ class Reflex
 	public function reflect() : bool
 	{
         $oDTRoute = Route::getCurrent();
-        $sModule = $oDTRoute->get_module();
-        $sClass = $oDTRoute-> get_c();
-        $sMethod = $oDTRoute->get_m();
+        $sMethod = $oDTRoute->get_method();
 
         Event::run ('mvc.reflex.reflect.before',
             DTArrayObject::create()
@@ -42,19 +40,7 @@ class Reflex
                 )
         );
 
-//        // Fallback Target
-//		if ($sModule == '' && $sClass == '')
-//		{
-//			parse_str (Config::get_MVC_ROUTING_FALLBACK(), $aParse);
-//			$sControllerClassName = '\\' . ucfirst ($aParse[Config::get_MVC_ROUTE_QUERY_PARAM_MODULE()]) . '\\Controller\\' . ucfirst ($aParse[Config::get_MVC_ROUTE_QUERY_PARAM_C()]);
-//		}
-//		// Regular Target
-//		else
-//		{
-//			$sControllerClassName = '\\' . ucfirst ($sModule) . '\\Controller\\' . ucfirst ($sClass);
-//		}
         $sControllerClassName = $oDTRoute->get_class();
-
 		$sControllerFilename = $oDTRoute->get_classFile();
 
 		if (file_exists ($sControllerFilename))
@@ -102,11 +88,11 @@ class Reflex
 				if (false === filter_var (($oReflectionObject instanceof \MVC\MVCInterface\Controller), FILTER_VALIDATE_BOOLEAN))
 				{
 					$sMsg = 'ERROR: <br />Make sure `' . $sControllerClassName . '` <b>implements</b> \MVC\MVCInterface\Controller';
-                    Error::error(strip_tags ($sMsg));
-					Debug::stop ($sMsg);
+                    Error::error(strip_tags($sMsg));
+					Debug::stop($sMsg);
 				}
 
-				if ($sMethod != '')
+				if (false === empty($sMethod))
 				{
 					try
 					{
