@@ -28,16 +28,14 @@ class Controller
     {
         // may be false
         $oDTRoute = Route::getCurrent();
-        $sTargetModule = Config::get_MVC_MODULES_DIR() . '/' . $oDTRoute->get_module();
         $sTargetClass = $oDTRoute->get_class();
         $sTargetClassFile = $oDTRoute->get_classFile();
         $sMethodNamePreconstruct = Config::get_MVC_METHODNAME_PRECONSTRUCT();
 
-        if (false === file_exists($sTargetModule) || false === file_exists ($sTargetClassFile))
+        if (false === file_exists ($sTargetClassFile))
         {
             $sMessage = "\n"
-                        . "Module or Classfile missing\n\n- Expected Module: " . $oDTRoute->get_module() . "\n"
-                        . "- Expected Classfile\n" . $sTargetClassFile . "\n"
+                        . "Classfile missing: " . $sTargetClassFile . "\n"
                         . "Abort.\n\n"
                         . str_repeat('-', 80) . "\n\n"
                         . "Documentation\nhttps://emvicy.com/\n\n"

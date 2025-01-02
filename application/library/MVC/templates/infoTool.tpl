@@ -1,3 +1,4 @@
+{nocache}
 {*
 application/library/MVC/templates/infoTool.tpl
 
@@ -384,8 +385,8 @@ Request2::in()->get_pathParamArray()[ $sKey ]</pre>
 					<h6>Target Controller method <a id="myMvcToolbar_Target"></a> </h6>
 					{*					<p>\{$aToolbar.aRouting.sModule}\Controller\{$aToolbar.aRouting.sController}::{$aToolbar.aRouting.sMethod}({$aToolbar.aRouting.sArg|escape:"htmlall":"UTF-8"})	</p>*}
 					{if isset($aToolbar.aRouting.aRoutingCurrent.class)}
-						<code>\{$aToolbar.aRouting.aRoutingCurrent.class}::{$aToolbar.aRouting.aRoutingCurrent.m}()</code>
-						<pre>Route::getCurrent()->get_class()  ::  Route::getCurrent()->get_m()</pre>
+						<code>\{$aToolbar.aRouting.aRoutingCurrent.class}::{$aToolbar.aRouting.aRoutingCurrent.method}()</code>
+						<pre>Route::getCurrent()->get_class()  ::  Route::getCurrent()->get_method()</pre>
 					{else}
 						<code>unknown</code>
 					{/if}
@@ -652,3 +653,4 @@ Request2::in()->get_pathParamArray()[ $sKey ]</pre>
 	</navi>
 </div>
 <script src="/Emvicy/scripts/EmvicyInfoTool.min.js" type="text/javascript"></script>
+{/nocache}

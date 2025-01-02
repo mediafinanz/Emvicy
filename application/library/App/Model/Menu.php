@@ -17,12 +17,12 @@ class Menu
 
     /**
      * @param \MVC\ArrDot $oArrDot
-     * @param bool        $bGetProptertiesFromRouteOnTag default=false
-     * @param string      $sCallback default='\App\Model\Menu::buildBootstrap5Menu'
+     * @param bool        $bGetPropertiesFromRouteOnTag default=false
+     * @param string      $sCallback                    default='\App\Model\Menu::buildBootstrap5Menu'
      * @return void
      * @throws \ReflectionException
      */
-    public static function buildAllMenus(ArrDot $oArrDot, bool $bGetProptertiesFromRouteOnTag = false, string $sCallback = '\App\Model\Menu::buildBootstrap5Menu')
+    public static function buildAllMenus(ArrDot $oArrDot, bool $bGetPropertiesFromRouteOnTag = false, string $sCallback = '\App\Model\Menu::buildBootstrap5Menu')
     {
         Event::run('app.model.menu.build.before', $oArrDot);
 
@@ -31,7 +31,7 @@ class Menu
         {
             self::set(
                 $sMenuName,
-                call_user_func($sCallback, $aMenu, false, $bGetProptertiesFromRouteOnTag)
+                call_user_func($sCallback, $aMenu, false, $bGetPropertiesFromRouteOnTag)
             );
         }
 

@@ -119,6 +119,8 @@ MVC_APPLICATION_SETTINGS_I: {
     $aConfig['MVC_EVENT_LOG_RUN'] = $aConfig['MVC_LOG_EVENT_RUN']; /** @deprecated use instead: MVC_LOG_EVENT_RUN */
     $aConfig['MVC_LOG_POLICY'] = true;              // logging enabled true|false
     $aConfig['MVC_LOG_PROCESS'] = true;              // logging enabled true|false
+    $aConfig['MVC_LOG_QUEUE'] = true;              // logging enabled true|false
+    $aConfig['MVC_LOG_CRON'] = true;              // logging enabled true|false
     $aConfig['MVC_LOG_ERROR'] = true;               // logging enabled true|false
     $aConfig['MVC_LOG_NOTICE'] = true;              // logging enabled true|false
     $aConfig['MVC_LOG_WARNING'] = true;             // logging enabled true|false
@@ -140,6 +142,8 @@ MVC_APPLICATION_SETTINGS_I: {
     $aConfig['MVC_LOG_FILE_SQL'] = $aConfig['MVC_LOG_FILE_DIR'] . 'sql.log';
     $aConfig['MVC_LOG_FILE_ROUTEINTERVALL'] = $aConfig['MVC_LOG_FILE_DIR'] . 'route_intervall.log';
     $aConfig['MVC_LOG_FILE_PROCESS'] = $aConfig['MVC_LOG_FILE_DIR'] . 'process.log';
+    $aConfig['MVC_LOG_FILE_QUEUE'] = $aConfig['MVC_LOG_FILE_DIR'] . 'queue.log';
+    $aConfig['MVC_LOG_FILE_CRON'] = $aConfig['MVC_LOG_FILE_DIR'] . 'cron.log';
 
     // 1) make sure write access is given to the folder
     // as long as the db user is going to write and not the webserver user
@@ -257,12 +261,6 @@ MVC_APPLICATION_SETTINGS_II:
     );
 
     /**
-     * keys for "query" notation in \MVC\Route routings
-     * e.g.: 'module=Foo&c=index&m=index'
-     */
-    $aConfig['MVC_ROUTE_QUERY_PARAM_MODULE'] = 'module';
-
-    /**
      * MVC fallback routing
      * this routing will be used if none is specified for routing
      * Note: Possibility of a direct call (http|cli) of this route is disabled
@@ -306,10 +304,24 @@ MVC_MISC: {
 MVC_QUEUE: {
 
     // prefix for AutoRoutes
-    $aConfig['MVC_QUEUE_ROUTE_PREFIX'] = '/queue/worker/';
+    $aConfig['MVC_QUEUE_ROUTE_PREFIX'] = '/_mvc/queue';
+
+    // Route for running Queue; calling Worker on Jobs
+    // @see modules/{module}/etc/config/{module}/config/_queue.php
+    // @see modules/{module}/etc/routing/service.php
+    $aConfig['MVC_QUEUE_RUN'] = $aConfig['MVC_QUEUE_ROUTE_PREFIX'] . '/run';
+
+    // Class::method responsible for running Queue
+    $aConfig['MVC_QUEUE_RUN_CLASSMETHOD'] = '\App\Controller\Queue::run';
+
+    // Worker Route Structure
+    $aConfig['MVC_QUEUE_WORKER_AUTO_ROUTE_PREFIX'] = $aConfig['MVC_QUEUE_ROUTE_PREFIX'] . '/worker';
+
+    // Class::method responsible for resolving Worker Routes
+    $aConfig['MVC_QUEUE_WORKER_AUTO_ROUTE_RESOLVE_CLASSMETHOD'] = '\App\Controller\Queue::workerAutoRouteResolve';
 
     // Max processing time of an async process in seconds; cancellation if reached.
-    $aConfig['MVC_QUEUE_RUNTIME_SECONDS'] = (60 * 5);
+    $aConfig['MVC_QUEUE_RUNTIME_SECONDS'] = 300;
 }
 
 MVC_PROCESS: {
@@ -318,8 +330,18 @@ MVC_PROCESS: {
     $aConfig['MVC_PROCESS_MAX_PROCESSES_OVERALL'] = 30;
 
     // kill ZombieFiles after Seconds
-    $aConfig['MVC_PROCESS_KILL_ZOMBIES_AFTER_SECONDS'] = (60 * 5);
+    $aConfig['MVC_PROCESS_KILL_ZOMBIES_AFTER_SECONDS'] = 300;
 
-    // folder for PidFiles
-    $aConfig['MVC_PROCESS_PID_FILE_FOLDER'] = $aConfig['MVC_APPLICATION_PATH'] . '/pid/';
+    // pidFiles directory
+    $aConfig['MVC_PROCESS_PID_FILE_DIR'] = $aConfig['MVC_APPLICATION_PATH'] . '/pid/';
+}
+
+MVC_CRON: {
+
+    // @see modules/{module}/etc/config/{module}/config/_cron.php
+    // @see modules/{module}/etc/routing/service.php
+    $aConfig['MVC_CRON_ROUTE'] = '/_mvc/cron';
+
+    // Class::method responsible for running CRON
+    $aConfig['MVC_CRON_RUN_CLASSMETHOD'] = '\App\Controller\Cron::run';
 }

@@ -1,0 +1,58 @@
+<?php
+
+\MVC\Event::processBindConfigStack([
+
+    'mvc.worker.after'   => array(
+        function (string $sInfo) {
+            \MVC\Log::write($sInfo, \MVC\Config::get_MVC_LOG_FILE_QUEUE());
+        },
+    ),
+    //------------------------------------------------------------------------------------------------------------------
+    'app.controller.queue.worker'   => array(
+        function (string $sInfo) {
+            \MVC\Log::write($sInfo, \MVC\Config::get_MVC_LOG_FILE_QUEUE());
+        },
+    ),
+    //------------------------------------------------------------------------------------------------------------------
+    'app.table.queue.push.before'   => array(
+        function (\App\DataType\DTAppTableQueue $oDTAppTableQueue) {
+            \MVC\Log::write($oDTAppTableQueue, \MVC\Config::get_MVC_LOG_FILE_QUEUE());
+        },
+    ),
+    'app.table.queue.push.after'    => array(
+        function (mixed $oDTModelTableQueue) {
+            \MVC\Log::write($oDTModelTableQueue, \MVC\Config::get_MVC_LOG_FILE_QUEUE());
+        },
+    ),
+    'app.table.queue.pop.before'    => array(
+        function ($sKey) {
+            \MVC\Log::write($sKey, \MVC\Config::get_MVC_LOG_FILE_QUEUE());
+        },
+    ),
+    'app.table.queue.pop.after'     => array(
+        function (mixed $oDTModelTableQueue) {
+            \MVC\Log::write($oDTModelTableQueue, \MVC\Config::get_MVC_LOG_FILE_QUEUE());
+        },
+    ),
+    'app.table.queue.popall.before' => array(
+        function (string $sKey) {
+            \MVC\Log::write($sKey, \MVC\Config::get_MVC_LOG_FILE_QUEUE());
+        },
+    ),
+    'app.table.queue.popall.after'  => array(
+        function (array $aDTAppTableQueue) {
+            /** \App\DataType\DTAppTableQueue[] $aDTAppTableQueue */
+            \MVC\Log::write($aDTAppTableQueue, \MVC\Config::get_MVC_LOG_FILE_QUEUE());
+        },
+    ),
+    'app.table.queue.expire.before' => array(
+        function (int $iTime) {
+            \MVC\Log::write($iTime, \MVC\Config::get_MVC_LOG_FILE_QUEUE());
+        },
+    ),
+    'app.table.queue.expire.after'  => array(
+        function (int $iTime) {
+            \MVC\Log::write($iTime, \MVC\Config::get_MVC_LOG_FILE_QUEUE());
+        },
+    ),
+]);

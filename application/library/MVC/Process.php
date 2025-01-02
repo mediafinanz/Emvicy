@@ -13,8 +13,6 @@ class Process
      */
     public static function pause(int $iSeconds = 1, string $sPreText = '', bool $bEchoOut = false)
     {
-        $iMaxExecutionTime = ini_get('max_execution_time');
-
         if (false === empty($sPreText) && true === $bEchoOut)
         {
             echo $sPreText . "\n\t" . ' …pause… ';
@@ -74,7 +72,7 @@ class Process
     public static function getPidFileFolder()
     {
         // pidfile folder; make sure there is a trailing slash
-        $sPidFileFolder = Strings::replaceMultipleForwardSlashesByOneFromString(Config::get_MVC_PROCESS_PID_FILE_FOLDER() . '/');
+        $sPidFileFolder = Strings::replaceMultipleForwardSlashesByOneFromString(Config::get_MVC_PROCESS_PID_FILE_DIR() . '/');
 
         if (false === Dir::exists($sPidFileFolder))
         {
@@ -238,13 +236,16 @@ class Process
         {
             $aZombie = self::getZombiePidFileArray();
 
+            Log::write($aZombie, Config::get_MVC_LOG_FILE_PROCESS());
+
+
             foreach ($aZombie as $sPidFile)
             {
                 $bUnlink = unlink($sPidFile);
 
                 if (true === $bUnlink)
                 {
-                    Log::write('pidfile: ' . $sPidFile . "\tDELETE ZOMBIE", 'process.log');
+                    Event::run('mvc.process.deleteZombieFiles.after', $sPidFile);
                 }
             }
 
@@ -260,19 +261,22 @@ class Process
     public static function destruct()
     {
         $iPid = getmypid();
-        $sPidFile = self::getPidFileFolder() . $iPid;
 
-        $bUnlink = (true === file_exists($sPidFile))
-            ? unlink($sPidFile)
-            : false
-        ;
-
-        if (true === $bUnlink)
+        if (true === is_int($iPid))
         {
-            /** @todo event logging */
-            Log::write('pid: ' . $iPid . "\tDELETE", 'process.log');
-        }
+            $sPidFile = self::getPidFileFolder() . $iPid;
 
-        self::deleteZombieFiles();
+            $bUnlink = (true === file_exists($sPidFile))
+                ? unlink($sPidFile)
+                : false
+            ;
+
+            if (true === $bUnlink)
+            {
+                Event::run('mvc.process.destruct.after', $iPid);
+            }
+
+            self::deleteZombieFiles();
+        }
     }
 }

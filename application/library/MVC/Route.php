@@ -179,6 +179,7 @@ class Route
     {
         list($sClass, $sMethod) = explode('::', $sClassMethod);
         $aRequestMethodAssigned = array(strtoupper($sRequestMethod));
+        $oReflectionClass = new \ReflectionClass($sClass);
 
         // save all assigned Request Methods
         if (isset(self::$aRoute[$sPath]))
@@ -206,7 +207,7 @@ class Route
             ->set_query($sClassMethod)
             ->set_module(current(preg_split('%\\\%', $sClass, -1, PREG_SPLIT_NO_EMPTY)))
             ->set_class($sClass)
-            ->set_classFile(Config::get_MVC_MODULES_DIR() . str_replace ('\\', '/', $sClass) . '.php')
+            ->set_classFile($oReflectionClass->getFileName())
             ->set_method($sMethod)
             ->set_additional($mOptional)
             ->set_tag($sTag)
@@ -334,7 +335,7 @@ class Route
 
         foreach ($aIndex as $sIndex)
         {
-            // cutt off "*"
+            // cut off "*"
             $sIndexCutOff = substr($sIndex, 0, -1);
 
             if (true === str_starts_with($sPath, $sIndexCutOff))
@@ -451,7 +452,7 @@ class Route
      * @return \MVC\DataType\DTRoute
      * @throws \ReflectionException
      */
-    public static function getOnTag(string $sTag = '') : DTRoute|null
+    public static function getOnTag(string $sTag = '') : DTRoute
     {
         if (true === empty($sTag))
         {
@@ -465,6 +466,7 @@ class Route
         if ('*' === get($aIndex[0]))
         {
             $sPath = get($aIndex[1], '');
+            /** @var DTRoute $oDTRoute */
             $oDTRoute = get(Route::$aRoute[$sPath], DTRoute::create());
         }
         // is concrete, not a wildcard; take DTRoute from Route::$aMethodRoute
@@ -473,6 +475,7 @@ class Route
             array_pop($aIndex); # remove last
             $sIndex = implode('.', $aIndex);
             $oArrDot = new ArrDot(Convert::objectToArray(Route::$aMethodRoute));
+            /** @var DTRoute $oDTRoute */
             $oDTRoute = (false === empty($sIndex)) ? DTRoute::create($oArrDot->get($sIndex)) : DTRoute::create();
         }
 
@@ -484,19 +487,24 @@ class Route
      * @example Route::getTagList()
      *          Route::getTagList()['home']
      *          Route::getTagList()['home']->get_additional()
-     * @return \MVC\DataType\DTRoute[]|array
-     * @throws \ReflectionException
+     * @return array|\MVC\DataType\DTRoute[]
      */
     public static function getTagList() : array
     {
-        /** @var DTRoute[] $aTag */
         $aTag = array();
 
-        foreach (self::$aMethodRoute as $sMethod => $aRoute)
+        foreach (self::$aMethodRoute as $aRoute)
         {
-            foreach ($aRoute as $sRoute => $oDTRoute)
+            foreach ($aRoute as $oDTRoute)
             {
-                $aTag[$oDTRoute->get_tag()] = $oDTRoute; # Convert::objectToArray($oDTRoute);
+                // skip
+                if (true === empty($oDTRoute))
+                {
+                    continue;
+                }
+
+                /** @var DTRoute[] $aTag */
+                $aTag[$oDTRoute->get_tag()] = $oDTRoute;
             }
         }
 

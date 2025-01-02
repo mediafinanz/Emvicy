@@ -8,9 +8,6 @@
  * @license GNU GENERAL PUBLIC LICENSE Version 3. See application/doc/COPYING
  */
 
-/**
- * @name $MVC\MVCInterface
- */
 namespace  MVC\MVCInterface;
 
 use MVC\DataType\DTRequestIn;

@@ -62,10 +62,10 @@ class Controller implements \MVC\MVCInterface\Controller
     }
 
     /**
-     *
+     * @throws \ReflectionException
      */
     public function __destruct()
     {
-        ;
+        Event::run('app.controller.__destruct');
     }
 }

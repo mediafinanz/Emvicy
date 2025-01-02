@@ -1,0 +1,20 @@
+<?php
+
+
+// Automatically builds callable routes for each queue key,
+// placed in config `etc/config/{module}/config/_queue.php`.
+//
+// e.g.: the Route "/_mvc/queue/worker/Email::new" is created for queue key `Email::new`
+// so each queue key can be called with its own route
+// Syntax:
+//      /_mvc/queue/worker/{QUEUE KEY}
+//
+// the Target is to call the Route and get the Worker to run
+// which is associated with it in that config file
+\MVC\Worker::workerAutoRoute();
+
+// Calling this ↓ route would start all these ↑ workers
+\MVC\Route::GET(
+    \MVC\Config::get_MVC_QUEUE_RUN(),
+    \MVC\Config::get_MVC_QUEUE_RUN_CLASSMETHOD()
+);

@@ -2,7 +2,7 @@
 
 namespace App\Table;
 
-use MVC\DataType\DTAppTableQueue;
+use App\DataType\DTAppTableQueue;
 use MVC\DataType\DTDBOption;
 use MVC\DataType\DTDBWhere;
 use MVC\DataType\DTDBWhereRelation;
@@ -44,9 +44,9 @@ class Queue extends Db
 
     /**
      * stores a value on the specified key
-     * @param \MVC\DataType\DTAppTableQueue $oDTAppTableQueue
+     * @param \App\DataType\DTAppTableQueue $oDTAppTableQueue
      * @param bool                               $bPreventMultipleCreation
-     * @return \MVC\DataType\DTAppTableQueue|null
+     * @return \App\DataType\DTAppTableQueue|null
      * @throws \ReflectionException
      */
     public function push(DTAppTableQueue $oDTAppTableQueue, bool $bPreventMultipleCreation = false)
@@ -67,7 +67,7 @@ class Queue extends Db
             : false;
 
         $iExpirySeconds = (
-            (abs($oDTAppTableQueue->get_expirySeconds()) > 0)
+            (false === empty($oDTAppTableQueue->get_expirySeconds()) && abs($oDTAppTableQueue->get_expirySeconds()) > 0)
             ? abs($oDTAppTableQueue->get_expirySeconds())
             : null
         );
@@ -105,7 +105,7 @@ class Queue extends Db
             }
         }
 
-        Event::run('queue.push.before', $oDTAppTableQueue);
+        Event::run('app.table.queue.push.before', $oDTAppTableQueue);
 
         /** @var DTAppTableQueue $oDTAppTableQueue */
         $oDTAppTableQueue = $this->create(
@@ -115,7 +115,7 @@ class Queue extends Db
             bAutoIncrementId: (true === empty($oDTAppTableQueue->get_id()))
         );
 
-        Event::run('queue.push.after', $oDTAppTableQueue);
+        Event::run('app.table.queue.push.after', $oDTAppTableQueue);
 
         return $oDTAppTableQueue;
     }
@@ -124,12 +124,12 @@ class Queue extends Db
      * dequeues ONE (the oldest) value along to the given key; it returns the tupel, also deletes the tupel
      * @param string $sKey
      * @param string $sKey2 optional
-     * @return \MVC\DataType\DTAppTableQueue|false|null
+     * @return \App\DataType\DTAppTableQueue|false|null
      * @throws \ReflectionException
      */
     public function pop(string $sKey = '', string $sKey2 = '')
     {
-        Event::run('queue.pop.before', $sKey);
+        Event::run('app.table.queue.pop.before', $sKey);
 
         if (true === empty($sKey))
         {
@@ -153,7 +153,7 @@ class Queue extends Db
             $aDTDBWhere[] = DTDBWhere::create()->set_sKey(DTAppTableQueue::getPropertyName_key2())->set_sValue($sKey2);
         }
 
-        /** @var \MVC\DataType\DTAppTableQueue|false $oDTAppTableQueue */
+        /** @var \App\DataType\DTAppTableQueue|false $oDTAppTableQueue */
         $oDTAppTableQueue = current($this->retrieve(
             $aDTDBWhere,
             $aDTDBOption,
@@ -166,7 +166,7 @@ class Queue extends Db
             $this->deleteTupel($oDTAppTableQueue);
         }
 
-        Event::run('queue.pop.after', $oDTAppTableQueue);
+        Event::run('app.table.queue.pop.after', $oDTAppTableQueue);
 
         return $oDTAppTableQueue;
     }
@@ -174,14 +174,14 @@ class Queue extends Db
     /**
      * @param int                            $iLimit
      * @param \MVC\DataType\DTDBWhere[]      $aDTDBWhere
-     * @return \MVC\DataType\DTAppTableQueue[]
+     * @return \App\DataType\DTAppTableQueue[]
      * @throws \ReflectionException
      */
     public function next(int $iLimit = 1, array $aDTDBWhere = array())
     {
         $this->expire();
 
-        /** @var \MVC\DataType\DTAppTableQueue[] $aDTAppTableQueue */
+        /** @var \App\DataType\DTAppTableQueue[] $aDTAppTableQueue */
         $aDTAppTableQueue = $this->retrieve(
             $aDTDBWhere,
             [DTDBOption::create()->set_sValue("ORDER BY `stampChange` ASC LIMIT 0, " . $iLimit)],
@@ -194,12 +194,12 @@ class Queue extends Db
      * dequeues all values according to the specified keys; it returns all tuples, also deletes all tuples
      * @param string $sKey
      * @param string $sKey2
-     * @return \MVC\DataType\DTAppTableQueue[]|null
+     * @return \App\DataType\DTAppTableQueue[]|null
      * @throws \ReflectionException
      */
     public function popAll(string $sKey = '', string $sKey2 = '')
     {
-        Event::run('queue.popall.before', $sKey);
+        Event::run('app.table.queue.popall.before', $sKey);
 
         if (true === empty($sKey))
         {
@@ -225,7 +225,7 @@ class Queue extends Db
             $this->deleteTupel($oDTAppTableQueue);
         }
 
-        Event::run('queue.popall.after', $aDTAppTableQueue);
+        Event::run('app.table.queue.popall.after', $aDTAppTableQueue);
 
         return $aDTAppTableQueue;
     }
@@ -318,7 +318,7 @@ class Queue extends Db
             return false;
         }
 
-        Event::run('queue.expire.before', $iTime);
+        Event::run('app.table.queue.expire.before', $iTime);
 
         $sSql = "
             DELETE FROM `" . $this->sTableName . "` 
@@ -328,11 +328,11 @@ class Queue extends Db
 
         Db::getDbPdo()->query($sSql);
 
-        Event::run('queue.expire.after', $iTime);
+        Event::run('app.table.queue.expire.after', $iTime);
     }
 
     /**
-     * @param \MVC\DataType\DTAppTableQueue $oDTAppTableQueue
+     * @param \App\DataType\DTAppTableQueue $oDTAppTableQueue
      * @return bool
      * @throws \ReflectionException
      */

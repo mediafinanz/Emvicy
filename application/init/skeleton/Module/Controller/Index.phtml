@@ -35,8 +35,7 @@ class Index extends _Master
         parent::__construct($oDTRequestIn, $oDTRoute);
 
         Menu::buildAllMenus(
-            new ArrDot(Config::MODULE()['Menu']),
-            bGetProptertiesFromRouteOnTag: true,
+            new ArrDot(Config::MODULE()['Menu']), bGetPropertiesFromRouteOnTag: true,
             sCallback: '\App\Model\Menu::buildBootstrap5Menu'
         );
     }

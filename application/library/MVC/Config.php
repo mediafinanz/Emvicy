@@ -61,20 +61,6 @@ class Config
      * @return string
      * @throws \ReflectionException
      */
-    public static function get_MVC_ROUTE_QUERY_PARAM_MODULE() : string
-    {
-        if (Registry::isRegistered('MVC_ROUTE_QUERY_PARAM_MODULE'))
-        {
-            return (string) Registry::get('MVC_ROUTE_QUERY_PARAM_MODULE');
-        }
-
-        return '';
-    }
-
-    /**
-     * @return string
-     * @throws \ReflectionException
-     */
     public static function get_MVC_MODULE_PRIMARY_DIR() : string
     {
         if (Registry::isRegistered('MVC_MODULE_PRIMARY_DIR'))
@@ -398,6 +384,54 @@ class Config
     {
         Registry::set('MVC_LOG_PROCESS', $bVar);
         $GLOBALS['aConfig']['MVC_LOG_PROCESS'] = $bVar;
+    }
+
+    /**
+     * @return bool
+     * @throws \ReflectionException
+     */
+    public static function get_MVC_LOG_QUEUE() : bool
+    {
+        if (Registry::isRegistered('MVC_LOG_QUEUE'))
+        {
+            return (boolean) filter_var(Registry::get('MVC_LOG_QUEUE'), FILTER_VALIDATE_BOOLEAN);
+        }
+
+        return true;
+    }
+
+    /**
+     * @param bool $bVar
+     * @return void
+     */
+    public static function set_MVC_LOG_QUEUE(bool $bVar = false) : void
+    {
+        Registry::set('MVC_LOG_QUEUE', $bVar);
+        $GLOBALS['aConfig']['MVC_LOG_QUEUE'] = $bVar;
+    }
+
+    /**
+     * @return bool
+     * @throws \ReflectionException
+     */
+    public static function get_MVC_LOG_CRON() : bool
+    {
+        if (Registry::isRegistered('MVC_LOG_CRON'))
+        {
+            return (boolean) filter_var(Registry::get('MVC_LOG_CRON'), FILTER_VALIDATE_BOOLEAN);
+        }
+
+        return true;
+    }
+
+    /**
+     * @param bool $bVar
+     * @return void
+     */
+    public static function set_MVC_LOG_CRON(bool $bVar = false) : void
+    {
+        Registry::set('MVC_LOG_CRON', $bVar);
+        $GLOBALS['aConfig']['MVC_LOG_CRON'] = $bVar;
     }
 
     /**
@@ -1302,6 +1336,54 @@ class Config
     }
 
     /**
+     * @return string
+     * @throws \ReflectionException
+     */
+    public static function get_MVC_LOG_FILE_QUEUE() : string
+    {
+        if (Registry::isRegistered('MVC_LOG_FILE_QUEUE'))
+        {
+            return (string) Registry::get('MVC_LOG_FILE_QUEUE');
+        }
+
+        return '';
+    }
+
+    /**
+     * @param string $sLogFileName
+     * @return void
+     */
+    public static function set_MVC_LOG_FILE_QUEUE(string $sLogFileName = '') : void
+    {
+        Registry::set('MVC_LOG_FILE_QUEUE', $sLogFileName);
+        $GLOBALS['aConfig']['MVC_LOG_FILE_QUEUE'] = $sLogFileName;
+    }
+
+    /**
+     * @return string
+     * @throws \ReflectionException
+     */
+    public static function get_MVC_LOG_FILE_CRON() : string
+    {
+        if (Registry::isRegistered('MVC_LOG_FILE_CRON'))
+        {
+            return (string) Registry::get('MVC_LOG_FILE_CRON');
+        }
+
+        return '';
+    }
+
+    /**
+     * @param string $sLogFileName
+     * @return void
+     */
+    public static function set_MVC_LOG_FILE_CRON(string $sLogFileName = '') : void
+    {
+        Registry::set('MVC_LOG_FILE_CRON', $sLogFileName);
+        $GLOBALS['aConfig']['MVC_LOG_FILE_CRON'] = $sLogFileName;
+    }
+
+    /**
      * @return bool
      * @throws \ReflectionException
      */
@@ -1608,6 +1690,102 @@ class Config
     }
 
     /**
+     * @return string
+     * @throws \ReflectionException
+     */
+    public static function get_MVC_QUEUE_WORKER_AUTO_ROUTE_PREFIX() : string
+    {
+        if (Registry::isRegistered('MVC_QUEUE_WORKER_AUTO_ROUTE_PREFIX'))
+        {
+            return (string) Registry::get('MVC_QUEUE_WORKER_AUTO_ROUTE_PREFIX');
+        }
+
+        return $GLOBALS['aConfig']['MVC_QUEUE_WORKER_AUTO_ROUTE_PREFIX'];
+    }
+
+    /**
+     * @param string $sPrefix
+     * @return void
+     */
+    public static function set_MVC_QUEUE_WORKER_AUTO_ROUTE_PREFIX(string $sPrefix = '') : void
+    {
+        Registry::set('MVC_QUEUE_WORKER_AUTO_ROUTE_PREFIX', $sPrefix);
+        $GLOBALS['aConfig']['MVC_QUEUE_WORKER_AUTO_ROUTE_PREFIX'] = $sPrefix;
+    }
+
+    /**
+     * @return string
+     * @throws \ReflectionException
+     */
+    public static function get_MVC_QUEUE_RUN() : string
+    {
+        if (Registry::isRegistered('MVC_QUEUE_RUN'))
+        {
+            return (string) Registry::get('MVC_QUEUE_RUN');
+        }
+
+        return $GLOBALS['aConfig']['MVC_QUEUE_RUN'];
+    }
+
+    /**
+     * @param string $sPrefix
+     * @return void
+     */
+    public static function set_MVC_QUEUE_RUN(string $sPrefix = '') : void
+    {
+        Registry::set('MVC_QUEUE_RUN', $sPrefix);
+        $GLOBALS['aConfig']['MVC_QUEUE_RUN'] = $sPrefix;
+    }
+
+    /**
+     * @return string
+     * @throws \ReflectionException
+     */
+    public static function get_MVC_QUEUE_RUN_CLASSMETHOD() : string
+    {
+        if (Registry::isRegistered('MVC_QUEUE_RUN_CLASSMETHOD'))
+        {
+            return (string) Registry::get('MVC_QUEUE_RUN_CLASSMETHOD');
+        }
+
+        return $GLOBALS['aConfig']['MVC_QUEUE_RUN_CLASSMETHOD'];
+    }
+
+    /**
+     * @param string $sPrefix
+     * @return void
+     */
+    public static function set_MVC_QUEUE_RUN_CLASSMETHOD(string $sPrefix = '') : void
+    {
+        Registry::set('MVC_QUEUE_RUN_CLASSMETHOD', $sPrefix);
+        $GLOBALS['aConfig']['MVC_QUEUE_RUN_CLASSMETHOD'] = $sPrefix;
+    }
+
+    /**
+     * @return string
+     * @throws \ReflectionException
+     */
+    public static function get_MVC_QUEUE_WORKER_AUTO_ROUTE_RESOLVE_CLASSMETHOD() : string
+    {
+        if (Registry::isRegistered('MVC_QUEUE_WORKER_AUTO_ROUTE_RESOLVE_CLASSMETHOD'))
+        {
+            return (string) Registry::get('MVC_QUEUE_WORKER_AUTO_ROUTE_RESOLVE_CLASSMETHOD');
+        }
+
+        return $GLOBALS['aConfig']['MVC_QUEUE_WORKER_AUTO_ROUTE_RESOLVE_CLASSMETHOD'];
+    }
+
+    /**
+     * @param string $sPrefix
+     * @return void
+     */
+    public static function set_MVC_QUEUE_WORKER_AUTO_ROUTE_RESOLVE_CLASSMETHOD(string $sPrefix = '') : void
+    {
+        Registry::set('MVC_QUEUE_WORKER_AUTO_ROUTE_RESOLVE_CLASSMETHOD', $sPrefix);
+        $GLOBALS['aConfig']['MVC_QUEUE_WORKER_AUTO_ROUTE_RESOLVE_CLASSMETHOD'] = $sPrefix;
+    }
+
+    /**
      * @return int
      * @throws \ReflectionException
      */
@@ -1686,23 +1864,74 @@ class Config
      * @return string
      * @throws \ReflectionException
      */
-    public static function get_MVC_PROCESS_PID_FILE_FOLDER() : string
+    public static function get_MVC_PROCESS_PID_FILE_DIR() : string
     {
-        if (Registry::isRegistered('MVC_PROCESS_PID_FILE_FOLDER'))
+        if (Registry::isRegistered('MVC_PROCESS_PID_FILE_DIR'))
         {
-            return (string) Registry::get('MVC_PROCESS_PID_FILE_FOLDER');
+            return (string) Registry::get('MVC_PROCESS_PID_FILE_DIR');
         }
 
-        return $GLOBALS['aConfig']['MVC_PROCESS_PID_FILE_FOLDER'];
+        return $GLOBALS['aConfig']['MVC_PROCESS_PID_FILE_DIR'];
     }
 
     /**
      * @param string $sPrefix
      * @return void
      */
-    public static function set_MVC_PROCESS_PID_FILE_FOLDER(string $sPrefix = '') : void
+    public static function set_MVC_PROCESS_PID_FILE_DIR(string $sPrefix = '') : void
     {
-        Registry::set('MVC_PROCESS_PID_FILE_FOLDER', $sPrefix);
-        $GLOBALS['aConfig']['MVC_PROCESS_PID_FILE_FOLDER'] = $sPrefix;
+        Registry::set('MVC_PROCESS_PID_FILE_DIR', $sPrefix);
+        $GLOBALS['aConfig']['MVC_PROCESS_PID_FILE_DIR'] = $sPrefix;
+    }
+
+    #-------------------------------------------------------------------------------------------------------------------
+    # cron
+
+    /**
+     * @return string
+     * @throws \ReflectionException
+     */
+    public static function get_MVC_CRON_ROUTE() : string
+    {
+        if (Registry::isRegistered('MVC_CRON_ROUTE'))
+        {
+            return (string) Registry::get('MVC_CRON_ROUTE');
+        }
+
+        return $GLOBALS['aConfig']['MVC_CRON_ROUTE'];
+    }
+
+    /**
+     * @param string $sPrefix
+     * @return void
+     */
+    public static function set_MVC_CRON_ROUTE(string $sPrefix = '') : void
+    {
+        Registry::set('MVC_CRON_ROUTE', $sPrefix);
+        $GLOBALS['aConfig']['MVC_CRON_ROUTE'] = $sPrefix;
+    }
+
+    /**
+     * @return string
+     * @throws \ReflectionException
+     */
+    public static function get_MVC_CRON_RUN_CLASSMETHOD() : string
+    {
+        if (Registry::isRegistered('MVC_CRON_RUN_CLASSMETHOD'))
+        {
+            return (string) Registry::get('MVC_CRON_RUN_CLASSMETHOD');
+        }
+
+        return $GLOBALS['aConfig']['MVC_CRON_RUN_CLASSMETHOD'];
+    }
+
+    /**
+     * @param string $sPrefix
+     * @return void
+     */
+    public static function set_MVC_CRON_RUN_CLASSMETHOD(string $sPrefix = '') : void
+    {
+        Registry::set('MVC_CRON_RUN_CLASSMETHOD', $sPrefix);
+        $GLOBALS['aConfig']['MVC_CRON_RUN_CLASSMETHOD'] = $sPrefix;
     }
 }

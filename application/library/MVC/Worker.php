@@ -2,7 +2,7 @@
 
 namespace MVC;
 
-use MVC\DataType\DTAppTableQueue;
+use App\DataType\DTAppTableQueue;
 use MVC\DataType\DTDBWhere;
 use MVC\DataType\DTDBWhereRelation;
 
@@ -27,9 +27,9 @@ class Worker
         // get configs
         $aWorkerConfig = self::getConfig();
         $sWorkerConfigKeys = '"' . implode('","', array_keys(array_filter($aWorkerConfig))) . '"';
-        $sRoutePrefix = Config::get_MVC_QUEUE_ROUTE_PREFIX();
+        $sQueueWorkerAutoRoutePrefix = Config::get_MVC_QUEUE_WORKER_AUTO_ROUTE_PREFIX();
 
-        if (true === empty($sRoutePrefix))
+        if (true === empty($sQueueWorkerAutoRoutePrefix))
         {
             return false;
         }
@@ -73,7 +73,7 @@ class Worker
                 // No free processes
                 if (0 === $iAmountProcessesAvailable)
                 {
-                    Process::pause(iSeconds: 3, sPreText: "\t· keine weiteren Prozesse frei");
+                    Process::pause(iSeconds: 3, sPreText: "\t· max Amount of Processes reached: " . $iMaxProcessesParallel);
                     $iProcessCounter = 0;
                 }
                 // Process free; processing can take place
@@ -83,7 +83,7 @@ class Worker
                     $oDTAppTableQueue = $aDTAppTableQueue[$iIteration];
 
                     // call worker via autoRoute async (non-blocking)
-                    $sRoute = $sRoutePrefix . $oDTAppTableQueue->get_key() . '/' . $oDTAppTableQueue->get_id();
+                    $sRoute = $sQueueWorkerAutoRoutePrefix . '/' . $oDTAppTableQueue->get_key() . '/' . $oDTAppTableQueue->get_id();
                     $iPid = Process::callRouteAsync($sRoute);
 
                     // worked, there is a PID
@@ -92,7 +92,7 @@ class Worker
                         // save pidfile
                         Process::savePid($iPid, $oDTAppTableQueue);
 
-                        Event::run('queue.worker',
+                        Event::run('mvc.worker.after',
                             'pid: ' . $iPid .
                             ', started: ' .  count(Process::getRunningPidFileArray()) .
                             ', free: ' . Process::getAmountProcessesAvailable() .
@@ -132,7 +132,7 @@ class Worker
     {
         // get worker config
         $aWorker = self::getConfig();
-        $sRoutePrefix = Config::get_MVC_QUEUE_ROUTE_PREFIX();
+        $sRoutePrefix = Config::get_MVC_QUEUE_WORKER_AUTO_ROUTE_PREFIX();
 
         if (true === empty($sRoutePrefix))
         {
@@ -149,10 +149,12 @@ class Worker
             }
 
             // add individual route for worker
-            $sRoute = $sRoutePrefix . $sQueueKey . '/*';
+            $sRoute = $sRoutePrefix . '/' . $sQueueKey . '/*';
 
-            // route points to '\{module}\Controller\Queue::workerAutoRouteResolve'
-            \MVC\Route::GET($sRoute, '\\' . __CLASS__ . '::workerAutoRouteResolve');
+            \MVC\Route::GET(
+                sPath: $sRoute,
+                sClassMethod: Config::get_MVC_QUEUE_WORKER_AUTO_ROUTE_RESOLVE_CLASSMETHOD()
+            );
         }
 
         return true;

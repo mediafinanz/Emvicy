@@ -2,16 +2,16 @@
 
 namespace MVC;
 
-use MVC\DataType\DTAppTableQueue;
+use App\DataType\DTAppTableQueue;
 use MVC\DB\Model\DbInit;
 
 class Queue
 {
     /**
      * pushes a job to the queue
-     * @param \MVC\DataType\DTAppTableQueue $oDTAppTableQueue
+     * @param \App\DataType\DTAppTableQueue $oDTAppTableQueue
      * @param bool                          $bPreventMultipleCreation
-     * @return \MVC\DataType\DTAppTableQueue|null
+     * @return \App\DataType\DTAppTableQueue|null
      * @throws \ReflectionException
      */
     public static function push(DTAppTableQueue $oDTAppTableQueue, bool $bPreventMultipleCreation = false)
@@ -23,7 +23,7 @@ class Queue
      * get job object due to a key and delete it
      * @param string $sKey
      * @param string $sKey2
-     * @return \MVC\DataType\DTAppTableQueue|false|null
+     * @return \App\DataType\DTAppTableQueue|false|null
      * @throws \ReflectionException
      */
     public static function pop(string $sKey = '', string $sKey2 = '')
@@ -34,7 +34,7 @@ class Queue
     /**
      * pops a concrete job by its id
      * @param int|null $iIdQueue
-     * @return \MVC\DataType\DTAppTableQueue
+     * @return \App\DataType\DTAppTableQueue
      * @throws \ReflectionException
      */
     public static function popOnId(?int $iIdQueue = null)
@@ -54,7 +54,7 @@ class Queue
      * get time based next job array object without deleting it (just inform)
      * @param int                            $iLimit
      * @param \MVC\DataType\DTDBWhere[]      $aDTDBWhere
-     * @return \MVC\DataType\DTAppTableQueue[]
+     * @return \App\DataType\DTAppTableQueue[]
      * @throws \ReflectionException
      */
     public static function next(int $iLimit = 1, array $aDTDBWhere = array())
@@ -65,7 +65,7 @@ class Queue
     /**
      * @param string $sKey
      * @param string $sKey2
-     * @return \MVC\DataType\DTAppTableQueue[]|null
+     * @return \App\DataType\DTAppTableQueue[]|null
      * @throws \ReflectionException
      */
     public static function popAll(string $sKey = '', string $sKey2 = '')

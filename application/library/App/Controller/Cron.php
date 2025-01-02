@@ -1,13 +1,15 @@
 <?php
 
-/**
- * @name $CdmController
- */
-namespace MVC;
+namespace App\Controller;
 
 use App\Controller;
+use MVC\Config;
 use MVC\DataType\DTRequestIn;
 use MVC\DataType\DTRoute;
+use MVC\Event;
+use MVC\Lock;
+use MVC\Log;
+use MVC\Process;
 
 class Cron extends Controller
 {
@@ -37,21 +39,26 @@ class Cron extends Controller
         // maintenance modus
         if (true === file_exists(Config::get_MVC_BASE_PATH() . '/.maintenance'))
         {
-            Log::write('maintenance: ' . date('Y-m-d H:i:s', filemtime(Config::get_MVC_BASE_PATH() . '/.maintenance')), 'cron.log');
+            Event::run(
+                'app.controller.cron.run.maintenance',
+                'maintenance: ' . date('Y-m-d H:i:s', filemtime(Config::get_MVC_BASE_PATH() . '/.maintenance'))
+            );
 
             return false;
         }
 
         Lock::create();
-
         Event::run('mvc.view.render.off');
         Event::run('mvc.view.echoOut.off');
 
         $aCron = get(Config::MODULE()['cron'], array());
 
-        if (Config::MODULE()['queue']['config']['iMaxProcessesOverall'] < count($aCron))
+        if (Config::get_MVC_PROCESS_MAX_PROCESSES_OVERALL() < count($aCron))
         {
-            Log::write('WARNING' . "\t" . '(iMaxProcessesOverall) ' . Config::MODULE()['queue']['config']['iMaxProcessesOverall'] . ' < ' . count($aCron) . ' (number of CronJobs required)', 'cron.log');
+            Event::run(
+                'app.controller.cron.run.warning',
+                'WARNING' . "\t" . '(MVC_PROCESS_MAX_PROCESSES_OVERALL) ' . Config::get_MVC_PROCESS_MAX_PROCESSES_OVERALL() . ' < ' . count($aCron) . ' (number of CronJobs required)'
+            );
         }
 
         foreach ($aCron as $sRoute)
@@ -67,7 +74,7 @@ class Cron extends Controller
             // save pidfile
             Process::savePid($iPid, $sRoute);
 
-            Log::write('pid: ' . $iPid . "\t" . $sRoute, 'cron.log');
+            Event::run('app.controller.cron.run.after', 'pid: ' . $iPid . "\t" . $sRoute);
         }
     }
 
@@ -76,6 +83,7 @@ class Cron extends Controller
      */
     public function __destruct()
     {
-        Event::run('mvc.cron.__destruct');
+        parent::__destruct();
+        Event::run('app.controller.cron.__destruct');
     }
 }

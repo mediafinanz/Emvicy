@@ -10,6 +10,8 @@
 namespace MVC;
 
 
+use Emvicy\Emvicy;
+
 /**
  * InfoTool
  */
@@ -25,8 +27,9 @@ class InfoTool
     public function __construct(\Smarty $oView)
     {
         // add toolbar at the right time
-        Event::bind('mvc.view.render.before', function() {
-            InfoTool::injectToolbar(Config::get_MVC_MODULE_PRIMARY_VIEW());
+        Event::bind('mvc.view.render.before', function() use ($oView) {
+            InfoTool::injectToolbar($oView);
+            Emvicy::cleartemp();
         });
 
         // get toolbar values and save them to registry
@@ -59,8 +62,8 @@ class InfoTool
         $sInfoToolSmarty = '{$' . $sToolBarVarName . '}';
 
         // add toolbar template var to layout
-        $oView->assign('aToolbar', $aToolbar);
-        $oView->assign($sToolBarVarName, $oView->loadTemplateAsString(realpath(__DIR__) . '/templates/infoTool.tpl'));
+        $oView->assign('aToolbar', $aToolbar, true);
+        $oView->assign($sToolBarVarName, $oView->loadTemplateAsString(realpath(__DIR__) . '/templates/infoTool.tpl'), true);
 
         // disable regular view output
         View::$bEchoOut = false;

@@ -1,0 +1,34 @@
+<?php
+
+\MVC\Event::processBindConfigStack([
+
+    /*
+     * Events for which the process destructor should be called
+     * '*.controller.*.__destruct',
+     */
+    'app.controller.__destruct' => [
+        function() {
+            \MVC\Process::destruct();
+        }
+    ],
+    'mvc.process.callRouteAsync.before' => [
+        function (string $sRoute) {
+            \MVC\Log::write($sRoute, \MVC\Config::get_MVC_LOG_FILE_PROCESS());
+        },
+    ],
+    'mvc.process.callRouteAsync.after' => [
+        function (array $aInfo) {
+            \MVC\Log::write(json_encode($aInfo), \MVC\Config::get_MVC_LOG_FILE_PROCESS());
+        },
+    ],
+    'mvc.process.deleteZombieFiles.after' => [
+        function (string $sPidFile) {
+            \MVC\Log::write('pidfile: ' . $sPidFile . "\tDELETE ZOMBIE", \MVC\Config::get_MVC_LOG_FILE_PROCESS());
+        },
+    ],
+    'mvc.process.destruct.after' => [
+        function (int $iPid) {
+            \MVC\Log::write('pid: ' . $iPid . "\tDELETE", \MVC\Config::get_MVC_LOG_FILE_PROCESS());
+        },
+    ],
+]);

@@ -46,6 +46,7 @@ class View extends \MVC\View
     }
 
     /**
+     * @todo move to Http/Header and complete
      * set HTTP Security Header
      * @return bool
      * @throws \ReflectionException
