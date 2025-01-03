@@ -156,25 +156,20 @@ class Process
     }
 
     /**
-     * @example return
-     * Zombie: 4667
-     * Running: 5037    2024-11-23 12:48:32
-     * Zombie: 6026
-     * Zombie: 6028
-     * Zombie: 6030
-     * Zombie: 6032
+     * @param string $sRunningSymbol
+     * @param        $sZombieSymbol
      * @return string
      * @throws \ReflectionException
      */
-    public static function reportOnPid() : string
+    public static function reportOnPid(string $sRunningSymbol = '⚙', $sZombieSymbol = '☠️') : string
     {
         $sCmd = 'cd ' . self::getPidFileFolder() . '; ' .
                 'aPid=`ls`; for iPid in ${aPid}; ' .
                 'do ' . whereis('ps') . ' --pid $iPid  > /dev/null; ' .
                 'if [ "$?" -eq 0 ]; then ' .
                 'sDate=`' . whereis('date') . ' -r $iPid "+%Y-%m-%d %H:%M:%S";`; ' .
-                'echo "<i class=\"fa fa-gear text-success\"></i> Running: $iPid since <code>$sDate</code>"; ' .
-                'else echo "<i class=\"fa fa-skull-crossbones text-danger\"></i> Zombie: <span class=\"text-black-50\">$iPid</span>"; ' .
+                'echo "' . addslashes($sRunningSymbol) . ' Running: $iPid since <code>$sDate</code>"; ' .
+                'else echo "' . addslashes($sZombieSymbol) . ' Zombie: <span class=\"text-black-50\">$iPid</span>"; ' .
                 'fi; ' .
                 'done;';
 
@@ -188,17 +183,7 @@ class Process
      */
     public static function getZombiePidFileArray()
     {
-        $sCmd = 'cd ' . self::getPidFileFolder() . '; aPid=`ls`; for iPid in ${aPid}; do ' . whereis('ps') . ' --pid $iPid > /dev/null; if [ "$?" -eq 1 ]; then echo "$iPid"; fi; done;';
-        $aPid = array_filter(explode("\n", shell_exec($sCmd)));
-
-        $aPid = array_map(
-            function($sPid){
-                return self::getPidFileFolder() . $sPid;
-            },
-            $aPid
-        );
-
-        return $aPid;
+        return self::getPidFileArray(1);
     }
 
     /**
@@ -208,7 +193,17 @@ class Process
      */
     public static function getRunningPidFileArray()
     {
-        $sCmd = 'cd ' . self::getPidFileFolder() . '; aPid=`ls`; for iPid in ${aPid}; do ' . whereis('ps') . ' --pid $iPid > /dev/null; if [ "$?" -eq 0 ]; then echo "$iPid"; fi; done;';
+        return self::getPidFileArray(0);
+    }
+
+    /**
+     * @param int $iFlag 1=zombie;0=running
+     * @return string[]
+     * @throws \ReflectionException
+     */
+    protected static function getPidFileArray(int $iFlag = 1)
+    {
+        $sCmd = 'cd ' . self::getPidFileFolder() . '; aPid=`ls`; for iPid in ${aPid}; do ' . whereis('ps') . ' --pid $iPid > /dev/null; if [ "$?" -eq ' . $iFlag . ' ]; then echo "$iPid"; fi; done;';
         $aPid = array_filter(explode("\n", shell_exec($sCmd)));
 
         $aPid = array_map(
@@ -227,34 +222,21 @@ class Process
      */
     public static function deleteZombieFiles()
     {
-        $sCacheKey = Strings::seofy(__METHOD__);
-        $iCacheTime = (int) Cache::getCache($sCacheKey);
-        $iTimePassed = (time() - $iCacheTime);
+        $aZombie = self::getZombiePidFileArray();
 
-        // Allow action if never run before or after expiry of the waiting time
-        if (true === empty($iCacheTime) || $iTimePassed >= Config::get_MVC_PROCESS_KILL_ZOMBIES_AFTER_SECONDS())
+        foreach ($aZombie as $sPidFile)
         {
-            $aZombie = self::getZombiePidFileArray();
+            $bUnlink = unlink($sPidFile);
 
-            Log::write($aZombie, Config::get_MVC_LOG_FILE_PROCESS());
-
-
-            foreach ($aZombie as $sPidFile)
+            if (true === $bUnlink)
             {
-                $bUnlink = unlink($sPidFile);
-
-                if (true === $bUnlink)
-                {
-                    Event::run('mvc.process.deleteZombieFiles.after', $sPidFile);
-                }
+                Event::run('mvc.process.deleteZombieFiles.after', $sPidFile);
             }
-
-            Cache::saveCache($sCacheKey, time());
         }
     }
 
     /**
-     * delete pidfile on shutdown
+     * delete pid-files on shutdown
      * @return void
      * @throws \ReflectionException
      */
@@ -265,7 +247,6 @@ class Process
         if (true === is_int($iPid))
         {
             $sPidFile = self::getPidFileFolder() . $iPid;
-
             $bUnlink = (true === file_exists($sPidFile))
                 ? unlink($sPidFile)
                 : false
@@ -275,8 +256,8 @@ class Process
             {
                 Event::run('mvc.process.destruct.after', $iPid);
             }
-
-            self::deleteZombieFiles();
         }
+
+        self::deleteZombieFiles();
     }
 }

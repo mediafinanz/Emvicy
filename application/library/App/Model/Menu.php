@@ -2,7 +2,8 @@
 
 namespace App\Model;
 
-use MVC\ArrDot;
+use MVC\Config;
+use MVC\Convert;
 use MVC\Event;
 use MVC\Registry;
 use MVC\Route;
@@ -16,18 +17,23 @@ class Menu
     protected static $sRegistryKeyPrefix = __CLASS__ . '.';
 
     /**
-     * @param \MVC\ArrDot $oArrDot
-     * @param bool        $bGetPropertiesFromRouteOnTag default=false
-     * @param string      $sCallback                    default='\App\Model\Menu::buildBootstrap5Menu'
+     * @param array  $aMenuConfig                   default=array(); loading from Config::MODULE()['Menu']
+     * @param bool   $bGetPropertiesFromRouteOnTag  default=false
+     * @param string $sCallback                     default='\App\Model\Menu::buildBootstrap5Menu'
      * @return void
      * @throws \ReflectionException
      */
-    public static function buildAllMenus(ArrDot $oArrDot, bool $bGetPropertiesFromRouteOnTag = false, string $sCallback = '\App\Model\Menu::buildBootstrap5Menu')
+    public static function buildAllMenus(array $aMenuConfig = array(), bool $bGetPropertiesFromRouteOnTag = false, string $sCallback = '\App\Model\Menu::buildBootstrap5Menu')
     {
-        Event::run('app.model.menu.build.before', $oArrDot);
+        // try to load module's Menu config if missing in param
+        (true === empty($aMenuConfig))
+            ? $aMenuConfig = get(Config::MODULE()['Menu'], array())
+            : false
+        ;
+        Event::run('app.model.menu.build.before', $aMenuConfig);
 
         // walk config array and build menus
-        foreach ($oArrDot->get() as $sMenuName => $aMenu)
+        foreach ($aMenuConfig as $sMenuName => $aMenu)
         {
             self::set(
                 $sMenuName,
@@ -35,7 +41,7 @@ class Menu
             );
         }
 
-        Event::run('app.model.menu.build.after', $oArrDot);
+        Event::run('app.model.menu.build.after', $aMenuConfig);
     }
 
     /**
@@ -101,7 +107,7 @@ class Menu
                 $sId = $aProperty;
                 $aProperty = [
                     'sUrl' => $oRoute->get_path(),
-                    'sText' => get($oRoute->get_additional()['sTitle'], $oRoute->get_path())
+                    'sText' => ((true === is_object($oRoute->get_additional())) ? $oRoute->get_additional()->get_sTitle() : $sId)
                 ];
 
                 if (isset($aSub))

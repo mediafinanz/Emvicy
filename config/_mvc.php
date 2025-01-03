@@ -301,10 +301,13 @@ MVC_MISC: {
     $aConfig['MVC_UNIQUE_ID'] = date('YmdHis') . '' . uniqid();
 }
 
+// needs a leading slash, avoid a trailing slash
+$aConfig['MVC_ROUTE_PREFIX'] = '/~';
+
 MVC_QUEUE: {
 
     // prefix for AutoRoutes
-    $aConfig['MVC_QUEUE_ROUTE_PREFIX'] = '/_mvc/queue';
+    $aConfig['MVC_QUEUE_ROUTE_PREFIX'] = $aConfig['MVC_ROUTE_PREFIX'] . '/queue';
 
     // Route for running Queue; calling Worker on Jobs
     // @see modules/{module}/etc/config/{module}/config/_queue.php
@@ -329,9 +332,6 @@ MVC_PROCESS: {
     // Maximum number of all job processes allowed in parallel
     $aConfig['MVC_PROCESS_MAX_PROCESSES_OVERALL'] = 30;
 
-    // kill ZombieFiles after Seconds
-    $aConfig['MVC_PROCESS_KILL_ZOMBIES_AFTER_SECONDS'] = 300;
-
     // pidFiles directory
     $aConfig['MVC_PROCESS_PID_FILE_DIR'] = $aConfig['MVC_APPLICATION_PATH'] . '/pid/';
 }
@@ -340,7 +340,7 @@ MVC_CRON: {
 
     // @see modules/{module}/etc/config/{module}/config/_cron.php
     // @see modules/{module}/etc/routing/service.php
-    $aConfig['MVC_CRON_ROUTE'] = '/_mvc/cron';
+    $aConfig['MVC_CRON_ROUTE'] = $aConfig['MVC_ROUTE_PREFIX'] . '/cron/run';
 
     // Class::method responsible for running CRON
     $aConfig['MVC_CRON_RUN_CLASSMETHOD'] = '\App\Controller\Cron::run';

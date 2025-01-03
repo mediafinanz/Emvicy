@@ -449,12 +449,17 @@ class Db
      * @return bool
      * @throws \ReflectionException
      */
-    protected function checkIfTableExists ($sTable) : bool
+    protected function checkIfTableExists($sTable) : bool
     {
         try
         {
-            // Select 1 from table_name will return false if the table does not exist.
-            $aResult = self::getDbPdo()->fetchAll("DESCRIBE " . $sTable);
+            // Select will be empty if the table does not exist.
+            $aResult = self::getDbPdo()->fetchAll("
+                SELECT * 
+                FROM information_schema.tables 
+                WHERE table_schema = '" . $this->aConfig['db']['dbname'] . "' 
+                AND table_name = '" . $sTable . "' LIMIT 1;"
+            );
         }
         catch (\Exception $oException)
         {
@@ -463,7 +468,7 @@ class Db
             return false;
         }
 
-        if (empty($aResult))
+        if (true === empty($aResult))
         {
             return false;
         }

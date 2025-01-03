@@ -459,25 +459,21 @@ class Route
             return DTRoute::create();
         }
 
-        // index
-        $aIndex = Arr::recursiveFind(Convert::objectToArray(Route::$aMethodRoute), $sTag);
+        // convert only once at runtime
+        if (false === Registry::isRegistered('mvc_route_getOnTag_aRoute'))
+        {
+            $aRoute = Convert::objectToArray(self::$aRoute);
+            Registry::set('mvc_route_getOnTag_aRoute', $aRoute);
+        }
 
-        // is wildcard; take DTRoute from Route::$aRoute
-        if ('*' === get($aIndex[0]))
-        {
-            $sPath = get($aIndex[1], '');
-            /** @var DTRoute $oDTRoute */
-            $oDTRoute = get(Route::$aRoute[$sPath], DTRoute::create());
-        }
-        // is concrete, not a wildcard; take DTRoute from Route::$aMethodRoute
-        else
-        {
-            array_pop($aIndex); # remove last
-            $sIndex = implode('.', $aIndex);
-            $oArrDot = new ArrDot(Convert::objectToArray(Route::$aMethodRoute));
-            /** @var DTRoute $oDTRoute */
-            $oDTRoute = (false === empty($sIndex)) ? DTRoute::create($oArrDot->get($sIndex)) : DTRoute::create();
-        }
+        $aRoute = Registry::get('mvc_route_getOnTag_aRoute');
+        $iKey = array_search(
+            // what to search for
+            $sTag,
+            // Array to search in & Key to look after
+            array_column($aRoute, 'tag')
+        );
+        $oDTRoute = self::$aRoute[array_keys($aRoute)[$iKey]];
 
         return $oDTRoute;
     }

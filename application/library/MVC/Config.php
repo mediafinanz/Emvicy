@@ -1662,6 +1662,30 @@ class Config
         return array();
     }
 
+    /**
+     * @return string
+     * @throws \ReflectionException
+     */
+    public static function get_MVC_ROUTE_PREFIX() : string
+    {
+        if (Registry::isRegistered('MVC_ROUTE_PREFIX'))
+        {
+            return (string) Registry::get('MVC_ROUTE_PREFIX');
+        }
+
+        return $GLOBALS['aConfig']['MVC_ROUTE_PREFIX'];
+    }
+
+    /**
+     * @param string $sPrefix
+     * @return void
+     */
+    public static function set_MVC_ROUTE_PREFIX(string $sPrefix = '') : void
+    {
+        Registry::set('MVC_ROUTE_PREFIX', $sPrefix);
+        $GLOBALS['aConfig']['MVC_ROUTE_PREFIX'] = $sPrefix;
+    }
+
     #-------------------------------------------------------------------------------------------------------------------
     # Queue
 
@@ -1834,30 +1858,6 @@ class Config
     {
         Registry::set('MVC_PROCESS_MAX_PROCESSES_OVERALL', $iValue);
         $GLOBALS['aConfig']['MVC_PROCESS_MAX_PROCESSES_OVERALL'] = $iValue;
-    }
-
-    /**
-     * @return int
-     * @throws \ReflectionException
-     */
-    public static function get_MVC_PROCESS_KILL_ZOMBIES_AFTER_SECONDS() : int
-    {
-        if (Registry::isRegistered('MVC_PROCESS_KILL_ZOMBIES_AFTER_SECONDS'))
-        {
-            return (int) Registry::get('MVC_PROCESS_KILL_ZOMBIES_AFTER_SECONDS');
-        }
-
-        return $GLOBALS['aConfig']['MVC_PROCESS_KILL_ZOMBIES_AFTER_SECONDS'];
-    }
-
-    /**
-     * @param int $iValue
-     * @return void
-     */
-    public static function set_MVC_PROCESS_KILL_ZOMBIES_AFTER_SECONDS(int $iValue = 300) : void
-    {
-        Registry::set('MVC_PROCESS_KILL_ZOMBIES_AFTER_SECONDS', $iValue);
-        $GLOBALS['aConfig']['MVC_PROCESS_KILL_ZOMBIES_AFTER_SECONDS'] = $iValue;
     }
 
     /**
