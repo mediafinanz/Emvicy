@@ -427,8 +427,13 @@ class Db
     {
         try
         {
-            // Select 1 from table_name will return false if the table does not exist.
-            $aResult = $this->oDbPDO->fetchAll("DESCRIBE " . $sTable);
+            // Select will be empty if the table does not exist.
+            $aResult = $this->oDbPDO->fetchAll("
+                SELECT * 
+                FROM information_schema.tables 
+                WHERE table_schema = '" . $this->aConfig['db']['dbname'] . "' 
+                AND table_name = '" . $sTable . "' LIMIT 1;"
+            );
         }
         catch (\Exception $oException)
         {
