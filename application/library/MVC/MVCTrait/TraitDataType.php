@@ -15,12 +15,13 @@ use MVC\DataType\DTValue;
 trait TraitDataType
 {
     /**
+     * returns the value from a DocCommentKey
      * @param string $sProperty
      * @param string $sDocCommentKey default=@var
      * @return string
      * @throws \ReflectionException
      */
-    function getDocCommentValueOfProperty2(string $sProperty = '', string $sDocCommentKey = '@var')
+    function getDocCommentValueOfProperty(string $sProperty = '', string $sDocCommentKey = '@var')
     {
         $oReflectionProperty = new \ReflectionProperty($this, $sProperty);
         $sDocComment = $oReflectionProperty->getDocComment();
@@ -34,73 +35,6 @@ trait TraitDataType
         )))));
 
         return $sResult;
-    }
-
-    /**
-     * returns the value from a DocCommentKey (such as @param string $sProperty
-     * @param string $sDocCommentKey
-     * @param string $sProperty
-     * @param string $sDocCommentKey
-     * @param bool $bReturnArray | default=false
-     * @return array|false|mixed|string
-     * @throws \ReflectionException
-     */
-    function getDocCommentValueOfProperty(string $sProperty = '', string $sDocCommentKey = '@var', bool $bReturnArray = false)
-    {
-        // get array of properties
-        $oReflectionClass = new \ReflectionClass($this);
-        $aProperty = array_keys(get_class_vars($oReflectionClass->getName()));
-        $bPropertyExists = in_array($sProperty, $aProperty);
-
-        if (false === $bPropertyExists)
-        {
-            return '';
-        }
-
-        $oReflectionProperty = new \ReflectionProperty($this, $sProperty);
-        $sDocComment = $oReflectionProperty->getDocComment();
-        $aExplode = explode("\n", $sDocComment);
-
-        // iterate DocComment lines
-        foreach ($aExplode as $sLine)
-        {
-            // remove unwanted
-            $sLine = str_replace('*', '', str_replace('/', '', $sLine));
-
-            // key found
-            if (stristr($sLine, $sDocCommentKey))
-            {
-                // remove unwanted
-                $sLine = trim(str_replace('@', '', str_replace($sDocCommentKey, '', $sLine)));
-
-                // if piped, explode
-                if (strstr($sLine, '|'))
-                {
-                    $aLine = explode('|', $sLine);
-                    $aLine = array_map('trim', $aLine);
-                    $aLine = array_map('strtolower', $aLine);
-
-                    if (true === $bReturnArray)
-                    {
-                        return $aLine;
-                    }
-
-                    // if there is null, take null...
-                    if (true === in_array('null', $aLine))
-                    {
-                        return 'null';
-                    }
-
-                    // ...otherwise first type
-                    return current($aLine);
-                }
-
-                // value left
-                return $sLine;
-            }
-        }
-
-        return '';
     }
 
     /**
@@ -120,7 +54,7 @@ trait TraitDataType
         foreach ($aData as $sKey => $mValue)
         {
             // value should be type of
-            $mType = $this->getDocCommentValueOfProperty($sKey, bReturnArray: true);
+            $mType = $this->getDocCommentValueOfProperty($sKey);
             $sType = $mType;
 
             if (true === is_array($mType))

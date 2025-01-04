@@ -1,5 +1,7 @@
 <?php
 
+#-------------------------------------------------------------------------------------------------------------------
+# queue
 
 // Automatically builds callable routes for each queue key,
 // placed in config `etc/config/{module}/config/_queue.php`.
@@ -17,4 +19,12 @@
 \MVC\Route::GET(
     \MVC\Config::get_MVC_QUEUE_RUN(),
     \MVC\Config::get_MVC_QUEUE_RUN_CLASSMETHOD()
+);
+
+#-------------------------------------------------------------------------------------------------------------------
+# cron
+
+\MVC\Route::GET(
+    \MVC\Config::get_MVC_CRON_ROUTE(),
+    \MVC\Config::get_MVC_CRON_RUN_CLASSMETHOD()
 );

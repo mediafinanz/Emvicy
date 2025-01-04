@@ -6,6 +6,11 @@
 
 \MVC\Event::processBindConfigStack([
 
+    'mvc.application.maintenance' => [
+        function(int $iFilectime) {
+            \MVC\Log::write('maintenance since ' . date('Y-m-d H:i:s', $iFilectime), \MVC\Config::get_MVC_LOG_FILE_DEFAULT());
+        }
+    ],
     'mvc.application.setSession.before' => [
         // enable Session
         function() {

@@ -43,7 +43,7 @@ MVC_RUNTIME_SETTINGS: {
     // Log autoloader actions
     $aConfig['MVC_LOG_AUTOLOADER'] = true;
 
-    // address the built-in php server will run on
+    // address the built-in php server will run on ( php emvicy serve )
     $aConfig['MVC_PHP_SERVER'] = '127.0.0.1:1969';
 }
 
@@ -116,7 +116,6 @@ MVC_APPLICATION_SETTINGS_I: {
     // be aware that setting this to "true" would produce much data in the logfile (consider using logrotate!)
     // anyway this might be useful for a develop environment, as it helps debugging and understanding
     $aConfig['MVC_LOG_EVENT_RUN'] = false;          // logging enabled true|false
-    $aConfig['MVC_EVENT_LOG_RUN'] = $aConfig['MVC_LOG_EVENT_RUN']; /** @deprecated use instead: MVC_LOG_EVENT_RUN */
     $aConfig['MVC_LOG_POLICY'] = true;              // logging enabled true|false
     $aConfig['MVC_LOG_PROCESS'] = true;              // logging enabled true|false
     $aConfig['MVC_LOG_QUEUE'] = true;              // logging enabled true|false

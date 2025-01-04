@@ -1,19 +1,27 @@
 <?php
+/**
+ * Master.php
+ *
+ * @package Emvicy
+ * @copyright ueffing.net
+ * @author Guido K.B.W. Üffing <emvicy@ueffing.net>
+ * @license GNU GENERAL PUBLIC LICENSE Version 3. See application/doc/COPYING
+ */
 
 /**
- * @name ${module}Controller
+ * @name $FooController
  */
-namespace {module}\Controller;
+namespace Foo\Controller\Regular;
 
 use App\Controller;
-    use MVC\DataType\DTRequestIn;
+use MVC\DataType\DTRequestIn;
 use MVC\DataType\DTRoute;
 use MVC\MVCTrait\TraitDataType;
 
 /**
  * @extends Controller
  */
-class _Master extends Controller
+class Master extends Controller
 {
     use TraitDataType;
 
@@ -34,26 +42,10 @@ class _Master extends Controller
     public function __construct(DTRequestIn $oDTRequestIn, DTRoute $oDTRoute)
 	{
         parent::__construct($oDTRequestIn, $oDTRoute);
-
-        // View
-        if (true === $this->isPrimary())
-        {
-            if (false === function_exists('{module}\Controller\view'))
-            {
-                /**
-                 * @return \{module}\View\Index|\MVC\View|null
-                 */
-                function view() {return \{module}\View\Index::init();}
-            }
-        }
-        else
-        {
-            \{module}\View\Index::init();
-        }
     }
 
     public function __destruct()
     {
-        ;
+        parent::__destruct();
     }
 }

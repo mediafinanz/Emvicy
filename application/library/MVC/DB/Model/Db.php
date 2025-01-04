@@ -57,11 +57,6 @@ class Db
      */
     public $aFieldArrayComplete = array();
 
-//    /**
-//     * @var \MVC\DB\Model\DbPDO
-//     */
-//    public $oDbPDO;
-
     /**
      * @var bool
      */
@@ -163,19 +158,6 @@ class Db
         $this->aConfig = $aDbConfig;
         $this->sCacheKeyTableName = __CLASS__ . '.' . $this->sTableName;
         $this->sCacheValueTableName = func_get_args();
-
-//        // init DB
-//        $sRegistryKey = 'oDbPDO';
-//
-//        if (Registry::isRegistered($sRegistryKey))
-//        {
-//            self::getDbPdo() = Registry::get($sRegistryKey);
-//        }
-//        else
-//        {
-//            self::getDbPdo() = new DbPDO($this->aConfig);
-//            Registry::set($sRegistryKey, self::getDbPdo());
-//        }
 
         $this->setCachingState();
         $this->setSqlLoggingState();
@@ -429,22 +411,6 @@ class Db
     }
 
     /**
-     * @deprecated
-     * @param array $aField
-     * @return bool
-     * @throws \ReflectionException
-     */
-    protected function bFieldsAreEqual(array $aField = array()) : bool
-    {
-        $aParamFieldKey = array_keys($aField);
-        $aDbFieldKey = array_keys($this->getFieldInfo());
-        $mDiff1 = array_diff($aParamFieldKey, $aDbFieldKey);
-        $mDiff2 = array_diff($aDbFieldKey, $aParamFieldKey);
-
-        return (empty($mDiff1) && empty($mDiff2));
-    }
-
-    /**
      * @param $sTable
      * @return bool
      * @throws \ReflectionException
@@ -659,6 +625,7 @@ class Db
         // Insert
         $aInsert = [];
         $aInsertTmp = array_diff($aTableFieldDef, $aTableNoForeignKeys);
+
         foreach ($aInsertTmp as $sInsert) {(isset($this->aField[$sInsert])) ? $aInsert[$sInsert] = $this->aField[$sInsert] : false;}
 
         // DELETE
@@ -724,7 +691,7 @@ class Db
         {
             $sSql = "ALTER TABLE `" . $this->sTableName . "` CHANGE  `" . $sKey . "`\n`" . $sKey . "` " . $sValue . "; \n";
 
-            Event::run('mvc.db.model.db.update.sql', $sSql . (' /* ' . Log::prepareDebug(debug_backtrace(limit: 1)) . ' */ ') . "\n");
+            Event::run('mvc.db.model.db.' . $this->sTableName . '.update.sql', $sSql . (' /* ' . Log::prepareDebug(debug_backtrace(limit: 1)) . ' */ ') . "\n");
 
             try
             {
@@ -1343,7 +1310,6 @@ class Db
         );
 
         $oDTValue = DTValue::create()->set_mValue(array('oDb' => $this, 'aDTDBSet' => $aDTDBSet, 'aDTDBWhere' => $aDTDBWhere));
-        Event::run('mvc.db.model.db.update.before', $oDTValue);/** @deprecated  */
         Event::run('mvc.db.model.db.' . $this->sTableName . '.update.before', $oDTValue);
         /** @var \MVC\DataType\DTDBSet[] $aDTDBSet */
         $aDTDBSet = $oDTValue->get_mValue()['aDTDBSet'];
@@ -1386,7 +1352,6 @@ class Db
 
         #---
 
-        Event::run('mvc.db.model.db.update.sql', $sSqlExplain . (' /* ' . Log::prepareDebug(debug_backtrace(limit: 1)) . ' */ ') . "\n");/** @deprecated  */
         Event::run('mvc.db.model.db.' . $this->sTableName . '.update.sql', $sSqlExplain . (' /* ' . Log::prepareDebug(debug_backtrace(limit: 1)) . ' */ ') . "\n");
 
         #---
@@ -1442,13 +1407,11 @@ class Db
         {
             \MVC\Error::exception($oException);
             $oDTValue = DTValue::create()->set_mValue(array('oDb' => $this, 'aDTDBSet' => $aDTDBSet, 'aDTDBWhere' => $aDTDBWhere, 'oException' => $oException));
-            Event::run('mvc.db.model.db.update.fail', $oDTValue);/** @deprecated  */
             Event::run('mvc.db.model.db.' . $this->sTableName . '.update.fail', $oDTValue);
 
             return false;
         }
 
-        Event::run('mvc.db.model.db.update.success', $oDTValue);/** @deprecated  */
         Event::run('mvc.db.model.db.' . $this->sTableName . '.update.success', $oDTValue);
 
         return true;

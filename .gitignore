@@ -14,6 +14,7 @@ application/library/MVC/xarray.php
 application/.composer
 application/cache/*
 application/log/*
+application/pid/*
 application/session/*
 application/templates_c/*
 application/composer.lock

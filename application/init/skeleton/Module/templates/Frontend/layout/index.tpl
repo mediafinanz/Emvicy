@@ -20,17 +20,17 @@
 <body>
 	<a id="top"></a>
 
-	{Foo\View\Index::init()->loadTemplateAsString($oDTRoutingAdditional->get_sMainmenu())}
+	{{module}\View\Index::init()->loadTemplateAsString($oDTRoutingAdditional->get_sMainmenu())}
 
 	<main role="main">
 
-		{Foo\View\Index::init()->loadTemplateAsString($oDTRoutingAdditional->get_sContent())}
+		{{module}\View\Index::init()->loadTemplateAsString($oDTRoutingAdditional->get_sContent())}
 
 	</main>
 
-	{Foo\View\Index::init()->loadTemplateAsString($oDTRoutingAdditional->get_sFooter())}
-	{Foo\View\Index::init()->loadTemplateAsString($oDTRoutingAdditional->get_sNoscript())}
-	{Foo\View\Index::init()->loadTemplateAsString($oDTRoutingAdditional->get_sCookieConsent())}
+	{{module}\View\Index::init()->loadTemplateAsString($oDTRoutingAdditional->get_s{module}ter())}
+	{{module}\View\Index::init()->loadTemplateAsString($oDTRoutingAdditional->get_sNoscript())}
+	{{module}\View\Index::init()->loadTemplateAsString($oDTRoutingAdditional->get_sCookieConsent())}
 
 	{foreach key=sKey item=sItem from=$oDTRoutingAdditional->get_aScript()}
 		<script src="{$sItem}" type="text/javascript"></script>

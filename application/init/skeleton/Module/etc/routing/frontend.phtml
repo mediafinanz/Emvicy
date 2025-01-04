@@ -10,13 +10,17 @@
 // template
 $oDTRoutingAdditional = \{module}\DataType\DTRoutingAdditional::create()
     ->set_sTitle('{module}')
-    ->set_sLayout('Frontend/layout/index.tpl')
-    ->set_sMainmenu('Frontend/layout/menu.tpl')
-    ->set_sContent('Frontend/content/index.tpl')
-    ->set_sHeader('Frontend/layout/header.tpl')
-    ->set_sNoscript('Frontend/content/_noscript.tpl')
-    ->set_sCookieConsent('Frontend/content/_cookieConsent.tpl')
-    ->set_sFooter('Frontend/layout/footer.tpl')
+
+    # main
+    ->set_sLayout('Frontend/content/index.tpl')
+
+
+//    ->set_sMainmenu('Frontend/layout/menu.tpl')
+//    ->set_sContent('Frontend/content/index.tpl')
+//    ->set_sHeader('Frontend/layout/header.tpl')
+//    ->set_sNoscript('Frontend/content/_noscript.tpl')
+//    ->set_sCookieConsent('Frontend/content/_cookieConsent.tpl')
+//    ->set_s{module}ter('Frontend/layout/{module}ter.tpl')
     ->set_aStyle(array (
         '/Emvicy/assets/bootstrap-5.3.2-dist/css/bootstrap.min.css',
         '/Emvicy/assets/fontawesome-free-6.4.2-web/css/all.min.css',
@@ -25,6 +29,7 @@ $oDTRoutingAdditional = \{module}\DataType\DTRoutingAdditional::create()
     ->set_aScript(array (
         '/Emvicy/assets/jquery-3.7.1/jquery-3.7.1.min.js',
         '/Emvicy/assets/jquery-cookie-1.4.1/jquery.cookie.min.js',
+        '/Emvicy/assets/bootstrap-5.3.2-dist/js/popper.min.js',
         '/Emvicy/assets/bootstrap-5.3.2-dist/js/bootstrap.min.js',
         '/Emvicy/scripts/cookieConsent.min.js',
     ));
@@ -32,16 +37,43 @@ $oDTRoutingAdditional = \{module}\DataType\DTRoutingAdditional::create()
 /*
  * Routes
  */
-\MVC\Route::mix(
-    aMethod: ['GET', 'POST'],
-    sPath: '/', sClassMethod: '\{module}\Controller\Index::index',
-    mOptional: clone $oDTRoutingAdditional,
+\MVC\Route::get(
+    sPath: '/',
+    sClassMethod: '\{module}\Controller\Index::index',
+    mOptional: clone $oDTRoutingAdditional->set_sTitle('Home')->set_sLayout('Frontend/content/index.tpl'),
     sTag: 'home',
 );
+
+# array
 \MVC\Route::get(
-    sPath: '/404/', sClassMethod: '\{module}\Controller\Index::notFound',
-    mOptional: clone $oDTRoutingAdditional
-        ->set_sTitle('404')
-        ->set_sContent('Frontend/content/404.tpl'),
+    sPath: '/imprint/',
+    sClassMethod: '\{module}\Controller\Index::index',
+    mOptional: clone $oDTRoutingAdditional->set_sTitle('Imprint')->set_sLayout('Frontend/content/index.tpl'),
+    sTag: 'imprint',
+);
+# array
+\MVC\Route::get(
+    sPath: '/privacy-policy/',
+    sClassMethod: '\{module}\Controller\Index::index',
+    mOptional: clone $oDTRoutingAdditional->set_sTitle('Privacy Policy')->set_sLayout('Frontend/content/index.tpl'),
+    sTag: 'privacyPolicy',
+);
+# array
+\MVC\Route::get(
+    sPath: '/info/',
+    sClassMethod: '\{module}\Controller\Index::phpinfo',
+    mOptional: clone $oDTRoutingAdditional->set_sTitle('phpinfo()')->set_sLayout('Frontend/content/info.tpl'),
+    sTag: 'info',
+);
+\MVC\Route::any(
+    sPath: '/403/',
+    sClassMethod: '\{module}\Controller\Index::forbidden',
+    mOptional: clone $oDTRoutingAdditional->set_sTitle('403')->set_sLayout('Frontend/content/403.tpl'),
+    sTag: '403',
+);
+\MVC\Route::any(
+    sPath: '/404/',
+    sClassMethod: '\{module}\Controller\Index::notFound',
+    mOptional: clone $oDTRoutingAdditional->set_sTitle('404')->set_sLayout('Frontend/content/404.tpl'),
     sTag: '404',
 );

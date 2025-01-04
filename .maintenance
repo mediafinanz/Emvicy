@@ -1,0 +1,9 @@
+to set this application in a maintenance modus
+rename this file from
+
+.maintenance
+to
+maintenance
+
+(so remove the dot . )
+

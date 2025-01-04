@@ -1,0 +1,15 @@
+<?php
+
+\MVC\Event::processBindConfigStack([
+
+    'app.controller.cron.run.warning' => [
+        function(string $sInfo) {
+            \MVC\Log::write($sInfo, \MVC\Config::get_MVC_LOG_FILE_CRON());
+        }
+    ],
+    'app.controller.cron.run.after' => [
+        function(string $sInfo) {
+            \MVC\Log::write($sInfo, \MVC\Config::get_MVC_LOG_FILE_CRON());
+        }
+    ],
+]);

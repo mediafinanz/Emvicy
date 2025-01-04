@@ -179,7 +179,7 @@ class Event
         # nothing special bonded; simple "RUN" and leave
         if (!isset (self::$aEvent[$sEvent]))
         {
-            if (true === Config::get_MVC_EVENT_LOG_RUN())
+            if (true === Config::get_MVC_LOG_EVENT_RUN())
             {
                 Log::write('RUN' . $sPreLog, Config::get_MVC_LOG_FILE_EVENT());
             }

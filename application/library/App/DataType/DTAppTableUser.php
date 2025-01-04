@@ -116,26 +116,6 @@ class DTAppTableUser extends \MVC\DB\DataType\DB\TableDataType
     }
 
 	/**
-     * @deprecated
-     * @param array $aData
-     * @return array
-     * @throws \ReflectionException
-     */
-    public static function cast(array $aData = array())
-    {
-        $oThis = new self();
-
-        foreach ($aData as $sKey => $sValue)
-        {
-            $sVar = $aData[$sKey];
-            settype($sVar, $oThis->getDocCommentValueOfProperty($sKey));
-            $aData[$sKey] = $sVar;
-        }
-
-        return $aData;
-    }
-
-	/**
 	 * @param int|null $mValue 
 	 * @return $this
 	 * @throws \ReflectionException

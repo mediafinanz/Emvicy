@@ -9,7 +9,7 @@ use MVC\DataType\DTRoute;
 use MVC\Event;
 use MVC\Http\Status_Forbidden_403;
 use MVC\Lock;
-use MVC\Request2;
+use MVC\Request;
 use MVC\RequestHelper;
 use MVC\Route;
 use MVC\Worker;
@@ -20,7 +20,7 @@ class Queue extends Controller
 	{
         parent::__construct($oDTRequestIn, $oDTRoute);
 
-        if (false === Request2::in()->get_isCli())
+        if (false === Request::in()->get_isCli())
         {
             RequestHelper::redirect(
                 sLocation: Route::getOnTag('403')->get_path(),
@@ -67,7 +67,7 @@ class Queue extends Controller
         $sQueueKey = strtok(substr($oDTRoute->get_path(), strlen($sQueueWorkerAutoRoutePrefix)), '/');
 
         // if a concrete queue JobID was also transferred as `_tail`; `/queue/worker/{Queue::Key}/*`
-        $iIdQueue = preg_replace('/[^[:digit:]\\-]/ui', '', Request2::in()->get_pathParamArray()['_tail']);
+        $iIdQueue = preg_replace('/[^[:digit:]\\-]/ui', '', Request::in()->get_pathParamArray()['_tail']);
 
         // get worker config
         $aWorkerConfig = Worker::getConfig();

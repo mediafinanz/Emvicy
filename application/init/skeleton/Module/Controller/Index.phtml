@@ -1,4 +1,12 @@
 <?php
+/**
+ * Index.php
+ *
+ * @package Emvicy
+ * @copyright ueffing.net
+ * @author Guido K.B.W. Üffing <emvicy@ueffing.net>
+ * @license GNU GENERAL PUBLIC LICENSE Version 3. See application/doc/COPYING
+ */
 
 /**
  * @name ${module}Controller
@@ -6,15 +14,15 @@
 namespace {module}\Controller;
 
 use App\Model\Menu;
-use MVC\ArrDot;
+use {module}\Controller\Regular\Master;
 use MVC\Config;
 use MVC\DataType\DTRequestIn;
 use MVC\DataType\DTRoute;
+use MVC\Http\Status_Forbidden_403;
+use MVC\Http\Status_Not_Found_404;
 
-/**
- * @extends \{module}\Controller\_Master
- */
-class Index extends _Master
+
+class Index extends Master
 {
     /**
      * @return void
@@ -34,33 +42,58 @@ class Index extends _Master
     {
         parent::__construct($oDTRequestIn, $oDTRoute);
 
-        Menu::buildAllMenus(
-            new ArrDot(Config::MODULE()['Menu']), bGetPropertiesFromRouteOnTag: true,
+        Menu::build(
+            Config::MODULE()['Menu'],
+            bGetPropertiesFromRouteOnTag: true,
             sCallback: '\App\Model\Menu::buildBootstrap5Menu'
         );
     }
 
     /**
-     * @param \MVC\DataType\DTRequestIn $oDTRequestCurrent
+     * @param \MVC\DataType\DTRequestIn $oDTRequestIn
      * @param \MVC\DataType\DTRoute     $oDTRoute
      * @return void
      * @throws \ReflectionException
      */
-	public function index(DTRequestIn $oDTRequestCurrent, DTRoute $oDTRoute)
+    public function phpinfo(DTRequestIn $oDTRequestIn, DTRoute $oDTRoute)
+    {
+        phpinfo();
+        view()->autoAssign();
+    }
+
+    /**
+     * @param \MVC\DataType\DTRequestIn $oDTRequestIn
+     * @param \MVC\DataType\DTRoute     $oDTRoute
+     * @return void
+     * @throws \ReflectionException
+     */
+	public function index(DTRequestIn $oDTRequestIn, DTRoute $oDTRoute)
 	{
-        \{module}\View\Index::init()->autoAssign();
+        view()->autoAssign();
 	}
 
     /**
-     * @param \MVC\DataType\DTRequestIn $oDTRequestCurrent
+     * @param \MVC\DataType\DTRequestIn $oDTRequestIn
      * @param \MVC\DataType\DTRoute     $oDTRoute
      * @return void
      * @throws \ReflectionException
      */
-    public function notFound(DTRequestIn $oDTRequestCurrent, DTRoute $oDTRoute)
+    public function forbidden(DTRequestIn $oDTRequestIn, DTRoute $oDTRoute)
     {
-        \MVC\Http\Status_Not_Found_404::header();
-        \{module}\View\Index::init()->autoAssign();
+        Status_Forbidden_403::header();
+        view()->autoAssign();
+    }
+
+    /**
+     * @param \MVC\DataType\DTRequestIn $oDTRequestIn
+     * @param \MVC\DataType\DTRoute     $oDTRoute
+     * @return void
+     * @throws \ReflectionException
+     */
+    public function notFound(DTRequestIn $oDTRequestIn, DTRoute $oDTRoute)
+    {
+        Status_Not_Found_404::header();
+        view()->autoAssign();
     }
 
     /**
@@ -69,6 +102,7 @@ class Index extends _Master
      */
     public function __destruct ()
     {
-        \{module}\View\Index::init()->render();
+        parent::__destruct();
+        view()->render();
     }
 }

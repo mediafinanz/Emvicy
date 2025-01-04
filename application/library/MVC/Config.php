@@ -1190,32 +1190,6 @@ class Config
     }
 
     /**
-     * @deprecated use instead: \MVC\Config::get_MVC_LOG_EVENT_RUN()
-     * @return bool
-     * @throws \ReflectionException
-     */
-    public static function get_MVC_EVENT_LOG_RUN() : bool
-    {
-        if (Registry::isRegistered('MVC_EVENT_LOG_RUN'))
-        {
-            return (boolean) filter_var(Registry::get('MVC_EVENT_LOG_RUN'), FILTER_VALIDATE_BOOLEAN);
-        }
-
-        return false;
-    }
-
-    /**
-     * @deprecated use instead: \MVC\Config::set_MVC_LOG_EVENT_RUN()
-     * @param bool $bVar
-     * @return void
-     */
-    public static function set_MVC_EVENT_LOG_RUN(bool $bVar = false) : void
-    {
-        Registry::set('MVC_EVENT_LOG_RUN', $bVar);
-        $GLOBALS['aConfig']['MVC_EVENT_LOG_RUN'] = $bVar;
-    }
-
-    /**
      * @return bool
      * @throws \ReflectionException
      */

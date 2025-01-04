@@ -1,0 +1,73 @@
+<?php
+
+namespace Foo\Controller\Api;
+
+use Foo\Controller\Regular\Master;
+use MVC\DataType\DTRequestIn;
+use MVC\DataType\DTRoute;
+use MVC\Http\Header;
+use MVC\Media\Type_Application_json;
+use MVC\Media\Type_Text_csv;
+
+class Api extends Master
+{
+    /**
+     * @return void
+     * @throws \ReflectionException
+     */
+    public static function __preconstruct()
+    {
+        parent::__preconstruct();
+    }
+
+    /**
+     * @param \MVC\DataType\DTRequestIn $oDTRequestIn
+     * @param \MVC\DataType\DTRoute     $oDTRoute
+     * @throws \ReflectionException
+     */
+    public function __construct(DTRequestIn $oDTRequestIn, DTRoute $oDTRoute)
+    {
+        parent::__construct($oDTRequestIn, $oDTRoute);
+        \Foo\View\Index::$bRender = false;
+        \Foo\View\Index::$bEchoOut = false;
+    }
+
+    /**
+     * @param \MVC\DataType\DTRequestIn $oDTRequestIn
+     * @param \MVC\DataType\DTRoute     $oDTRoute
+     * @return void
+     * @throws \ReflectionException
+     */
+	public function index(DTRequestIn $oDTRequestIn, DTRoute $oDTRoute)
+	{
+        Type_Application_json::header();
+//        echo $oDTRequestIn->get_requestmethod();
+        echo $oDTRequestIn->getPropertyJson();
+	}
+
+    /**
+     * @param \MVC\DataType\DTRequestIn $oDTRequestIn
+     * @param \MVC\DataType\DTRoute     $oDTRoute
+     * @return void
+     */
+    public function download(DTRequestIn $oDTRequestIn, DTRoute $oDTRoute)
+    {
+        Header::init()
+            ->Content_Disposition_Attachment('robots.txt')
+            ->Content_Type_application_force_download()
+            ->Content_Type_application_octet_stream()
+            ->Content_Type_application_download()
+            ->Content_Description_File_Transfer()
+            ->Content_Length(filesize('/var/www/html/public/robots.txt'))
+        ;
+        echo file_get_contents('/var/www/html/public/robots.txt');
+    }
+    /**
+     * @throws \ReflectionException
+     * @throws \SmartyException
+     */
+    public function __destruct ()
+    {
+        ;
+    }
+}

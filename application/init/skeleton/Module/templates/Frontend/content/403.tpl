@@ -20,26 +20,18 @@
 
         {include file="Frontend/layout/menu.tpl"}
 
-{*        *}{* @see https://getbootstrap.com/docs/5.3/examples/cheatsheet/ *}
-{*        <div class="container py-4 shadow bg-white padding20">*}
-{*            <div class="text-center">*}
-{*                <h1 class="display-5 fw-bold">*}
-{*                    {$oDTRoutingAdditional->get_sTitle()}*}
-{*                </h1>*}
-{*                <p class="fs-4">*}
-{*                    *}{* @see https://fontawesome.com/icons/php?f=brands&s=solid *}
-{*                    done by <img src="/favicon-32x32.png" style="border: none;margin-top: 5px;margin-right: 2px;"><b>Emvicy</b>, PHP <i class="fa-brands fa-php"></i> MVC Framework*}
-{*                    <br>*}
-{*                </p>*}
-{*                <p>*}
-{*                    <a class="btn btn-primary btn-lg" href="https://emvicy.com/" role="button" target="_blank">*}
-{*                        see Documentation*}
-{*                    </a>*}
-{*                </p>*}
-{*            </div>*}
-{*            <br>*}
-{*            {include file="Frontend/content/_info.tpl"}*}
-{*        </div>*}
+        {* @see https://getbootstrap.com/docs/5.3/migration/#jumbotron AND https://getbootstrap.com/docs/5.3/examples/jumbotron/*}
+        <div class="container py-4 shadow bg-white padding20">
+            <div class="text-center">
+                <h1 class="text-danger">403 - Forbidden</h1>
+                <p>
+                    You don't have permission to access the requested document
+                </p>
+            </div>
+            <br>
+            {include file="Frontend/content/_info.tpl"}
+        </div>
+
 
         {include file="Frontend/layout/footer.tpl"}
         {include file="Frontend/content/_noscript.tpl"}

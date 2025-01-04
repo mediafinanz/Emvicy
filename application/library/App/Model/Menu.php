@@ -23,7 +23,7 @@ class Menu
      * @return void
      * @throws \ReflectionException
      */
-    public static function buildAllMenus(array $aMenuConfig = array(), bool $bGetPropertiesFromRouteOnTag = false, string $sCallback = '\App\Model\Menu::buildBootstrap5Menu')
+    public static function build(array $aMenuConfig = array(), bool $bGetPropertiesFromRouteOnTag = false, string $sCallback = '\App\Model\Menu::buildBootstrap5Menu')
     {
         // try to load module's Menu config if missing in param
         (true === empty($aMenuConfig))

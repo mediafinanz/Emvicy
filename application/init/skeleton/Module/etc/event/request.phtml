@@ -19,22 +19,18 @@
     /**
      * after current request was get
      */
-    'mvc.request.getCurrentRequest.after' => [
+    'mvc.request.in.after' => [
         /*
          * logging requests
          */
-        function(\MVC\DataType\DTArrayObject $oDTArrayObject, \MVC\DataType\DTEventContext $oDTEventContext) {
+        function(\MVC\DataType\DTRequestIn $oDTRequestIn, \MVC\DataType\DTEventContext $oDTEventContext) {
 
             if (false === \MVC\Config::get_MVC_LOG_REQUEST())
             {
                 return false;
             }
 
-            /** @var \MVC\DataType\DTRequestIn $oDTRequestCurrent */
-            $oDTRequestCurrent = $oDTArrayObject->flatten()['oDTRequestCurrent'];
-
-            \MVC\Log::write($oDTRequestCurrent, \MVC\Config::get_MVC_LOG_FILE_REQUEST());
+            \MVC\Log::write($oDTRequestIn, \MVC\Config::get_MVC_LOG_FILE_REQUEST());
         },
     ],
-
 ]);

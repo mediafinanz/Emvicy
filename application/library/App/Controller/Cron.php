@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Controller;
+use MVC\Application;
 use MVC\Config;
 use MVC\DataType\DTRequestIn;
 use MVC\DataType\DTRoute;
@@ -36,14 +37,9 @@ class Cron extends Controller
      */
     public function run(DTRequestIn $oDTRequestCurrent, DTRoute $oDTRoute)
     {
-        // maintenance modus
-        if (true === file_exists(Config::get_MVC_BASE_PATH() . '/.maintenance'))
+        // check on maintenance modus
+        if (true === Application::isMaintenance())
         {
-            Event::run(
-                'app.controller.cron.run.maintenance',
-                'maintenance: ' . date('Y-m-d H:i:s', filemtime(Config::get_MVC_BASE_PATH() . '/.maintenance'))
-            );
-
             return false;
         }
 

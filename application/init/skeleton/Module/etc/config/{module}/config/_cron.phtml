@@ -7,7 +7,9 @@ $aConfig['MODULE']['{module}']['cron'] = [
 
     #-------------------------------------------------------------------------------------------------------------------
     # queue
+    # starts all workers that are listed in config `etc/config/{module}/config/_worker.php`.
 
-    # starts all Worker, listed in config `etc/config/{module}/config/_worker.php`
-    '/queue/worker',
+    $aConfig['MVC_QUEUE_RUN'],
+
 ];
+

@@ -11,7 +11,7 @@ namespace MVC\Http;
 
 use MVC\Enum\EnumHttpHeaderCacheControl;
 use MVC\Enum\EnumHttpHeaderRetryAfter;
-use MVC\Request2;
+use MVC\Request;
 use MVC\RequestHelper;
 use Respect\Validation\Validator;
 
@@ -87,6 +87,7 @@ class Header
     }
 
     /**
+
      * @return $this
      */
     public function Content_Type_application_force_download()
@@ -139,7 +140,7 @@ class Header
 
         if (true === is_array($mEnumCacheControl))
         {
-            /** @var \MVC\Http\EnumCacheControl $sEnumCacheControl */
+            /** @var \MVC\Enum\EnumHttpHeaderCacheControl $sEnumCacheControl */
             foreach ($mEnumCacheControl as $sEnumCacheControl)
             {
                 $sCacheControl.= $sEnumCacheControl->value() . ',';
@@ -233,7 +234,7 @@ class Header
         $sValue = rawurlencode($sValue);
         $sDate = date('D, d M Y H:i:s \G\M\T', $iExpireUnixTimestamp);
         $sHeader = 'Set-Cookie: ' . $sName . '=' . $sValue . ';';
-        (true === empty($sDomain)) ? $sDomain = Request2::in()->get_host() : false;
+        (true === empty($sDomain)) ? $sDomain = Request::in()->get_host() : false;
 
         (false === empty($iExpireUnixTimestamp))
             ? $sHeader.= 'expires=' . $sDate . '; Max-Age=' . ($iExpireUnixTimestamp - time()) . ';'

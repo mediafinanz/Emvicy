@@ -60,7 +60,7 @@ blue: hsl(210,50%,50%)
 <div id="myMvcToolbar" class="myMvcToolbar_expand">
 	<div id="myMvcToolbar_head" class="myMvcToolbar_expand">
 		<span>
-			PHP {$aToolbar.sPHP}, Operating System {$aToolbar.sOS}, {$aToolbar.sEnvOfRequest}, Construction Time: {$aToolbar.sConstructionTime} s,
+			PHP {$aToolbar.sPHP}, Operating System {$aToolbar.sOS}, {if 'true' === getenv('IS_DDEV_PROJECT')}<mark>ddev {getenv('DDEV_VERSION')}</mark>, {/if}{$aToolbar.sEnvOfRequest}, Construction Time: {$aToolbar.sConstructionTime} s,
 			<a href="https://emvicy.com/" target="_blank">Documentation</a>
 		</span>
 		<br>
@@ -274,13 +274,13 @@ Config::MODULE('{MVC\Config::get_MVC_MODULE_PRIMARY_NAME()}')['SESSION']</pre>
 				</div>
 				<div class="subtab22">
 					<h6>Current Request Object</h6>
-					<pre>{MVC\Request2::in()|@print_r:true}</pre>
-					<pre>Request2::in()</pre>
+					<pre>{MVC\Request::in()|@print_r:true}</pre>
+					<pre>Request::in()</pre>
 					<br>
 
 					<h6>Path <small>requested</small><a id="myMvcToolbar_Path"></a> </h6>
 					<code>{$aToolbar.sRoutingPath|escape:"htmlall":"UTF-8"}</code>
-					<pre>Request2::in()->get_path()</pre>
+					<pre>Request::in()->get_path()</pre>
 
 					<h6>Path Param Array</h6>
 					<code>
@@ -290,8 +290,8 @@ Config::MODULE('{MVC\Config::get_MVC_MODULE_PRIMARY_NAME()}')['SESSION']</pre>
 							{$aToolbar.sPathParam}
 						{/if}
 					</code>
-					<pre>Request2::in()->get_pathParamArray();
-Request2::in()->get_pathParamArray()[ $sKey ]</pre>
+					<pre>Request::in()->get_pathParamArray();
+Request::in()->get_pathParamArray()[ $sKey ]</pre>
 
 					<h6>Query <small>requested</small><a id="myMvcToolbar_Query"></a> </h6>
 					<code>
@@ -301,7 +301,7 @@ Request2::in()->get_pathParamArray()[ $sKey ]</pre>
 							{$aToolbar.sRoutingQuery|unescape:"url"|escape:"htmlall":"UTF-8"}
 						{/if}
 					</code>
-					<pre>Request2::in()->get_query()</pre>
+					<pre>Request::in()->get_query()</pre>
 					<br>
 				</div>
 

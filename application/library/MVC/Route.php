@@ -284,8 +284,8 @@ class Route
     public static function getCurrent() : DTRoute
     {
         // Request
-        $sPath = Request2::in()->get_path();
-        $sRequestMethod = Request2::in()->get_requestMethod();
+        $sPath = Request::in()->get_path();
+        $sRequestMethod = Request::in()->get_requestMethod();
 
         // Path 1:1 Match; e.g: /foo/bar/
         if (!is_null(get(self::$aMethodRoute[$sRequestMethod][$sPath]))) # concrete
@@ -436,7 +436,7 @@ class Route
         Event::run (
             'mvc.route.handleFallback.after',
             DTArrayObject::create()
-                ->add_aKeyValue(DTKeyValue::create()->set_sKey('sRequest')->set_sValue(Request2::in()->get_requestUri()))
+                ->add_aKeyValue(DTKeyValue::create()->set_sKey('sRequest')->set_sValue(Request::in()->get_requestUri()))
                 ->add_aKeyValue(DTKeyValue::create()->set_sKey('sForward')->set_sValue($sIndex))
         );
 
@@ -518,7 +518,7 @@ class Route
 
         (true === Registry::isRegistered('oDTRequestIn'))
             ? $oDTRequestIn = Registry::get('oDTRequestIn')
-            : $oDTRequestIn = Request2::in()
+            : $oDTRequestIn = Request::in()
         ;
 
         $oDTRequestIn->set_pathParamArray($aPathParam);

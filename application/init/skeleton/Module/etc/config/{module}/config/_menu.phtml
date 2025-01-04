@@ -10,13 +10,17 @@ $aConfig['MODULE']['{module}']['Menu'] = [
 
     // Name
     'frontend' => [
-        # Route::Tag
-        'home' => [
-            'info',
-            'imprint',
+        'PullDown Menu' => [ # Array key names can also be freely assigned and do not need to correspond to an existing tag
+             'info',
+             '403',
+             '404',
+             'imprint',
+             'privacyPolicy',
         ],
         'info',
-        'foo',
+        '403',
+        '404',
         'imprint',
+        'privacyPolicy',
     ],
 ];

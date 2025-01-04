@@ -6,14 +6,14 @@
      * Events for which the process destructor should be called
      * '*.controller.*.__destruct',
      */
-    'app.controller.__destruct' => [
+    '*.__destruct' => [
         function() {
             \MVC\Process::destruct();
         }
     ],
     'mvc.process.callRouteAsync.before' => [
         function (string $sRoute) {
-            \MVC\Log::write($sRoute, \MVC\Config::get_MVC_LOG_FILE_PROCESS());
+//            \MVC\Log::write($sRoute, \MVC\Config::get_MVC_LOG_FILE_PROCESS());
         },
     ],
     'mvc.process.callRouteAsync.after' => [

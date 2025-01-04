@@ -148,6 +148,33 @@ class Application
     }
 
     /**
+     * @return bool
+     * @throws \ReflectionException
+     */
+    public static function isMaintenance() : bool
+    {
+        return (self::getMaintenanceTimeStamp() > 0);
+    }
+
+    /**
+     * @return int Unix timestamp of the time since which the maintenance is valid | 0 = no maintenance
+     * @throws \ReflectionException
+     */
+    public static function getMaintenanceTimeStamp()
+    {
+        $iFilectime = 0;
+
+        // check on maintenance modus
+        if (true === file_exists(Config::get_MVC_BASE_PATH() . '/maintenance'))
+        {
+            $iFilectime = (int) filectime(Config::get_MVC_BASE_PATH() . '/maintenance');
+            Event::run('mvc.application.maintenance', $iFilectime);
+        }
+
+        return $iFilectime;
+    }
+
+    /**
      * Destructor;
      * runs Event mvc.application.destruct
      * @throws \ReflectionException

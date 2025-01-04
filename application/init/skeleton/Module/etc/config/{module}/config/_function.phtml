@@ -1,0 +1,14 @@
+<?php
+
+// place to store functions
+
+if (false === function_exists('view'))
+{
+    /**
+     * @return \{module}\View\Index
+     */
+    function view()
+    {
+        return \{module}\View\Index::init();
+    }
+}

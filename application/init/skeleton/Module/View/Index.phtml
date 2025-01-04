@@ -14,6 +14,7 @@
 namespace {module}\View;
 
 use App\View;
+use MVC\MVCTrait\TraitViewInit;
 
 /**
  * Index
@@ -21,6 +22,8 @@ use App\View;
  */
 class Index extends View
 {
+    use TraitViewInit;
+
     /**
      * Index constructor.
      * @throws \ReflectionException
@@ -30,5 +33,6 @@ class Index extends View
         parent::__construct();
         $this->sendSecurityHeader();
         $this->sContentVar = 'sContent';
+//        $this->caching = true;
     }
 }

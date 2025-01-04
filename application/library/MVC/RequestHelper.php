@@ -68,7 +68,7 @@ class RequestHelper
         );
 
         // CLI
-        if (true === Request2::in()->get_isCli())
+        if (true === Request::in()->get_isCli())
         {
             echo trim((string) shell_exec(Config::get_MVC_BIN_PHP_BINARY() . ' index.php "' . $sLocation . '"'));
 
@@ -153,7 +153,7 @@ class RequestHelper
      */
     public static function getHeaderValueOnKey(string $sKey = '', bool $bCaseInsensitive = true) : string
     {
-        $aHeader = Request2::in()->get_headerArray();
+        $aHeader = Request::in()->get_headerArray();
 
         // for comparison convert searched key and all header array keys to lowercase
         if (true === $bCaseInsensitive)
