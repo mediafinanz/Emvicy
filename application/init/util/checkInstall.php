@@ -115,8 +115,9 @@ class MyMVCInstaller
         {
             $this->prepareForOutput();
             $this->_text("\n<br><span class='text-info'><b>🛈</b> You need to install at least one Module as primary to be able to work.</span>");
-            $this->_text("\n<br>Open a console and enter:");
-            $this->_text("\n\t<hr><kbd>cd " . $this->_aConfig['MVC_BASE_PATH'] . "; " . PHP_BINDIR . "/php emvicy</kbd>\n\n");
+            $this->_text("\n<hr><i><u>Example</u>: create the primary module 'Foo'</i>");
+            $this->_text("\n\t<br><pre class='bg-black text-white padding10 rounded-1'>cd " . $this->_aConfig['MVC_BASE_PATH'] . "; \\\n" . PHP_BINDIR . "/php emvicy module:create Foo primary</pre>\n");
+            $this->_text("Afterwards, reload this page");
             exit();
         }
     }
@@ -271,17 +272,17 @@ class MyMVCInstaller
      */
     protected function placeMarkup()
     {
-        $sMarkup = '<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"><title>Foo</title><link href="/Emvicy/assets/bootstrap-5.3.2-dist/css/bootstrap.min.css" rel="stylesheet" type="text/css"><link href="/Emvicy/assets/fontawesome-free-6.4.2-web/css/all.min.css" rel="stylesheet" type="text/css"><link href="/Emvicy/styles/Emvicy.min.css" rel="stylesheet" type="text/css"><style>body {padding-top: 7rem;/* Move down content because of fixed navbar */}</style></head>'
+        $sMarkup = '<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"><title>Foo</title><link href="/Emvicy/assets/bootstrap-5.3.3-dist/css/bootstrap.min.css" rel="stylesheet" type="text/css"><link href="/Emvicy/assets/fontawesome-free-6.7.2-web/css/all.min.css" rel="stylesheet" type="text/css"><link href="/Emvicy/styles/Emvicy.min.css" rel="stylesheet" type="text/css"><style>body {padding-top: 7rem;/* Move down content because of fixed navbar */}</style></head>'
                    . '<body><a name="top"></a>'
                    . '<div class="container">'
-                   . '<div class="header shadow"><h3 class="text-muted bg-white padding20"><img src="android-chrome-192x192.png" width="50" style="margin: 0;border: none;">Emvicy</h3></div><br>'
+                   . '<div class="header shadow"><h3 class="text-muted bg-white padding20"><img src="/android-chrome-192x192.png" width="50" style="margin: 0;border: none;">Emvicy</h3></div><br>'
                    . '<div id="jumboHomepage" class="bg-white shadow padding20">'
                    . '<noscript><p>please activate Javascript<br />then run this page again.</p></noscript>'
                    . '</div><hr>'
                    . '<footer class="footer"><p>documentation: <a href="https://emvicy.com/" target="_blank">emvicy.com</a></p></footer>'
                    . '</div>'
                    . '<script>function text(sTxt){var sInnerHTML = document.getElementById("jumboHomepage").innerHTML; document.getElementById("jumboHomepage").innerHTML = sInnerHTML + sTxt};function reload(){setTimeout(function(){window.location.reload(1);}, 5000);}</script>'
-                   . '<script src="/Emvicy/assets/jquery-3.7.1/jquery-3.7.1.min.js" type="text/javascript"></script><script src="/Emvicy/assets/jquery-cookie-1.4.1/jquery.cookie.min.js" type="text/javascript"></script><script src="/Emvicy/assets/bootstrap-5.3.2-dist/js/bootstrap.min.js" type="text/javascript"></script><script src="/Emvicy/scripts/cookieConsent.min.js" type="text/javascript"></script></body></html>';
+                   . '<script src="/Emvicy/assets/jquery-3.7.1/jquery-3.7.1.min.js" type="text/javascript"></script><script src="/Emvicy/assets/jquery-cookie-1.4.1/jquery.cookie.min.js" type="text/javascript"></script><script src="/Emvicy/assets/bootstrap-5.3.3-dist/js/bootstrap.min.js" type="text/javascript"></script><script src="/Emvicy/scripts/cookieConsent.min.js" type="text/javascript"></script></body></html>';
 
         echo ('cli' !== php_sapi_name()) ? $sMarkup : '';
     }
