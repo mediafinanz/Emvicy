@@ -14,6 +14,7 @@
 namespace {module}\View;
 
 use App\View;
+use MVC\Http\Header;
 use MVC\MVCTrait\TraitViewInit;
 
 /**
@@ -31,8 +32,9 @@ class Index extends View
     protected function __construct()
     {
         parent::__construct();
-        $this->sendSecurityHeader();
+        Header::init()->ContentSecurityPolicy();
+
         $this->sContentVar = 'sContent';
-//        $this->caching = true;
+        $this->caching = false;
     }
 }

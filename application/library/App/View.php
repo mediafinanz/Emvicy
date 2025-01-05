@@ -46,39 +46,6 @@ class View extends \MVC\View
     }
 
     /**
-     * @todo move to Http/Header and complete
-     * set HTTP Security Header
-     * @return bool
-     * @throws \ReflectionException
-     */
-    public function sendSecurityHeader()
-    {
-        $aCSPMapping = array(
-            // header key                   CSP config key
-            'Content-Security-Policy'   => 'Content-Security-Policy',   // Default
-            'X-Content-Security-Policy' => 'Content-Security-Policy',   // IE
-            'X-Webkit-CSP'              => 'Content-Security-Policy',   // Chrome, Safari
-            'X-Frame-Options'           => 'X-Frame-Options',
-            'X-XSS-Protection'          => 'X-XSS-Protection',
-            'Strict-Transport-Security' => 'Strict-Transport-Security',
-        );
-
-        $aCSP = get(Config::MODULE()['CSP'], array());
-
-        foreach ($aCSPMapping as $sKey => $sValue)
-        {
-            if (null === get($aCSP[$sKey]))
-            {
-                continue;
-            }
-
-            header($sKey . ': ' . trim(preg_replace('!\s+!', ' ', $aCSP[$sKey])));
-        }
-
-        return true;
-    }
-
-    /**
      * @param \MVC\DataType\DTRoute $oDTRoute
      * @return void
      * @throws \ReflectionException

@@ -9,8 +9,10 @@
 
 namespace MVC\Http;
 
+use MVC\Config;
 use MVC\Enum\EnumHttpHeaderCacheControl;
 use MVC\Enum\EnumHttpHeaderRetryAfter;
+use MVC\Log;
 use MVC\Request;
 use MVC\RequestHelper;
 use Respect\Validation\Validator;
@@ -21,6 +23,19 @@ class Header
      * @var null
      */
     protected static $_oInstance = null;
+
+    /**
+     * @var string[]
+     */
+    public static $aHttpHeaderCSPKeyMapping = array(
+        // header key                   CSP config key
+        'Content-Security-Policy'   => 'Content-Security-Policy',   // Default
+        'X-Content-Security-Policy' => 'Content-Security-Policy',   // IE
+        'X-Webkit-CSP'              => 'Content-Security-Policy',   // Chrome, Safari
+        'X-Frame-Options'           => 'X-Frame-Options',
+        'X-XSS-Protection'          => 'X-XSS-Protection',
+        'Strict-Transport-Security' => 'Strict-Transport-Security',
+    );
 
     /**
      * Constructor
@@ -340,5 +355,27 @@ class Header
         ;
 
         return $this;
+    }
+
+    /**
+     * set CSP ("Content Security Policy") HTTP Header
+     * @return bool
+     * @throws \ReflectionException
+     */
+    public function ContentSecurityPolicy()
+    {
+        $aCSP = get(Config::MODULE()['CSP'], array());
+
+        foreach (self::$aHttpHeaderCSPKeyMapping as $sKey => $sValue)
+        {
+            if (null === get($aCSP[$sKey]))
+            {
+                continue;
+            }
+
+            header($sKey . ': ' . trim(preg_replace('!\s+!', ' ', $aCSP[$sKey])));
+        }
+
+        return true;
     }
 }
