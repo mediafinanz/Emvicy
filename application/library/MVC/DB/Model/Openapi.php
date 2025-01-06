@@ -62,6 +62,11 @@ class Openapi
             $sDtClassName = $sDtClassPrefix . str_replace('\\', '', $sClass);
             $sDTofClass = $sDTFolderPre . '\\' . $sDtClassName;
 
+//            if (false === class_exists($sDTofClass, autoload: true))
+//            {
+//                return '';
+//            }
+
             /** @var \MVC\DB\DataType\DB\TableDataType $oDtTmp */
             $oDtTmp = $sDTofClass::create();
 
