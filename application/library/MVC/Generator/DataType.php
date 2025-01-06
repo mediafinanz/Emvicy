@@ -595,7 +595,6 @@ class DataType
             ? $sContent.= "\t\t\MVC\Event::run('" . $oDTDataTypeGeneratorClass->get_name() . ".__construct.before', " . '$oDTValue' . ");\n"
             : false
         ;
-        $sContent.= "\t\t" . '$aData = $oDTValue->get_mValue();' . "\n\n";
 
         foreach ($oDTDataTypeGeneratorClass->get_property() as $sKey => $oProperty)
         {
@@ -686,10 +685,11 @@ class DataType
         if (false === empty($oDTDataTypeGeneratorClass->get_extends()))
         {
             $sContent.="\n";
-            $sContent.="\t\t" . 'parent::__construct($aData);' . "\n";
+            $sContent.="\t\t" . 'parent::__construct($oDTValue);' . "\n";
         }
 
         $sContent.="\t\t" . '$this->setProperties($oDTValue);' . "\n\n";
+        $sContent.= "\t\t" . '$aData = $oDTValue->get_mValue();' . "\n";
         $sContent.= "\t\t" . '$oDTValue = DTValue::create()->set_mValue($aData); ';
 
         (true === $this->bCreateEvents)

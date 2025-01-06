@@ -82,8 +82,6 @@ class DTResponse
 	protected function __construct(DTValue $oDTValue)
 	{
 		\MVC\Event::run('DTResponse.__construct.before', $oDTValue);
-		$aData = $oDTValue->get_mValue();
-
 		$this->body = '';
 		$this->raw = '';
 		$this->headers = [];
@@ -96,6 +94,7 @@ class DTResponse
 		$this->cookies = [];
 		$this->setProperties($oDTValue);
 
+		$aData = $oDTValue->get_mValue();
 		$oDTValue = DTValue::create()->set_mValue($aData); 
 		\MVC\Event::run('DTResponse.__construct.after', $oDTValue);
 	}

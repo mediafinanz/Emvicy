@@ -57,8 +57,15 @@ class Index extends Master
      */
     public function phpinfo(DTRequestIn $oDTRequestIn, DTRoute $oDTRoute)
     {
-        view()->autoAssign();
+        ob_start();
         phpinfo();
+        $sContent = ob_get_clean();
+        ob_end_flush();
+        $sContent = \HTMLPurifier::getInstance()->purify($sContent);
+        $sContent = str_replace('<table>','<table class="table table-hover table-bordered table-light">', $sContent);
+        $oDTRoute->get_additional()->set_sContent($sContent);
+
+        view()->autoAssign();
     }
 
     /**
@@ -67,10 +74,10 @@ class Index extends Master
      * @return void
      * @throws \ReflectionException
      */
-	public function index(DTRequestIn $oDTRequestIn, DTRoute $oDTRoute)
-	{
+    public function index(DTRequestIn $oDTRequestIn, DTRoute $oDTRoute)
+    {
         view()->autoAssign();
-	}
+    }
 
     /**
      * @param \MVC\DataType\DTRequestIn $oDTRequestIn

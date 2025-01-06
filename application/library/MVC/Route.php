@@ -175,9 +175,10 @@ class Route
      * @return void
      * @throws \ReflectionException
      */
-    protected static function add(string $sRequestMethod = '*', string $sPath = '', string $sClassMethod = '', mixed $mOptional = '', string $sTag = '') : void
+    protected static function add(string $sRequestMethod = '*', string $sPath = '', string $sClassMethod = '', mixed $mOptional = null, string $sTag = '') : void
     {
         list($sClass, $sMethod) = explode('::', $sClassMethod);
+        (true === empty($mOptional)) ? $mOptional = null : false;
         $aRequestMethodAssigned = array(strtoupper($sRequestMethod));
         $oReflectionClass = new \ReflectionClass($sClass);
 

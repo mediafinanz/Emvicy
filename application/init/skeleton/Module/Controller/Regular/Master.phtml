@@ -9,13 +9,14 @@
  */
 
 /**
- * @name $FooController
+ * @name ${module}Controller
  */
-namespace Foo\Controller\Regular;
+namespace {module}\Controller\Regular;
 
 use App\Controller;
 use MVC\DataType\DTRequestIn;
 use MVC\DataType\DTRoute;
+use MVC\Http\Header;
 use MVC\MVCTrait\TraitDataType;
 
 /**
@@ -40,8 +41,9 @@ class Master extends Controller
      * @throws \ReflectionException
      */
     public function __construct(DTRequestIn $oDTRequestIn, DTRoute $oDTRoute)
-	{
+    {
         parent::__construct($oDTRequestIn, $oDTRoute);
+        Header::init()->ContentSecurityPolicy();
     }
 
     public function __destruct()

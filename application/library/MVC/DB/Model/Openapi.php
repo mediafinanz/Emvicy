@@ -58,7 +58,7 @@ class Openapi
             }
 
             $aFieldInfo = $oDB->$sProperty->getFieldInfo();
-            $sClass = $oDB->getDocCommentValueOfProperty2($sProperty);
+            $sClass = $oDB->getDocCommentValueOfProperty($sProperty);
             $sDtClassName = $sDtClassPrefix . str_replace('\\', '', $sClass);
             $sDTofClass = $sDTFolderPre . '\\' . $sDtClassName;
 

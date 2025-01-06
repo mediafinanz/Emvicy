@@ -52,8 +52,6 @@ class DTRequestOut
 	protected function __construct(DTValue $oDTValue)
 	{
 		\MVC\Event::run('DTRequestOut.__construct.before', $oDTValue);
-		$aData = $oDTValue->get_mValue();
-
 		$this->eRequestMethod = null;
 		$this->sUrl = '';
 		$this->aHeader = [];
@@ -61,6 +59,7 @@ class DTRequestOut
 		$this->aOption = [];
 		$this->setProperties($oDTValue);
 
+		$aData = $oDTValue->get_mValue();
 		$oDTValue = DTValue::create()->set_mValue($aData); 
 		\MVC\Event::run('DTRequestOut.__construct.after', $oDTValue);
 	}

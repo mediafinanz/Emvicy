@@ -12,7 +12,7 @@ class DTRoute
 {
 	use TraitDataType;
 
-	public const DTHASH = 'd21182aa40938905bf611e5ecdb59c33';
+	public const DTHASH = '01dfe8d56e9dc2d64b7e724d7ef7d68b';
 
 	/**
 	 * @required true
@@ -64,7 +64,7 @@ class DTRoute
 
 	/**
 	 * @required false
-	 * @var mixed|null
+	 * @var \MVC\DataType\DTRoutingAdditional|null
 	 */
 	protected $additional;
 
@@ -82,8 +82,6 @@ class DTRoute
 	protected function __construct(DTValue $oDTValue)
 	{
 		\MVC\Event::run('DTRoute.__construct.before', $oDTValue);
-		$aData = $oDTValue->get_mValue();
-
 		$this->path = '';
 		$this->requestMethod = '';
 		$this->methodsAssigned = [];
@@ -96,6 +94,7 @@ class DTRoute
 		$this->tag = '';
 		$this->setProperties($oDTValue);
 
+		$aData = $oDTValue->get_mValue();
 		$oDTValue = DTValue::create()->set_mValue($aData); 
 		\MVC\Event::run('DTRoute.__construct.after', $oDTValue);
 	}
@@ -245,11 +244,11 @@ class DTRoute
 	}
 
 	/**
-	 * @param mixed|null $mValue 
+	 * @param \MVC\DataType\DTRoutingAdditional|null $mValue 
 	 * @return $this
 	 * @throws \ReflectionException
 	 */
-	public function set_additional(mixed $mValue)
+	public function set_additional(?\MVC\DataType\DTRoutingAdditional $mValue)
 	{
 		$oDTValue = DTValue::create()->set_mValue($mValue); 
 		\MVC\Event::run('DTRoute.set_additional.before', $oDTValue);
@@ -369,10 +368,10 @@ class DTRoute
 	}
 
 	/**
-	 * @return mixed|null
+	 * @return \MVC\DataType\DTRoutingAdditional|null
 	 * @throws \ReflectionException
 	 */
-	public function get_additional()
+	public function get_additional() : ?\MVC\DataType\DTRoutingAdditional
 	{
 		$oDTValue = DTValue::create()->set_mValue($this->additional); 
 		\MVC\Event::run('DTRoute.get_additional.before', $oDTValue);

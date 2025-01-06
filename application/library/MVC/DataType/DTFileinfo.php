@@ -130,8 +130,6 @@ class DTFileinfo
 	protected function __construct(DTValue $oDTValue)
 	{
 		\MVC\Event::run('DTFileinfo.__construct.before', $oDTValue);
-		$aData = $oDTValue->get_mValue();
-
 		$this->dirname = '';
 		$this->basename = '';
 		$this->path = '';
@@ -152,6 +150,7 @@ class DTFileinfo
 		$this->mimetype = '';
 		$this->setProperties($oDTValue);
 
+		$aData = $oDTValue->get_mValue();
 		$oDTValue = DTValue::create()->set_mValue($aData); 
 		\MVC\Event::run('DTFileinfo.__construct.after', $oDTValue);
 	}

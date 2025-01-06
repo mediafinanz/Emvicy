@@ -55,12 +55,15 @@ class View extends \MVC\View
         (true === is_null($oDTRoute)) ? $oDTRoute = Route::getCurrent() : false;
         $oDTRoutingAdditional = $oDTRoute->get_additional();
 
-        $this->sTemplateRelative = (false === empty($oDTRoutingAdditional->get_sLayout())) ? $oDTRoutingAdditional->get_sLayout() : Config::get_MVC_SMARTY_TEMPLATE_DEFAULT();
+        $this->sTemplateRelative = (false === empty($oDTRoutingAdditional->get_sTemplate()))
+            ? $oDTRoutingAdditional->get_sTemplate()
+            : Config::get_MVC_SMARTY_TEMPLATE_DEFAULT()
+        ;
         $this->sTemplate = $this->sTemplateDir . '/' . $this->sTemplateRelative;
-        $this->assign('sTemplateRelative', $this->sTemplateRelative);
+
+        // and this one will be rendered
         $this->assign('sTemplate', $this->sTemplate);
         $this->assign('oDTRoute', $oDTRoute);
         $this->assign('oDTRoutingAdditional', $oDTRoutingAdditional);
-        $this->assign('layout', trim($this->loadTemplateAsString($oDTRoutingAdditional->get_sLayout())));
     }
 }

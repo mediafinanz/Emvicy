@@ -358,13 +358,17 @@ class Header
     }
 
     /**
-     * set CSP ("Content Security Policy") HTTP Header
-     * @return bool
+     * sets CSP ("Content Security Policy") HTTP Header
+     * @param array $aCSP
+     * @return $this
      * @throws \ReflectionException
      */
-    public function ContentSecurityPolicy()
+    public function ContentSecurityPolicy(array $aCSP = array())
     {
-        $aCSP = get(Config::MODULE()['CSP'], array());
+        (true === empty($aCSP))
+            ? $aCSP = get(Config::MODULE()['CSP'], array())
+            : false
+        ;
 
         foreach (self::$aHttpHeaderCSPKeyMapping as $sKey => $sValue)
         {
@@ -376,6 +380,6 @@ class Header
             header($sKey . ': ' . trim(preg_replace('!\s+!', ' ', $aCSP[$sKey])));
         }
 
-        return true;
+        return $this;
     }
 }

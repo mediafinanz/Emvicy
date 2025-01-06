@@ -26,8 +26,20 @@ class InfoTool
      */
     public function __construct(\Smarty $oView)
     {
+        $oDTRoutingAdditional = Route::getCurrent()->get_additional();
+
+        if (true == empty($oDTRoutingAdditional))
+        {
+            return false;
+        }
+
+        // add fully rendered template as 'layout'
+        $sTemplate = $oDTRoutingAdditional->get_sTemplate();
+        $oView->assign('layout', trim($oView->loadTemplateAsString($sTemplate)));
+
         // add toolbar at the right time
         Event::bind('mvc.view.render.before', function() use ($oView) {
+            $oView->setCaching(false);
             InfoTool::injectToolbar($oView);
             Emvicy::cleartemp();
         });

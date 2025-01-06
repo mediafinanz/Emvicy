@@ -12,7 +12,7 @@ class DTRoutingAdditional
 {
 	use TraitDataType;
 
-	public const DTHASH = 'd1146596bdc5be9f318fabe93f3bf5fb';
+	public const DTHASH = '7f9a10857e96506212abc60a0e1644f9';
 
 	/**
 	 * @required true
@@ -24,43 +24,13 @@ class DTRoutingAdditional
 	 * @required true
 	 * @var string
 	 */
-	protected $sLayout;
-
-	/**
-	 * @required true
-	 * @var string
-	 */
-	protected $sMainmenu;
+	protected $sTemplate;
 
 	/**
 	 * @required true
 	 * @var string
 	 */
 	protected $sContent;
-
-	/**
-	 * @required true
-	 * @var string
-	 */
-	protected $sHeader;
-
-	/**
-	 * @required true
-	 * @var string
-	 */
-	protected $sNoscript;
-
-	/**
-	 * @required true
-	 * @var string
-	 */
-	protected $sCookieConsent;
-
-	/**
-	 * @required true
-	 * @var string
-	 */
-	protected $sFooter;
 
 	/**
 	 * @required true
@@ -76,49 +46,35 @@ class DTRoutingAdditional
 
 	/**
 	 * DTRoutingAdditional constructor.
-	 * @param array $aData
+	 * @param DTValue $oDTValue
 	 * @throws \ReflectionException 
 	 */
-	public function __construct(array $aData = array())
+	protected function __construct(DTValue $oDTValue)
 	{
-		$oDTValue = DTValue::create()->set_mValue($aData);
 		\MVC\Event::run('DTRoutingAdditional.__construct.before', $oDTValue);
-		$aData = $oDTValue->get_mValue();
-
 		$this->sTitle = '';
-		$this->sLayout = '';
-		$this->sMainmenu = '';
+		$this->sTemplate = '';
 		$this->sContent = '';
-		$this->sHeader = '';
-		$this->sNoscript = '';
-		$this->sCookieConsent = '';
-		$this->sFooter = '';
-		$this->aStyle = array();
-		$this->aScript = array();
+		$this->aStyle = [];
+		$this->aScript = [];
+		$this->setProperties($oDTValue);
 
-		foreach ($aData as $sKey => $mValue)
-		{
-			$sMethod = 'set_' . $sKey;
-
-			if (method_exists($this, $sMethod))
-			{
-				$this->$sMethod($mValue);
-			}
-		}
-
-		$oDTValue = DTValue::create()->set_mValue($aData); \MVC\Event::run('DTRoutingAdditional.__construct.after', $oDTValue);
+		$aData = $oDTValue->get_mValue();
+		$oDTValue = DTValue::create()->set_mValue($aData); 
+		\MVC\Event::run('DTRoutingAdditional.__construct.after', $oDTValue);
 	}
 
     /**
-     * @param array $aData
+     * @param array|null $aData
      * @return DTRoutingAdditional
      * @throws \ReflectionException
      */
-    public static function create(array $aData = array())
-    {
+    public static function create(?array $aData = array())
+    {            
+        (null === $aData) ? $aData = array() : false;
         $oDTValue = DTValue::create()->set_mValue($aData);
 		\MVC\Event::run('DTRoutingAdditional.create.before', $oDTValue);
-		$oObject = new self($oDTValue->get_mValue());
+		$oObject = new self($oDTValue);
         $oDTValue = DTValue::create()->set_mValue($oObject); \MVC\Event::run('DTRoutingAdditional.create.after', $oDTValue);
 
         return $oDTValue->get_mValue();
@@ -143,25 +99,11 @@ class DTRoutingAdditional
 	 * @return $this
 	 * @throws \ReflectionException
 	 */
-	public function set_sLayout(string $mValue)
+	public function set_sTemplate(string $mValue)
 	{
 		$oDTValue = DTValue::create()->set_mValue($mValue); 
-		\MVC\Event::run('DTRoutingAdditional.set_sLayout.before', $oDTValue);
-		$this->sLayout = (string) $oDTValue->get_mValue();
-
-		return $this;
-	}
-
-	/**
-	 * @param string $mValue 
-	 * @return $this
-	 * @throws \ReflectionException
-	 */
-	public function set_sMainmenu(string $mValue)
-	{
-		$oDTValue = DTValue::create()->set_mValue($mValue); 
-		\MVC\Event::run('DTRoutingAdditional.set_sMainmenu.before', $oDTValue);
-		$this->sMainmenu = (string) $oDTValue->get_mValue();
+		\MVC\Event::run('DTRoutingAdditional.set_sTemplate.before', $oDTValue);
+		$this->sTemplate = (string) $oDTValue->get_mValue();
 
 		return $this;
 	}
@@ -181,63 +123,7 @@ class DTRoutingAdditional
 	}
 
 	/**
-	 * @param string $mValue 
-	 * @return $this
-	 * @throws \ReflectionException
-	 */
-	public function set_sHeader(string $mValue)
-	{
-		$oDTValue = DTValue::create()->set_mValue($mValue); 
-		\MVC\Event::run('DTRoutingAdditional.set_sHeader.before', $oDTValue);
-		$this->sHeader = (string) $oDTValue->get_mValue();
-
-		return $this;
-	}
-
-	/**
-	 * @param string $mValue 
-	 * @return $this
-	 * @throws \ReflectionException
-	 */
-	public function set_sNoscript(string $mValue)
-	{
-		$oDTValue = DTValue::create()->set_mValue($mValue); 
-		\MVC\Event::run('DTRoutingAdditional.set_sNoscript.before', $oDTValue);
-		$this->sNoscript = (string) $oDTValue->get_mValue();
-
-		return $this;
-	}
-
-	/**
-	 * @param string $mValue 
-	 * @return $this
-	 * @throws \ReflectionException
-	 */
-	public function set_sCookieConsent(string $mValue)
-	{
-		$oDTValue = DTValue::create()->set_mValue($mValue); 
-		\MVC\Event::run('DTRoutingAdditional.set_sCookieConsent.before', $oDTValue);
-		$this->sCookieConsent = (string) $oDTValue->get_mValue();
-
-		return $this;
-	}
-
-	/**
-	 * @param string $mValue 
-	 * @return $this
-	 * @throws \ReflectionException
-	 */
-	public function set_sFooter(string $mValue)
-	{
-		$oDTValue = DTValue::create()->set_mValue($mValue); 
-		\MVC\Event::run('DTRoutingAdditional.set_sFooter.before', $oDTValue);
-		$this->sFooter = (string) $oDTValue->get_mValue();
-
-		return $this;
-	}
-
-	/**
-	 * @param array $mValue 
+	 * @param array  $mValue 
 	 * @return $this
 	 * @throws \ReflectionException
 	 */
@@ -245,13 +131,29 @@ class DTRoutingAdditional
 	{
 		$oDTValue = DTValue::create()->set_mValue($mValue); 
 		\MVC\Event::run('DTRoutingAdditional.set_aStyle.before', $oDTValue);
-		$this->aStyle = (array) $oDTValue->get_mValue();
+
+		$this->aStyle = $mValue;
 
 		return $this;
 	}
 
 	/**
-	 * @param array $mValue 
+	 * @param array $mValue
+	 * @return $this
+	 * @throws \ReflectionException 
+	 */
+	public function add_aStyle(array $mValue)
+	{
+		$oDTValue = DTValue::create()->set_mValue($this->aStyle); 
+		\MVC\Event::run('DTRoutingAdditional.add_aStyle.before', $oDTValue);
+
+		$this->aStyle[] = $mValue;
+
+		return $this;
+	}
+
+	/**
+	 * @param array  $mValue 
 	 * @return $this
 	 * @throws \ReflectionException
 	 */
@@ -259,7 +161,23 @@ class DTRoutingAdditional
 	{
 		$oDTValue = DTValue::create()->set_mValue($mValue); 
 		\MVC\Event::run('DTRoutingAdditional.set_aScript.before', $oDTValue);
-		$this->aScript = (array) $oDTValue->get_mValue();
+
+		$this->aScript = $mValue;
+
+		return $this;
+	}
+
+	/**
+	 * @param array $mValue
+	 * @return $this
+	 * @throws \ReflectionException 
+	 */
+	public function add_aScript(array $mValue)
+	{
+		$oDTValue = DTValue::create()->set_mValue($this->aScript); 
+		\MVC\Event::run('DTRoutingAdditional.add_aScript.before', $oDTValue);
+
+		$this->aScript[] = $mValue;
 
 		return $this;
 	}
@@ -280,22 +198,10 @@ class DTRoutingAdditional
 	 * @return string
 	 * @throws \ReflectionException
 	 */
-	public function get_sLayout() : string
+	public function get_sTemplate() : string
 	{
-		$oDTValue = DTValue::create()->set_mValue($this->sLayout); 
-		\MVC\Event::run('DTRoutingAdditional.get_sLayout.before', $oDTValue);
-
-		return $oDTValue->get_mValue();
-	}
-
-	/**
-	 * @return string
-	 * @throws \ReflectionException
-	 */
-	public function get_sMainmenu() : string
-	{
-		$oDTValue = DTValue::create()->set_mValue($this->sMainmenu); 
-		\MVC\Event::run('DTRoutingAdditional.get_sMainmenu.before', $oDTValue);
+		$oDTValue = DTValue::create()->set_mValue($this->sTemplate); 
+		\MVC\Event::run('DTRoutingAdditional.get_sTemplate.before', $oDTValue);
 
 		return $oDTValue->get_mValue();
 	}
@@ -308,54 +214,6 @@ class DTRoutingAdditional
 	{
 		$oDTValue = DTValue::create()->set_mValue($this->sContent); 
 		\MVC\Event::run('DTRoutingAdditional.get_sContent.before', $oDTValue);
-
-		return $oDTValue->get_mValue();
-	}
-
-	/**
-	 * @return string
-	 * @throws \ReflectionException
-	 */
-	public function get_sHeader() : string
-	{
-		$oDTValue = DTValue::create()->set_mValue($this->sHeader); 
-		\MVC\Event::run('DTRoutingAdditional.get_sHeader.before', $oDTValue);
-
-		return $oDTValue->get_mValue();
-	}
-
-	/**
-	 * @return string
-	 * @throws \ReflectionException
-	 */
-	public function get_sNoscript() : string
-	{
-		$oDTValue = DTValue::create()->set_mValue($this->sNoscript); 
-		\MVC\Event::run('DTRoutingAdditional.get_sNoscript.before', $oDTValue);
-
-		return $oDTValue->get_mValue();
-	}
-
-	/**
-	 * @return string
-	 * @throws \ReflectionException
-	 */
-	public function get_sCookieConsent() : string
-	{
-		$oDTValue = DTValue::create()->set_mValue($this->sCookieConsent); 
-		\MVC\Event::run('DTRoutingAdditional.get_sCookieConsent.before', $oDTValue);
-
-		return $oDTValue->get_mValue();
-	}
-
-	/**
-	 * @return string
-	 * @throws \ReflectionException
-	 */
-	public function get_sFooter() : string
-	{
-		$oDTValue = DTValue::create()->set_mValue($this->sFooter); 
-		\MVC\Event::run('DTRoutingAdditional.get_sFooter.before', $oDTValue);
 
 		return $oDTValue->get_mValue();
 	}
@@ -395,17 +253,9 @@ class DTRoutingAdditional
 	/**
 	 * @return string
 	 */
-	public static function getPropertyName_sLayout()
+	public static function getPropertyName_sTemplate()
 	{
-        return 'sLayout';
-	}
-
-	/**
-	 * @return string
-	 */
-	public static function getPropertyName_sMainmenu()
-	{
-        return 'sMainmenu';
+        return 'sTemplate';
 	}
 
 	/**
@@ -414,38 +264,6 @@ class DTRoutingAdditional
 	public static function getPropertyName_sContent()
 	{
         return 'sContent';
-	}
-
-	/**
-	 * @return string
-	 */
-	public static function getPropertyName_sHeader()
-	{
-        return 'sHeader';
-	}
-
-	/**
-	 * @return string
-	 */
-	public static function getPropertyName_sNoscript()
-	{
-        return 'sNoscript';
-	}
-
-	/**
-	 * @return string
-	 */
-	public static function getPropertyName_sCookieConsent()
-	{
-        return 'sCookieConsent';
-	}
-
-	/**
-	 * @return string
-	 */
-	public static function getPropertyName_sFooter()
-	{
-        return 'sFooter';
 	}
 
 	/**

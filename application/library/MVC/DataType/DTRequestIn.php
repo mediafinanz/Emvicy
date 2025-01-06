@@ -132,8 +132,6 @@ class DTRequestIn
 	protected function __construct(DTValue $oDTValue)
 	{
 		\MVC\Event::run('DTRequestIn.__construct.before', $oDTValue);
-		$aData = $oDTValue->get_mValue();
-
 		$this->requestMethod = '';
 		$this->full = '';
 		$this->protocol = '';
@@ -154,6 +152,7 @@ class DTRequestIn
 		$this->isHttp = false;
 		$this->setProperties($oDTValue);
 
+		$aData = $oDTValue->get_mValue();
 		$oDTValue = DTValue::create()->set_mValue($aData); 
 		\MVC\Event::run('DTRequestIn.__construct.after', $oDTValue);
 	}

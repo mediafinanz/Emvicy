@@ -1,13 +1,12 @@
 <?php
 
-namespace Foo\Controller\Api;
+namespace {module}\Controller\Api;
 
-use Foo\Controller\Regular\Master;
+use {module}\Controller\Regular\Master;
 use MVC\DataType\DTRequestIn;
 use MVC\DataType\DTRoute;
 use MVC\Http\Header;
 use MVC\Media\Type_Application_json;
-use MVC\Media\Type_Text_csv;
 
 class Api extends Master
 {
@@ -28,8 +27,8 @@ class Api extends Master
     public function __construct(DTRequestIn $oDTRequestIn, DTRoute $oDTRoute)
     {
         parent::__construct($oDTRequestIn, $oDTRoute);
-        \Foo\View\Index::$bRender = false;
-        \Foo\View\Index::$bEchoOut = false;
+        \{module}\View\Index::$bRender = false;
+        \{module}\View\Index::$bEchoOut = false;
     }
 
     /**
@@ -38,12 +37,11 @@ class Api extends Master
      * @return void
      * @throws \ReflectionException
      */
-	public function index(DTRequestIn $oDTRequestIn, DTRoute $oDTRoute)
-	{
+    public function index(DTRequestIn $oDTRequestIn, DTRoute $oDTRoute)
+    {
         Type_Application_json::header();
-//        echo $oDTRequestIn->get_requestmethod();
         echo $oDTRequestIn->getPropertyJson();
-	}
+    }
 
     /**
      * @param \MVC\DataType\DTRequestIn $oDTRequestIn

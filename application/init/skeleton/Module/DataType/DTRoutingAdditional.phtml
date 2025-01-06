@@ -12,48 +12,80 @@ class DTRoutingAdditional extends \MVC\DataType\DTRoutingAdditional
 {
     use TraitDataType;
 
-    public const DTHASH = 'da4597de003f66f5e0542ba8715931ad';
+    public const DTHASH = 'd7603ef1f64b1a6880ba08ee3694cc5b';
+
+    /**
+     * @required true
+     * @var string
+     */
+    protected $sLayout;
 
     /**
      * DTRoutingAdditional constructor.
-     * @param array $aData
+     * @param DTValue $oDTValue
      * @throws \ReflectionException
      */
-    public function __construct(array $aData = array())
+    protected function __construct(DTValue $oDTValue)
     {
-        $oDTValue = DTValue::create()->set_mValue($aData);
         \MVC\Event::run('DTRoutingAdditional.__construct.before', $oDTValue);
+        $this->sLayout = '';
+
+        parent::__construct($oDTValue);
+        $this->setProperties($oDTValue);
+
         $aData = $oDTValue->get_mValue();
-
-        parent::__construct($aData);
-
-
-        foreach ($aData as $sKey => $mValue)
-        {
-            $sMethod = 'set_' . $sKey;
-
-            if (method_exists($this, $sMethod))
-            {
-                $this->$sMethod($mValue);
-            }
-        }
-
-        $oDTValue = DTValue::create()->set_mValue($aData); \MVC\Event::run('DTRoutingAdditional.__construct.after', $oDTValue);
+        $oDTValue = DTValue::create()->set_mValue($aData);
+        \MVC\Event::run('DTRoutingAdditional.__construct.after', $oDTValue);
     }
 
     /**
-     * @param array $aData
+     * @param array|null $aData
      * @return DTRoutingAdditional
      * @throws \ReflectionException
      */
-    public static function create(array $aData = array())
+    public static function create(?array $aData = array())
     {
+        (null === $aData) ? $aData = array() : false;
         $oDTValue = DTValue::create()->set_mValue($aData);
         \MVC\Event::run('DTRoutingAdditional.create.before', $oDTValue);
-        $oObject = new self($oDTValue->get_mValue());
+        $oObject = new self($oDTValue);
         $oDTValue = DTValue::create()->set_mValue($oObject); \MVC\Event::run('DTRoutingAdditional.create.after', $oDTValue);
 
         return $oDTValue->get_mValue();
+    }
+
+    /**
+     * @param string $mValue
+     * @return $this
+     * @throws \ReflectionException
+     */
+    public function set_sLayout(string $mValue)
+    {
+        $oDTValue = DTValue::create()->set_mValue($mValue);
+        \MVC\Event::run('DTRoutingAdditional.set_sLayout.before', $oDTValue);
+        $this->sLayout = (string) $oDTValue->get_mValue();
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     * @throws \ReflectionException
+     */
+    public function get_sLayout() : string
+    {
+        $oDTValue = DTValue::create()->set_mValue($this->sLayout);
+        \MVC\Event::run('DTRoutingAdditional.get_sLayout.before', $oDTValue);
+
+        return $oDTValue->get_mValue();
+    }
+
+    /**
+     * @return string
+     */
+    public static function getPropertyName_sLayout()
+    {
+        return 'sLayout';
     }
 
     /**
@@ -69,7 +101,7 @@ class DTRoutingAdditional extends \MVC\DataType\DTRoutingAdditional
      */
     public function getPropertyJson()
     {
-        return json_encode($this->getPropertyArray());
+        return json_encode(\MVC\Convert::objectToArray($this));
     }
 
     /**
