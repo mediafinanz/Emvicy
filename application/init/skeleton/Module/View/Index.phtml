@@ -25,15 +25,12 @@ class Index extends View
     use TraitViewInit;
 
     /**
-     * Index constructor.
      * @throws \ReflectionException
      */
     protected function __construct()
     {
         parent::__construct();
 
-        $this->sContentVar = 'sContent';
-//        $this->caching = false;
         $this->caching = true;
     }
 }

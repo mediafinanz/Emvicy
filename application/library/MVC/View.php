@@ -51,13 +51,6 @@ class View extends \Smarty
     public $sTemplate;
 
     /**
-     * Defines the Content Variable,
-     * which represents the Content in the Layout
-     * @var string
-     */
-    public $sContentVar = 'sContent';
-
-    /**
      * smarty version
      * @var int
      */
@@ -192,18 +185,6 @@ class View extends \Smarty
     }
 
     /**
-     * assigns a value to a Template Variable
-     * @param mixed $mValue
-     * @param string $sVar
-     * @return void
-     */
-    public function assignValue(mixed $mValue, string $sVar = '') : void
-    {
-        ('' === $sVar) ? $sVar = $this->sContentVar : false;
-        $this->assign($sVar, $mValue);
-    }
-
-    /**
      * Sets the given Template
      * @param string $sTemplate
      * @return void
@@ -235,16 +216,6 @@ class View extends \Smarty
         }
 
         $this->setTemplateDir($sAbsolutePathToTemplateDir);
-    }
-
-    /**
-     * sets the content variable $this->sContentVar (which is per default="sContent")
-     * @param string $sContentVar
-     * @return void
-     */
-    public function setContentVar(string $sContentVar = 'sContent') : void
-    {
-        $this->sContentVar = $sContentVar;
     }
 
     /**

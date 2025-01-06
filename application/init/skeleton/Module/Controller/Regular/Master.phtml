@@ -43,6 +43,7 @@ class Master extends Controller
     public function __construct(DTRequestIn $oDTRequestIn, DTRoute $oDTRoute)
     {
         parent::__construct($oDTRequestIn, $oDTRoute);
+        view();
         Header::init()->ContentSecurityPolicy();
     }
 

@@ -606,6 +606,12 @@ class Emvicy
         Route::init();
         $aIndex = Route::$aMethodRoute;
 
+        if (true === empty($aIndex))
+        {
+            echo 'no routes found' . "\n";
+            return false;
+        }
+
         if (true === $bReturn)
         {
             ob_start();
