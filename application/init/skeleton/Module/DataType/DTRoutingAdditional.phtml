@@ -12,13 +12,7 @@ class DTRoutingAdditional extends \MVC\DataType\DTRoutingAdditional
 {
     use TraitDataType;
 
-    public const DTHASH = 'd7603ef1f64b1a6880ba08ee3694cc5b';
-
-    /**
-     * @required true
-     * @var string
-     */
-    protected $sLayout;
+    public const DTHASH = 'da4597de003f66f5e0542ba8715931ad';
 
     /**
      * DTRoutingAdditional constructor.
@@ -28,12 +22,11 @@ class DTRoutingAdditional extends \MVC\DataType\DTRoutingAdditional
     protected function __construct(DTValue $oDTValue)
     {
         \MVC\Event::run('DTRoutingAdditional.__construct.before', $oDTValue);
-        $this->sLayout = '';
+        $aData = $oDTValue->get_mValue();
 
         parent::__construct($oDTValue);
         $this->setProperties($oDTValue);
 
-        $aData = $oDTValue->get_mValue();
         $oDTValue = DTValue::create()->set_mValue($aData);
         \MVC\Event::run('DTRoutingAdditional.__construct.after', $oDTValue);
     }
@@ -52,40 +45,6 @@ class DTRoutingAdditional extends \MVC\DataType\DTRoutingAdditional
         $oDTValue = DTValue::create()->set_mValue($oObject); \MVC\Event::run('DTRoutingAdditional.create.after', $oDTValue);
 
         return $oDTValue->get_mValue();
-    }
-
-    /**
-     * @param string $mValue
-     * @return $this
-     * @throws \ReflectionException
-     */
-    public function set_sLayout(string $mValue)
-    {
-        $oDTValue = DTValue::create()->set_mValue($mValue);
-        \MVC\Event::run('DTRoutingAdditional.set_sLayout.before', $oDTValue);
-        $this->sLayout = (string) $oDTValue->get_mValue();
-
-        return $this;
-    }
-
-    /**
-     * @return string
-     * @throws \ReflectionException
-     */
-    public function get_sLayout() : string
-    {
-        $oDTValue = DTValue::create()->set_mValue($this->sLayout);
-        \MVC\Event::run('DTRoutingAdditional.get_sLayout.before', $oDTValue);
-
-        return $oDTValue->get_mValue();
-    }
-
-    /**
-     * @return string
-     */
-    public static function getPropertyName_sLayout()
-    {
-        return 'sLayout';
     }
 
     /**

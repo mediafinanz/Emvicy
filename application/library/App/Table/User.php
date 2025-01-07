@@ -27,13 +27,13 @@ class User extends Db
         $this->aField = array(
             'email'     => "varchar(255)    NOT NULL UNIQUE         COMMENT 'e-mail'",
             'active'    => "int(1)          NOT NULL DEFAULT '0'    COMMENT 'active'",
-            'uuid'      => "varchar(36)     NOT NULL UNIQUE         COMMENT 'uuid permanent'",
-            'uuidtmp'   => "varchar(36)     NOT NULL UNIQUE         COMMENT 'uuid temporary'",
+            'uuid'      => "varchar(36)     NOT NULL DEFAULT UUID() UNIQUE COMMENT 'uuid permanent'",
+            'uuidtmp'   => "varchar(36)         NULL UNIQUE         COMMENT 'uuid temporary'",
             'password'  => "varchar(60)     NOT NULL                COMMENT 'Password'",
-            'nickname'  => "varchar(10)     NOT NULL                COMMENT 'Abbreviation'",
-            'forename'  => "varchar(25)     NOT NULL                COMMENT 'First name'",
-            'lastname'  => "varchar(25)     NOT NULL                COMMENT 'Last name'",
-            "description"   => "tinytext    NOT NULL DEFAULT ''     COMMENT 'Description'",
+            'nickname'  => "varchar(10)         NULL                COMMENT 'Abbreviation'",
+            'forename'  => "varchar(25)         NULL                COMMENT 'First name'",
+            'lastname'  => "varchar(25)         NULL                COMMENT 'Last name'",
+            "description"   => "tinytext        NULL                COMMENT 'Description'",
         );
 
         // run setup after "foreign tables"
@@ -67,12 +67,10 @@ class User extends Db
     public static function setup($sTablename = '')
     {
         $sDateTime = date('Y-m-d H:i:s');
-        $sSql = "
-            INSERT INTO `" . $sTablename . "` 
-                (`id`, `id_AppTableGroup`, `email`, `active`, `uuid`, `uuidtmp`, `password`, `nickname`, `forename`, `lastname`, `description`, `stampChange`, `stampCreate`) 
-            VALUES 
-                (1, 1, 'emvicy@example.com', 1, '" . Strings::uuid4() . "', '', '". password_hash('emvicy@example.com', PASSWORD_DEFAULT) . "', 'root', 'emvicy', 'emvicy', '', '" . $sDateTime . "', '" . $sDateTime . "');
-        ";
+        $sSql = "INSERT INTO `" . $sTablename . "` (`id`, `id_AppTableGroup`, `email`, `active`, `uuid`, `uuidtmp`, `password`, `nickname`, `forename`, `lastname`, `description`, `stampChange`, `stampCreate`) VALUES \n";
+        $sSql.= "(1, 1, 'emvicy@example.com', 1, '" . Strings::uuid4() . "', '" . Strings::uuid4() . "', '". password_hash('emvicy@example.com', PASSWORD_DEFAULT) . "', 'root', 'emvicy', 'emvicy', '', '" . $sDateTime . "', '" . $sDateTime . "'),\n";
+        $sSql = substr(trim($sSql), 0, -1);
+        $sSql.= ";";
 
         $oStmt = \MVC\DB\Model\Db::getDbPdo()->query($sSql);
         $oStmt->closeCursor();

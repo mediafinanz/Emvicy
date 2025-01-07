@@ -34,8 +34,9 @@ class InfoTool
         }
 
         // add fully rendered template as 'layout'
-        $sTemplate = $oDTRoutingAdditional->get_sTemplate();
-        $oView->assign('layout', trim($oView->loadTemplateAsString($sTemplate)));
+        $oView->assign('layout', trim($oView->loadTemplateAsString($oDTRoutingAdditional->get_sTemplate())));
+        // smarty caching status (before toolbar is injected)
+        $oView->assign('smarty_caching_status', $oView->caching);
 
         // add toolbar at the right time
         Event::bind('mvc.view.render.before', function() use ($oView) {

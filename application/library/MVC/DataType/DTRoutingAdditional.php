@@ -52,6 +52,7 @@ class DTRoutingAdditional
 	protected function __construct(DTValue $oDTValue)
 	{
 		\MVC\Event::run('DTRoutingAdditional.__construct.before', $oDTValue);
+		$aData = $oDTValue->get_mValue();
 		$this->sTitle = '';
 		$this->sTemplate = '';
 		$this->sContent = '';
@@ -59,7 +60,6 @@ class DTRoutingAdditional
 		$this->aScript = [];
 		$this->setProperties($oDTValue);
 
-		$aData = $oDTValue->get_mValue();
 		$oDTValue = DTValue::create()->set_mValue($aData); 
 		\MVC\Event::run('DTRoutingAdditional.__construct.after', $oDTValue);
 	}

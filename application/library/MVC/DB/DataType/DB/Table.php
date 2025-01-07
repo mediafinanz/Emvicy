@@ -28,12 +28,11 @@ class Table
 
 	/**
 	 * Table constructor.
-	 * @param array $aData
-	 * @throws \ReflectionException 
-	 */
-	public function __construct(array $aData = array())
+     * @param \MVC\DataType\DTValue $oDTValue
+     * @throws \ReflectionException
+     */
+    protected function __construct(DTValue $oDTValue)
 	{
-		$oDTValue = DTValue::create()->set_mValue($aData);
 		\MVC\Event::run('Table.__construct.before', $oDTValue);
 		$aData = $oDTValue->get_mValue();
 
@@ -50,7 +49,8 @@ class Table
 			}
 		}
 
-		$oDTValue = DTValue::create()->set_mValue($aData); \MVC\Event::run('Table.__construct.after', $oDTValue);
+		$oDTValue = DTValue::create()->set_mValue($aData);
+        \MVC\Event::run('Table.__construct.after', $oDTValue);
 	}
 
     /**
@@ -62,8 +62,9 @@ class Table
     {
         $oDTValue = DTValue::create()->set_mValue($aData);
 		\MVC\Event::run('Table.create.before', $oDTValue);
-		$oObject = new self($oDTValue->get_mValue());
-        $oDTValue = DTValue::create()->set_mValue($oObject); \MVC\Event::run('Table.create.after', $oDTValue);
+		$oObject = new self($oDTValue);
+        $oDTValue = DTValue::create()->set_mValue($oObject);
+        \MVC\Event::run('Table.create.after', $oDTValue);
 
         return $oDTValue->get_mValue();
     }
@@ -98,7 +99,7 @@ class Table
         {            
             if (false === ($aData instanceof Field))
             {
-                $mValue[$mKey] = new Field($aData);
+                $mValue[$mKey] = Field::create($aData);
             }
         }
 

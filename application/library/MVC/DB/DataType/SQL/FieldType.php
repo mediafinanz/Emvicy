@@ -14,14 +14,12 @@ class FieldType
 
 	public const DTHASH = '7426be04244222050f2020d3ca94e371';
 
-	/**
-	 * FieldType constructor.
-	 * @param array $aData
-	 * @throws \ReflectionException 
-	 */
-	public function __construct(array $aData = array())
+    /**
+     * @param \MVC\DataType\DTValue $oDTValue
+     * @throws \ReflectionException
+     */
+    protected function __construct(DTValue $oDTValue)
 	{
-		$oDTValue = DTValue::create()->set_mValue($aData);
 		\MVC\Event::run('FieldType.__construct.before', $oDTValue);
 		$aData = $oDTValue->get_mValue();
 
@@ -48,7 +46,7 @@ class FieldType
     {
         $oDTValue = DTValue::create()->set_mValue($aData);
 		\MVC\Event::run('FieldType.create.before', $oDTValue);
-		$oObject = new self($oDTValue->get_mValue());
+		$oObject = new self($oDTValue);
         $oDTValue = DTValue::create()->set_mValue($oObject); \MVC\Event::run('FieldType.create.after', $oDTValue);
 
         return $oDTValue->get_mValue();
@@ -60,7 +58,7 @@ class FieldType
      */
     public static function typeChar($mValue = array()) : TypeChar
 	{
-		$mVar = new TypeChar($mValue);
+		$mVar = TypeChar::create($mValue);
 
 		return $mVar;
 	}
@@ -71,7 +69,7 @@ class FieldType
      */
     public static function typeVarchar($mValue = array()) : TypeVarchar
 	{
-		$mVar = new TypeVarchar($mValue);
+		$mVar = TypeVarchar::create($mValue);
 
 		return $mVar;
 	}
@@ -82,7 +80,7 @@ class FieldType
      */
     public static function typeBinary($mValue = array()) : TypeBinary
 	{
-		$mVar = new TypeBinary($mValue);
+		$mVar = TypeBinary::create($mValue);
 
 		return $mVar;
 	}
@@ -93,7 +91,7 @@ class FieldType
      */
     public static function typeVarbinary($mValue = array()) : TypeVarbinary
 	{
-		$mVar = new TypeVarbinary($mValue);
+		$mVar = TypeVarbinary::create($mValue);
 
 		return $mVar;
 	}
@@ -104,7 +102,7 @@ class FieldType
      */
     public static function typeTinyblob($mValue = array()) : TypeTinyblob
 	{
-		$mVar = new TypeTinyblob($mValue);
+		$mVar = TypeTinyblob::create($mValue);
 
 		return $mVar;
 	}
@@ -115,7 +113,7 @@ class FieldType
      */
     public static function typeBlob($mValue = array()) : TypeBlob
 	{
-		$mVar = new TypeBlob($mValue);
+		$mVar = TypeBlob::create($mValue);
 
 		return $mVar;
 	}
@@ -126,7 +124,7 @@ class FieldType
      */
     public static function typeMediumblob($mValue = array()) : TypeMediumblob
 	{
-		$mVar = new TypeMediumblob($mValue);
+		$mVar = TypeMediumblob::create($mValue);
 
 		return $mVar;
 	}
@@ -137,7 +135,7 @@ class FieldType
      */
     public static function typeLongblob($mValue = array()) : TypeLongblob
 	{
-		$mVar = new TypeLongblob($mValue);
+		$mVar = TypeLongblob::create($mValue);
 
 		return $mVar;
 	}
@@ -148,7 +146,7 @@ class FieldType
      */
     public static function typeTinytext($mValue = array()) : TypeTinytext
 	{
-		$mVar = new TypeTinytext($mValue);
+		$mVar = TypeTinytext::create($mValue);
 
 		return $mVar;
 	}
@@ -159,7 +157,7 @@ class FieldType
      */
     public static function typeText($mValue = array()) : TypeText
 	{
-		$mVar = new TypeText($mValue);
+		$mVar = TypeText::create($mValue);
 
 		return $mVar;
 	}
@@ -170,7 +168,7 @@ class FieldType
      */
     public static function typeMediumtext($mValue = array()) : TypeMediumtext
 	{
-		$mVar = new TypeMediumtext($mValue);
+		$mVar = TypeMediumtext::create($mValue);
 
 		return $mVar;
 	}
@@ -181,7 +179,7 @@ class FieldType
      */
     public static function typeLongtext($mValue = array()) : TypeLongtext
 	{
-		$mVar = new TypeLongtext($mValue);
+		$mVar = TypeLongtext::create($mValue);
 
 		return $mVar;
 	}
@@ -192,7 +190,7 @@ class FieldType
      */
     public static function typeEnum($mValue = array()) : TypeEnum
 	{
-		$mVar = new TypeEnum($mValue);
+		$mVar = TypeEnum::create($mValue);
 
 		return $mVar;
 	}
@@ -203,7 +201,7 @@ class FieldType
      */
     public static function typeSet($mValue = array()) : TypeSet
 	{
-		$mVar = new TypeSet($mValue);
+		$mVar = TypeSet::create($mValue);
 
 		return $mVar;
 	}
@@ -214,7 +212,7 @@ class FieldType
      */
     public static function typeDate($mValue = array()) : TypeDate
 	{
-		$mVar = new TypeDate($mValue);
+		$mVar = TypeDate::create($mValue);
 
 		return $mVar;
 	}
@@ -225,7 +223,7 @@ class FieldType
      */
     public static function typeTime($mValue = array()) : TypeTime
 	{
-		$mVar = new TypeTime($mValue);
+		$mVar = TypeTime::create($mValue);
 
 		return $mVar;
 	}
@@ -236,7 +234,7 @@ class FieldType
      */
     public static function typeDatetime($mValue = array()) : TypeDatetime
 	{
-		$mVar = new TypeDatetime($mValue);
+		$mVar = TypeDatetime::create($mValue);
 
 		return $mVar;
 	}
@@ -247,7 +245,7 @@ class FieldType
      */
     public static function typeTimestamp($mValue = array()) : TypeTimestamp
 	{
-		$mVar = new TypeTimestamp($mValue);
+		$mVar = TypeTimestamp::create($mValue);
 
 		return $mVar;
 	}
@@ -258,7 +256,7 @@ class FieldType
      */
     public static function typeYear($mValue = array()) : TypeYear
 	{
-		$mVar = new TypeYear($mValue);
+		$mVar = TypeYear::create($mValue);
 
 		return $mVar;
 	}
@@ -269,7 +267,7 @@ class FieldType
      */
     public static function typeTinyint($mValue = array()) : TypeTinyint
 	{
-		$mVar = new TypeTinyint($mValue);
+		$mVar = TypeTinyint::create($mValue);
 
 		return $mVar;
 	}
@@ -280,7 +278,7 @@ class FieldType
      */
     public static function typeSmallint($mValue = array()) : TypeSmallint
 	{
-		$mVar = new TypeSmallint($mValue);
+		$mVar = TypeSmallint::create($mValue);
 
 		return $mVar;
 	}
@@ -291,7 +289,7 @@ class FieldType
      */
     public static function typeMediumint($mValue = array()) : TypeMediumint
 	{
-		$mVar = new TypeMediumint($mValue);
+		$mVar = TypeMediumint::create($mValue);
 
 		return $mVar;
 	}
@@ -302,7 +300,7 @@ class FieldType
      */
     public static function typeInt($mValue = array()) : TypeInt
 	{
-		$mVar = new TypeInt($mValue);
+		$mVar = TypeInt::create($mValue);
 
 		return $mVar;
 	}
@@ -313,7 +311,7 @@ class FieldType
      */
     public static function typeBigint($mValue = array()) : TypeBigint
 	{
-		$mVar = new TypeBigint($mValue);
+		$mVar = TypeBigint::create($mValue);
 
 		return $mVar;
 	}
@@ -324,7 +322,7 @@ class FieldType
      */
     public static function typeFloat($mValue = array()) : TypeFloat
 	{
-		$mVar = new TypeFloat($mValue);
+		$mVar = TypeFloat::create($mValue);
 
 		return $mVar;
 	}
@@ -335,7 +333,7 @@ class FieldType
      */
     public static function typeDouble($mValue = array()) : TypeDouble
 	{
-		$mVar = new TypeDouble($mValue);
+		$mVar = TypeDouble::create($mValue);
 
 		return $mVar;
 	}
@@ -346,7 +344,7 @@ class FieldType
      */
     public static function typeBit($mValue = array()) : TypeBit
 	{
-		$mVar = new TypeBit($mValue);
+		$mVar = TypeBit::create($mValue);
 
 		return $mVar;
 	}
@@ -357,7 +355,7 @@ class FieldType
      */
     public static function typeBoolean($mValue = array()) : TypeBoolean
 	{
-		$mVar = new TypeBoolean($mValue);
+		$mVar = TypeBoolean::create($mValue);
 
 		return $mVar;
 	}
@@ -368,7 +366,7 @@ class FieldType
      */
     public static function typeBool($mValue = array()) : TypeBool
 	{
-		$mVar = new TypeBool($mValue);
+		$mVar = TypeBool::create($mValue);
 
 		return $mVar;
 	}
@@ -379,7 +377,7 @@ class FieldType
      */
     public static function typeGeometry($mValue = array()) : TypeGeometry
 	{
-		$mVar = new TypeGeometry($mValue);
+		$mVar = TypeGeometry::create($mValue);
 
 		return $mVar;
 	}
@@ -390,7 +388,7 @@ class FieldType
      */
     public static function typePoint($mValue = array()) : TypePoint
 	{
-		$mVar = new TypePoint($mValue);
+		$mVar = TypePoint::create($mValue);
 
 		return $mVar;
 	}
@@ -401,7 +399,7 @@ class FieldType
      */
     public static function typeLinestring($mValue = array()) : TypeLinestring
 	{
-		$mVar = new TypeLinestring($mValue);
+		$mVar = TypeLinestring::create($mValue);
 
 		return $mVar;
 	}
@@ -412,7 +410,7 @@ class FieldType
      */
     public static function typePolygon($mValue = array()) : TypePolygon
 	{
-		$mVar = new TypePolygon($mValue);
+		$mVar = TypePolygon::create($mValue);
 
 		return $mVar;
 	}
@@ -423,7 +421,7 @@ class FieldType
      */
     public static function typeGeometrycollection($mValue = array()) : TypeGeometrycollection
 	{
-		$mVar = new TypeGeometrycollection($mValue);
+		$mVar = TypeGeometrycollection::create($mValue);
 
 		return $mVar;
 	}
@@ -434,7 +432,7 @@ class FieldType
      */
     public static function typeMultilinestring($mValue = array()) : TypeMultilinestring
 	{
-		$mVar = new TypeMultilinestring($mValue);
+		$mVar = TypeMultilinestring::create($mValue);
 
 		return $mVar;
 	}
@@ -445,7 +443,7 @@ class FieldType
      */
     public static function typeMultipoint($mValue = array()) : TypeMultipoint
 	{
-		$mVar = new TypeMultipoint($mValue);
+		$mVar = TypeMultipoint::create($mValue);
 
 		return $mVar;
 	}
@@ -456,7 +454,7 @@ class FieldType
      */
     public static function typeMultipolygon($mValue = array()) : TypeMultipolygon
 	{
-		$mVar = new TypeMultipolygon($mValue);
+		$mVar = TypeMultipolygon::create($mValue);
 
 		return $mVar;
 	}
@@ -467,7 +465,7 @@ class FieldType
      */
     public static function typeJson($mValue = array()) : TypeJson
 	{
-		$mVar = new TypeJson($mValue);
+		$mVar = TypeJson::create($mValue);
 
 		return $mVar;
 	}

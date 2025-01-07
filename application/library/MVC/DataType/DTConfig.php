@@ -33,12 +33,12 @@ class DTConfig
 
 	/**
 	 * DTConfig constructor.
-	 * @param array $aData
-	 * @throws \ReflectionException 
-	 */
-	public function __construct(array $aData = array())
+     * @param \MVC\DataType\DTValue $oDTValue
+     * @throws \ReflectionException
+     */
+    protected function __construct(DTValue $oDTValue)
 	{
-        $oDTValue = DTValue::create()->set_mValue($aData); \MVC\Event::RUN ('DTConfig.__construct.before', $oDTValue);
+        \MVC\Event::RUN ('DTConfig.__construct.before', $oDTValue);
         $aData = $oDTValue->get_mValue();
 
 		$this->dir = '';
@@ -55,7 +55,8 @@ class DTConfig
 			}
 		}
 
-        $oDTValue = DTValue::create()->set_mValue($aData); \MVC\Event::RUN ('DTConfig.__construct.after', $oDTValue);
+        $oDTValue = DTValue::create()->set_mValue($aData);
+        \MVC\Event::RUN ('DTConfig.__construct.after', $oDTValue);
 	}
 
     /**
@@ -66,7 +67,7 @@ class DTConfig
     public static function create(array $aData = array())
     {
         $oDTValue = DTValue::create()->set_mValue($aData); \MVC\Event::RUN ('DTConfig.create.before', $oDTValue);
-        $oObject = new self($oDTValue->get_mValue());
+        $oObject = new self($oDTValue);
         $oDTValue = DTValue::create()->set_mValue($oObject); \MVC\Event::RUN ('DTConfig.create.after', $oDTValue);
         
         return $oDTValue->get_mValue();
@@ -125,7 +126,7 @@ class DTConfig
         {
             if (false === ($aData instanceof \MVC\DataType\DTClass))
             {
-                $aValue[$mKey] = new \MVC\DataType\DTClass($aData);
+                $aValue[$mKey] = \MVC\DataType\DTClass::create($aData);
             }
         }
 

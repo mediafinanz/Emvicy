@@ -2,21 +2,23 @@
 
 MODULENAME="$(basename "$(pwd)")";
 sHere=`pwd`;
+sAppRoot=`realpath "../../"`;
 sModuleDir=`realpath "../../modules/"`;
-xPhp=`type -p php`;
 xGit=`type -p git`;
-/usr/bin/clear;
+xPhp=`type -p php`;
 
+#------------------------------------------------------------
 # read .env
 . ../../.env;
 
 #------------------------------------------------------------
-# install further modules
+# maintenance
 
-cd "$sHere";
-cd "$sModuleDir";
+echo -e "\ninstalling...";
+cd "$sAppRoot";
 
-#...
+# maintenance file
+#/usr/bin/touch 'maintenance';
 
 #------------------------------------------------------------
 # public files
@@ -24,26 +26,26 @@ cd "$sHere";
 . _publish.sh
 
 #------------------------------------------------------------
-# init
+# install modules via git
 
-cd "$sHere";
-cd ../../public/;
-$xPhp index.php;
+echo "install modules via git...";
+cd "$sModuleDir";
 
-cd "$sHere";
-cd ../../;
-$xPhp emvicy up;
-
-#------------------------------------------------------------
-# generate DTClasses
-
-cd "$sHere";
-cd ../../;
-$xPhp emvicy datatype;
+# Paginator
+$xGit clone --branch 2.x \
+https://github.com/emvicy/Paginator.git \
+Paginator;
 
 #------------------------------------------------------------
 # done
 
-cd "$sHere";
-/bin/echo "...done!";
+cd "$sAppRoot";
 
+# clear cache
+$xPhp emvicy cc;
+
+# datatypes
+$xPhp emvicy dt;
+
+cd "$sHere";
+echo -e "installing complete.\n\n";

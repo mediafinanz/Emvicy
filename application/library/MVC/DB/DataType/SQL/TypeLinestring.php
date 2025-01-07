@@ -16,12 +16,12 @@ class TypeLinestring extends FieldTypeConcrete
 
 	/**
 	 * TypeLinestring constructor.
-	 * @param array $aData
-	 * @throws \ReflectionException 
-	 */
-	public function __construct(array $aData = array())
+    /**
+     * @param \MVC\DataType\DTValue $oDTValue
+     * @throws \ReflectionException
+     */
+    protected function __construct(DTValue $oDTValue)
 	{
-		$oDTValue = DTValue::create()->set_mValue($aData);
 		\MVC\Event::run('TypeLinestring.__construct.before', $oDTValue);
 		$aData = $oDTValue->get_mValue();
 
@@ -50,7 +50,7 @@ class TypeLinestring extends FieldTypeConcrete
     {
         $oDTValue = DTValue::create()->set_mValue($aData);
 		\MVC\Event::run('TypeLinestring.create.before', $oDTValue);
-		$oObject = new self($oDTValue->get_mValue());
+		$oObject = new self($oDTValue);
         $oDTValue = DTValue::create()->set_mValue($oObject); \MVC\Event::run('TypeLinestring.create.after', $oDTValue);
 
         return $oDTValue->get_mValue();

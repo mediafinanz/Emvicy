@@ -24,12 +24,12 @@ class DTArrayObject
     protected $aKeyValue;
 
     /**
-     * @param array $aData
+     * @param \MVC\DataType\DTValue $oDTValue
      * @throws \ReflectionException
      */
-    public function __construct(array $aData = array())
+    protected function __construct(DTValue $oDTValue)
     {
-        $oDTValue = DTValue::create()->set_mValue($aData); \MVC\Event::run('DTArrayObject.__construct.before', $oDTValue);
+        \MVC\Event::run('DTArrayObject.__construct.before', $oDTValue);
         $aData = $oDTValue->get_mValue();
 
         $this->aKeyValue = array();
@@ -50,7 +50,8 @@ class DTArrayObject
             }
         }
 
-        $oDTValue = DTValue::create()->set_mValue($aData); \MVC\Event::run('DTArrayObject.__construct.after', $oDTValue);
+        $oDTValue = DTValue::create()->set_mValue($aData);
+        \MVC\Event::run('DTArrayObject.__construct.after', $oDTValue);
     }
 
     /**
@@ -61,7 +62,7 @@ class DTArrayObject
     public static function create(array $aData = array())
     {
         $oDTValue = DTValue::create()->set_mValue($aData); \MVC\Event::run('DTArrayObject.create.before', $oDTValue);
-        $oObject = new self($oDTValue->get_mValue());
+        $oObject = new self($oDTValue);
         $oDTValue = DTValue::create()->set_mValue($oObject); \MVC\Event::run('DTArrayObject.create.after', $oDTValue);
 
         return $oDTValue->get_mValue();

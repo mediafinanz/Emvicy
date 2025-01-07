@@ -93,12 +93,12 @@ class DTProperty
 
     /**
      * DTProperty constructor.
-     * @param array $aData
+     * @param \MVC\DataType\DTValue $oDTValue
      * @throws \ReflectionException
      */
-    public function __construct(array $aData = array())
+    protected function __construct(DTValue $oDTValue)
     {
-        $oDTValue = DTValue::create()->set_mValue($aData); \MVC\Event::RUN ('DTProperty.__construct.before', $oDTValue);
+        \MVC\Event::RUN ('DTProperty.__construct.before', $oDTValue);
         $aData = $oDTValue->get_mValue();
 
         $this->key = '';
@@ -126,7 +126,8 @@ class DTProperty
             }
         }
 
-        $oDTValue = DTValue::create()->set_mValue($aData); \MVC\Event::RUN ('DTProperty.__construct.after', $oDTValue);
+        $oDTValue = DTValue::create()->set_mValue($aData);
+        \MVC\Event::RUN ('DTProperty.__construct.after', $oDTValue);
     }
 
     /**
@@ -137,7 +138,7 @@ class DTProperty
     public static function create(array $aData = array())
     {
         $oDTValue = DTValue::create()->set_mValue($aData); \MVC\Event::RUN ('DTProperty.create.before', $oDTValue);
-        $oObject = new self($oDTValue->get_mValue());
+        $oObject = new self($oDTValue);
         $oDTValue = DTValue::create()->set_mValue($oObject); \MVC\Event::RUN ('DTProperty.create.after', $oDTValue);
 
         return $oDTValue->get_mValue();

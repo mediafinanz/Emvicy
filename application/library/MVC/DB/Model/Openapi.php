@@ -12,6 +12,7 @@ namespace MVC\DB\Model;
 
 use MVC\Cache;
 use MVC\Config;
+use MVC\Log;
 use Symfony\Component\Yaml\Yaml;
 
 class Openapi
@@ -61,11 +62,12 @@ class Openapi
             $sClass = $oDB->getDocCommentValueOfProperty($sProperty);
             $sDtClassName = $sDtClassPrefix . str_replace('\\', '', $sClass);
             $sDTofClass = $sDTFolderPre . '\\' . $sDtClassName;
+            $sDTClassFile = Config::get_MVC_MODULE_PRIMARY_DATATYPE_DIR() . '/' . $sDtClassName . '.php';
 
-//            if (false === class_exists($sDTofClass, autoload: true))
-//            {
-//                return '';
-//            }
+            if (false === file_exists($sDTClassFile))
+            {
+                return '';
+            }
 
             /** @var \MVC\DB\DataType\DB\TableDataType $oDtTmp */
             $oDtTmp = $sDTofClass::create();

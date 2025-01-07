@@ -1,14 +1,13 @@
 #!/bin/bash
 
 MODULENAME="$(basename "$(pwd)")";
-sHerePublish=`pwd`;
+xCp=`type -p cp`;
 
 #------------------------------------------------------------
 
-cd "$sHerePublish";
 /bin/echo "copying public Data...";
 
 # copy
-/bin/cp -r ./etc/_INSTALL/public/*			../../public/
+$xCp -r ./etc/_INSTALL/public/*			../../public/
 
-/bin/echo "...done!";
+/bin/echo -e "...done!\n\n";

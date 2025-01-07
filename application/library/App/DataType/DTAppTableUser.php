@@ -92,7 +92,7 @@ class DTAppTableUser extends \MVC\DB\DataType\DB\TableDataType
 		$this->lastname = '';
 		$this->description = '';
 
-		parent::__construct($aData);
+		parent::__construct($oDTValue);
 		$this->setProperties($oDTValue);
 
 		$oDTValue = DTValue::create()->set_mValue($aData); 

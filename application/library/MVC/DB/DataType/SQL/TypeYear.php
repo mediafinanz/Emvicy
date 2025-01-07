@@ -14,14 +14,12 @@ class TypeYear extends FieldTypeConcrete
 
 	public const DTHASH = 'da4597de003f66f5e0542ba8715931ad';
 
-	/**
-	 * TypeYear constructor.
-	 * @param array $aData
-	 * @throws \ReflectionException 
-	 */
-	public function __construct(array $aData = array())
+    /**
+     * @param \MVC\DataType\DTValue $oDTValue
+     * @throws \ReflectionException
+     */
+    protected function __construct(DTValue $oDTValue)
 	{
-		$oDTValue = DTValue::create()->set_mValue($aData);
 		\MVC\Event::run('TypeYear.__construct.before', $oDTValue);
 		$aData = $oDTValue->get_mValue();
 
@@ -50,7 +48,7 @@ class TypeYear extends FieldTypeConcrete
     {
         $oDTValue = DTValue::create()->set_mValue($aData);
 		\MVC\Event::run('TypeYear.create.before', $oDTValue);
-		$oObject = new self($oDTValue->get_mValue());
+		$oObject = new self($oDTValue);
         $oDTValue = DTValue::create()->set_mValue($oObject); \MVC\Event::run('TypeYear.create.after', $oDTValue);
 
         return $oDTValue->get_mValue();

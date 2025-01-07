@@ -433,6 +433,7 @@ Request::in()->get_pathParamArray()[ $sKey ]</pre>
 				<a id="myMvcToolbar_top"></a>
 
 				<div class="subtab31">
+					<!-------------------------------------------------------->
 					<h6>Current View</h6>
 					{assign var=oViewCurrent value=MVC\Config::get_MVC_MODULE_PRIMARY_VIEW()}
 					<code>{get_class(MVC\Config::get_MVC_MODULE_PRIMARY_VIEW())}</code>
@@ -441,7 +442,12 @@ Request::in()->get_pathParamArray()[ $sKey ]</pre>
 					<pre>get_class(Config::get_MVC_MODULE_PRIMARY_VIEW())</pre>
 					<i>Object</i>
 					<pre>Config::get_MVC_MODULE_PRIMARY_VIEW()</pre>
-
+					<!-------------------------------------------------------->
+					<h6>Smarty caching</h6>
+					current state: <code>{MVC\Convert::boolToString($smarty_caching_status)}</code>
+					<pre>view()->caching</pre>
+					<pre>\MVC\Config::get_MVC_MODULE_PRIMARY_VIEW()->caching</pre>
+					<!-------------------------------------------------------->
 					<h6>Template Folder</h6>
 					<code>
 						{MVC\Config::get_MVC_VIEW_TEMPLATE_DIR()|escape:'htmlall'}
@@ -464,7 +470,7 @@ Request::in()->get_pathParamArray()[ $sKey ]</pre>
 					<b>Default Template</b><br>
 					<code>{MVC\View::getSmartyTemplateDefault()}</code>
 					<pre>View::getSmartyTemplateDefault()</pre>
-
+					<!-------------------------------------------------------->
 					<h6>Template Content</h6>
 					<div class="padding5" style="font-size: 14px; background-color: #EFEFEF;">
 						{$aToolbar.sTemplateContent}

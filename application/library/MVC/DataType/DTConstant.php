@@ -36,9 +36,9 @@ class DTConstant
 	 * @param array $aData
 	 * @throws \ReflectionException 
 	 */
-	public function __construct(array $aData = array())
+    protected function __construct(DTValue $oDTValue)
 	{
-        $oDTValue = DTValue::create()->set_mValue($aData); \MVC\Event::RUN ('DTConstant.__construct.before', $oDTValue);
+        \MVC\Event::RUN ('DTConstant.__construct.before', $oDTValue);
         $aData = $oDTValue->get_mValue();
 
 		$this->key = '';
@@ -55,7 +55,8 @@ class DTConstant
 			}
 		}
 
-        $oDTValue = DTValue::create()->set_mValue($aData); \MVC\Event::RUN ('DTConstant.__construct.after', $oDTValue);
+        $oDTValue = DTValue::create()->set_mValue($aData);
+        \MVC\Event::RUN ('DTConstant.__construct.after', $oDTValue);
 	}
 
     /**
@@ -66,7 +67,7 @@ class DTConstant
     public static function create(array $aData = array())
     {
         $oDTValue = DTValue::create()->set_mValue($aData); \MVC\Event::RUN ('DTConstant.create.before', $oDTValue);
-        $oObject = new self($oDTValue->get_mValue());
+        $oObject = new self($oDTValue);
         $oDTValue = DTValue::create()->set_mValue($oObject); \MVC\Event::RUN ('DTConstant.create.after', $oDTValue);
 
         return $oDTValue->get_mValue();

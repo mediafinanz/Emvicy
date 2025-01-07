@@ -57,7 +57,7 @@ class DTAppTableGroup extends \MVC\DB\DataType\DB\TableDataType
 		$this->uuid = '';
 		$this->description = '';
 
-		parent::__construct($aData);
+		parent::__construct($oDTValue);
 		$this->setProperties($oDTValue);
 
 		$oDTValue = DTValue::create()->set_mValue($aData); 

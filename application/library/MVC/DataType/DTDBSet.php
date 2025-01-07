@@ -29,12 +29,11 @@ class DTDBSet
 
 	/**
 	 * DTDBSet constructor.
-	 * @param array $aData
-	 * @throws \ReflectionException 
-	 */
-	public function __construct(array $aData = array())
+     * @param \MVC\DataType\DTValue $oDTValue
+     * @throws \ReflectionException
+     */
+    protected function __construct(DTValue $oDTValue)
 	{
-		$oDTValue = DTValue::create()->set_mValue($aData);
 		$aData = $oDTValue->get_mValue();
 
 		$this->sKey = '';
@@ -61,7 +60,7 @@ class DTDBSet
     public static function create(array $aData = array())
     {
         $oDTValue = DTValue::create()->set_mValue($aData);
-		$oObject = new self($oDTValue->get_mValue());
+		$oObject = new self($oDTValue);
         $oDTValue = DTValue::create()->set_mValue($oObject); 
 
         return $oDTValue->get_mValue();

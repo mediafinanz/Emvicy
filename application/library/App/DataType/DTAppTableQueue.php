@@ -71,7 +71,7 @@ class DTAppTableQueue extends \MVC\DB\DataType\DB\TableDataType
 		$this->expiryStamp = null;
 		$this->description = null;
 
-		parent::__construct($aData);
+		parent::__construct($oDTValue);
 		$this->setProperties($oDTValue);
 
 		$oDTValue = DTValue::create()->set_mValue($aData); 
