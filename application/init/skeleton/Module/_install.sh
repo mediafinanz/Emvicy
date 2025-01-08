@@ -31,6 +31,11 @@ cd "$sHere";
 echo "install modules via git...";
 cd "$sModuleDir";
 
+# Email
+$xGit clone --branch 2.x \
+https://github.com/emvicy/Email.git \
+Email;
+
 # Paginator
 $xGit clone --branch 2.x \
 https://github.com/emvicy/Paginator.git \
@@ -40,6 +45,8 @@ Paginator;
 # done
 
 cd "$sAppRoot";
+
+$xPhp emvicy up;
 
 # clear cache
 $xPhp emvicy cc;

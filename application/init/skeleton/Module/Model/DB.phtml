@@ -26,8 +26,8 @@ class DB extends DbInit
     use DbInitTrait;
 
     /*
-     * To instantiate all DTTables:
-     * It is sufficient to read all properties once with `get_object_vars($oDB)`.
+     * To instantiate all tables:
+     * It is sufficient to init this class once: `\{module}\Model\DB::init()`
      */
 
     /**

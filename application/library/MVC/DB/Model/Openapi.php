@@ -12,7 +12,6 @@ namespace MVC\DB\Model;
 
 use MVC\Cache;
 use MVC\Config;
-use MVC\Log;
 use Symfony\Component\Yaml\Yaml;
 
 class Openapi
@@ -42,7 +41,6 @@ class Openapi
         $sDTFolderPre = '\\' . Config::get_MVC_MODULE_PRIMARY_NAME() . '\\' . basename(Config::get_MVC_MODULE_PRIMARY_DATATYPE_DIR());
         $sYamlFile = Config::get_MVC_MODULE_PRIMARY_DATATYPE_DIR() . '/' . basename($sYamlFileName);
         $aClassVar = get_object_vars($oDB);
-
         $aTmp = [
             'components' => [
                 'schemas' => []

@@ -61,6 +61,7 @@ class Index extends Master
         phpinfo();
         $sContent = ob_get_clean();
         ob_end_flush();
+
         $sContent = \HTMLPurifier::getInstance()->purify($sContent);
         $sContent = str_replace('<table>','<table class="table table-hover table-bordered table-light">', $sContent);
         $oDTRoute->get_additional()->set_sContent($sContent);
