@@ -169,7 +169,7 @@ class DTClass
         {
             if (false === ($aData instanceof \MVC\DataType\DTConstant))
             {
-                $aValue[$mKey] = new \MVC\DataType\DTConstant($aData);
+                $aValue[$mKey] = DTConstant::create($aData);
             }
         }
 
@@ -220,7 +220,7 @@ class DTClass
         {
             if (false === ($aData instanceof \MVC\DataType\DTProperty))
             {
-                $aValue[$mKey] = new \MVC\DataType\DTProperty($aData);
+                $aValue[$mKey] = DTProperty::create($aData);
             }
         }
 

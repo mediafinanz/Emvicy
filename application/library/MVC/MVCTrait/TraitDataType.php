@@ -100,6 +100,14 @@ trait TraitDataType
             {
                 $aData[$sKey] = (array) $aData[$sKey];
             }
+            // assume DataType Class
+            else
+            {
+                if (true === method_exists($sType, 'create'))
+                {
+                    $aData[$sKey] = $sType::create($aData[$sKey]);
+                }
+            }
 
             $sMethod = 'set_' . $sKey;
 

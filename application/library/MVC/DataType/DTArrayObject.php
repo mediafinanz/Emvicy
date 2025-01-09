@@ -82,7 +82,7 @@ class DTArrayObject
         {
             if (false === ($aData instanceof \MVC\DataType\DTKeyValue))
             {
-                $aValue[$mKey] = new \MVC\DataType\DTKeyValue($aData);
+                $aValue[$mKey] = DTKeyValue::create($aData);
             }
         }
 

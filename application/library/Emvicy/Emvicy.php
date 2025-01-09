@@ -539,6 +539,8 @@ class Emvicy
         \MVC\Cache::init(\MVC\Config::get_MVC_CACHE_CONFIG());
         \MVC\Cache::autoDeleteCache('DataType', 0);
 
+        echo "\n";
+
         foreach ($GLOBALS['aConfig']['MVC_MODULE_SET'] as $sType => $aModule)
         {
             foreach ($aModule as $sModule)
@@ -549,17 +551,34 @@ class Emvicy
                     continue;
                 }
 
-                $aDataTypeConfig = get($GLOBALS['aConfig']['MODULE'][$sModule]['DATATYPE']);
+                echo 'Module: `' . $sModule . '`' . "\n";
 
-                if (false === is_null($aDataTypeConfig))
+                $sDataTypeConfigFile = Config::get_MVC_MODULES_DIR() . '/' . $sModule . '/etc/config/' . $sModule . '/config/_datatype.php';
+
+                if (true === file_exists($sDataTypeConfigFile))
                 {
-                    echo 'generating Datatype Classes for module: `' . $sModule . '`, ';
-                    echo 'directory: `' . get($aDataTypeConfig['dir']) . '` ... ';
-                    \MVC\Generator\DataType::create()->initConfigArray($aDataTypeConfig);
-                    echo "done ✔\n";
+                    (false === isset($aConfig)) ? $aConfig = $GLOBALS['aConfig'] : false;
+                    require $sDataTypeConfigFile;
+                    (true === isset($aDataType)) ? $GLOBALS['aConfig']['MODULE'][$sModule]['DATATYPE'] = $aDataType : false;
+
+                    if (true === is_array($aDataType))
+                    {
+                        echo '- generating Datatype Classes for module: `' . $sModule . '`, ';
+                        echo 'directory: `' . get($aDataType['dir']) . '` ... ';
+                        \MVC\Generator\DataType::create()->initConfigArray($aDataType);
+                        echo "done ✔\n";
+                    }
                 }
+                else
+                {
+                    echo '- skip (nothing to do)' . "\n";
+                }
+
+                echo str_repeat('-', 120) . "\n";
             }
         }
+
+        echo "\n";
     }
 
     /**
