@@ -7,6 +7,7 @@ use MVC\Convert;
 use MVC\DataType\DTRoute;
 use MVC\Debug;
 use MVC\Event;
+use MVC\Process;
 use MVC\Route;
 use MVC\Strings;
 
@@ -68,15 +69,6 @@ class Emvicy
             ),
             $_GET
         );
-    }
-
-    /**
-     * @return void
-     */
-    public static function help()
-    {
-        $sHelpFile = realpath(__DIR__) . '/doc/help.txt';
-        echo file_get_contents($sHelpFile);
     }
 
     /**
@@ -160,6 +152,93 @@ class Emvicy
     public static function cc()
     {
         self::clearcache();
+    }
+
+    /**
+     * @return void
+     * @throws \ReflectionException
+     */
+    public static function cronrun()
+    {
+        Process::callRouteAsync(Config::get_MVC_CRON_ROUTE());
+    }
+
+    /**
+     * @return void
+     * @throws \ReflectionException
+     */
+    public static function cronlist()
+    {
+        $aCron = Config::MODULE()['cron'];
+        ksort($aCron);
+
+        echo "\n# Cron List\n";
+        echo '# config: ' . Config::get_MVC_MODULE_PRIMARY_STAGING_CONFIG_DIR() . "/\n";
+
+        echo "\n\n";
+        echo str_pad('| No', 6, ' ')
+             . str_pad('| Route', 120, ' ')
+             . '|'
+             . "\n"
+        ;
+        echo str_pad('|', 6, '-')
+             . str_pad('|', 120, '-')
+             . '|'
+             . "\n"
+        ;
+        $iCnt = 1;
+
+        foreach ($aCron as $sRoute)
+        {
+            echo str_pad('| ' . $iCnt, 6, ' ')
+                 . str_pad('| ' . Strings::cutOff($sRoute, 114), 120, ' ')
+                 . '|'
+                 . "\n"
+            ;
+
+            $iCnt++;
+        }
+
+        echo "\n";
+    }
+
+    public static function queueworker()
+    {
+        $aQueue = Config::MODULE()['queue'];
+        ksort($aQueue);
+
+        echo "\n# Queue List\n";
+        echo '# config: ' . Config::get_MVC_MODULE_PRIMARY_STAGING_CONFIG_DIR() . "\n";
+        echo "\n\n";
+        echo str_pad('| No', 6, ' ')
+             . str_pad('| Job / Queue key ', 50, ' ')
+             . str_pad('| Worker', 80, ' ')
+             . '|'
+             . "\n"
+        ;
+        echo str_pad('|', 6, '-')
+             . str_pad('|', 50, '-')
+             . str_pad('|', 80, '-')
+             . '|'
+             . "\n"
+        ;
+        $iCnt = 1;
+
+        foreach ($aQueue as $sTopic => $aValue)
+        {
+            foreach ($aValue as $sKey => $sValue)
+            {
+                echo str_pad('| ' . $iCnt, 6, ' ')
+                     . str_pad('| ' . $sKey, 50, ' ')
+                     . str_pad('| ' . Strings::cutOff($sValue, 74), 80, ' ')
+                     . '|'
+                     . "\n"
+                ;
+                $iCnt++;
+            }
+        }
+
+        echo "\n";
     }
 
     /**
@@ -622,6 +701,8 @@ class Emvicy
             $sArg = implode(' ', $GLOBALS['argv']);
         }
 
+        echo "\n# Route List";
+
         Route::init();
         $aIndex = Route::$aMethodRoute;
 
@@ -748,6 +829,7 @@ class Emvicy
             ob_start();
         }
 
+        echo "\n# Event List";
         echo "\n\n";
         echo str_pad('| No', 6, ' ')
             . str_pad('| Event', 60, ' ')

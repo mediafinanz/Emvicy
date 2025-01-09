@@ -3,8 +3,7 @@
 
 use MVC\Config;
 
-$oSymfonyComponentConsoleApplication = new \Symfony\Component\Console\Application();
-$oSymfonyComponentConsoleApplication->setName("\n" . 'Emvicy CLI Tool');
+$oSymfonyComponentConsoleApplication = new \Symfony\Component\Console\Application('Emvicy', '2.x');
 
 #---
 
@@ -27,7 +26,7 @@ $oSymfonyComponentConsoleApplication
     });
 
 $oSymfonyComponentConsoleApplication
-    ->register('clearcache')
+    ->register('clear:cache')
     ->setAliases(['cc'])
     ->setDescription('clears all contents of cache directory: - /application/cache/')
     ->setCode(function (\Symfony\Component\Console\Input\InputInterface $oInputInterface, \Symfony\Component\Console\Output\OutputInterface $oOutputInterface): int {
@@ -36,7 +35,34 @@ $oSymfonyComponentConsoleApplication
     });
 
 $oSymfonyComponentConsoleApplication
-    ->register('clearlog')
+    ->register('cron:run')
+    ->setAliases(['crr'])
+    ->setDescription('runs emvicy cron configuration')
+    ->setCode(function (\Symfony\Component\Console\Input\InputInterface $oInputInterface, \Symfony\Component\Console\Output\OutputInterface $oOutputInterface): int {
+        \Emvicy\Emvicy::cronrun();
+        return \Symfony\Component\Console\Command\Command::SUCCESS;
+    });
+
+$oSymfonyComponentConsoleApplication
+    ->register('cron:list')
+    ->setAliases(['crl'])
+    ->setDescription('list cron configuration')
+    ->setCode(function (\Symfony\Component\Console\Input\InputInterface $oInputInterface, \Symfony\Component\Console\Output\OutputInterface $oOutputInterface): int {
+        \Emvicy\Emvicy::cronlist();
+        return \Symfony\Component\Console\Command\Command::SUCCESS;
+    });
+
+$oSymfonyComponentConsoleApplication
+    ->register('queue:worker')
+    ->setAliases(['qw'])
+    ->setDescription('list Queue key / Worker configuration')
+    ->setCode(function (\Symfony\Component\Console\Input\InputInterface $oInputInterface, \Symfony\Component\Console\Output\OutputInterface $oOutputInterface): int {
+        \Emvicy\Emvicy::queueworker();
+        return \Symfony\Component\Console\Command\Command::SUCCESS;
+    });
+
+$oSymfonyComponentConsoleApplication
+    ->register('clear:log')
     ->setAliases(['cl'])
     ->setDescription('clears all contents of log directory: - /application/log/')
     ->setCode(function (\Symfony\Component\Console\Input\InputInterface $oInputInterface, \Symfony\Component\Console\Output\OutputInterface $oOutputInterface): int {
@@ -45,7 +71,7 @@ $oSymfonyComponentConsoleApplication
     });
 
 $oSymfonyComponentConsoleApplication
-    ->register('clearsession')
+    ->register('clear:session')
     ->setAliases(['cs'])
     ->setDescription('clears all contents of session directory: - /application/session/')
     ->setCode(function (\Symfony\Component\Console\Input\InputInterface $oInputInterface, \Symfony\Component\Console\Output\OutputInterface $oOutputInterface): int {
@@ -54,7 +80,7 @@ $oSymfonyComponentConsoleApplication
     });
 
 $oSymfonyComponentConsoleApplication
-    ->register('cleartemp')
+    ->register('clear:temp')
     ->setAliases(['ct'])
     ->setDescription('clears all contents of templates_c directory: - /application/templates_c/')
     ->setCode(function (\Symfony\Component\Console\Input\InputInterface $oInputInterface, \Symfony\Component\Console\Output\OutputInterface $oOutputInterface): int {
@@ -63,7 +89,7 @@ $oSymfonyComponentConsoleApplication
     });
 
 $oSymfonyComponentConsoleApplication
-    ->register('clearall')
+    ->register('clear:all')
     ->setAliases(['ca'])
     ->setDescription('clears all contents of temp directories: - `/application/cache/`, - /application/log/, - /application/session/, - /application/templates_c/')
     ->setCode(function (\Symfony\Component\Console\Input\InputInterface $oInputInterface, \Symfony\Component\Console\Output\OutputInterface $oOutputInterface): int {
@@ -206,7 +232,7 @@ $oSymfonyComponentConsoleApplication
         return \Symfony\Component\Console\Command\Command::SUCCESS;
     });
 $oSymfonyComponentConsoleApplication
-    ->register('event:listener')
+    ->register('event:list')
     ->setAliases(['el'])
     ->setDescription('lists all known event listeners in a markdown table ')
     ->setCode(function (\Symfony\Component\Console\Input\InputInterface $oInputInterface, \Symfony\Component\Console\Output\OutputInterface $oOutputInterface): int {
