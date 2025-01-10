@@ -899,7 +899,7 @@ class Db
             Error::exception($oException);
         }
 
-        $oDTDBConstraint = new Constraint($aConstraint);
+        $oDTDBConstraint = Constraint::create($aConstraint);
 
         return $oDTDBConstraint;
     }
