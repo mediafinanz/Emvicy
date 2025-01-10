@@ -411,7 +411,7 @@ class Request
     {
         if (false === empty($sKey))
         {
-            return self::in()->get_pathParamArray()[$sKey];
+            return get(self::in()->get_pathParamArray()[$sKey], '');
         }
 
         return self::in()->get_pathParamArray();
