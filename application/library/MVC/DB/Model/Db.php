@@ -14,6 +14,7 @@
 namespace MVC\DB\Model;
 
 use MVC\Config;
+use MVC\Convert;
 use MVC\DataType\DTDBSet;
 use MVC\DataType\DTDBWhere;
 use MVC\DataType\DTDBWhereRelation;
@@ -720,17 +721,40 @@ class Db
 
     /**
      * @param string $sField
+     * @param bool   $bCacheAtRuntime
      * @return string
      * @throws \ReflectionException
      */
-    public function getComment(string $sField = '') : string
+    public function getComment(string $sField = '', bool $bCacheAtRuntime = true) : string
     {
+        if (true === $bCacheAtRuntime)
+        {
+            $sRegistryKey = $this->sTableName . '.' . __METHOD__ . '.' . md5($sField);
+
+            if (true === Registry::isRegistered($sRegistryKey))
+            {
+                return Registry::get($sRegistryKey);
+            }
+        }
+
         if (false === empty(get($this->aForeign[$sField])))
         {
             /** @var \MVC\DB\DataType\DB\Foreign $oDTForeign */
             $oDTForeign = get($this->aForeign[$sField]);
 
+            if (true === $bCacheAtRuntime)
+            {
+                // save to Registry
+                Registry::set($sRegistryKey, $oDTForeign->get_sComment());
+            }
+
             return $oDTForeign->get_sComment();
+        }
+
+        if (true === $bCacheAtRuntime)
+        {
+            // save to Registry
+            Registry::set($sRegistryKey, (string) get($this->getFieldInfo($sField)['Comment'], ''));
         }
 
         return (string) get($this->getFieldInfo($sField)['Comment'], '');
@@ -738,12 +762,23 @@ class Db
 
     /**
      * @param string $sFieldName
-     * @param bool $bAvoidReserved
+     * @param bool   $bAvoidReserved
+     * @param bool   $bCacheAtRuntime
      * @return array|mixed
      * @throws \ReflectionException
      */
-    public function getFieldInfo(string $sFieldName = '', bool $bAvoidReserved = true)
+    public function getFieldInfo(string $sFieldName = '', bool $bAvoidReserved = true, bool $bCacheAtRuntime = true)
     {
+        if (true === $bCacheAtRuntime)
+        {
+            $sRegistryKey = $this->sTableName . '.' . __METHOD__ . '.' . md5($sFieldName . $bAvoidReserved);
+
+            if (true === Registry::isRegistered($sRegistryKey))
+            {
+                return Registry::get($sRegistryKey);
+            }
+        }
+
         $aResult = array();
         $sSql = "SHOW FULL COLUMNS FROM " . $this->sTableName;
         ('' !== $sFieldName) ? $sSql.= " where Field =:sFieldName" : false;
@@ -767,6 +802,12 @@ class Db
 
         if (empty($aResult))
         {
+            if (true === $bCacheAtRuntime)
+            {
+                // save to Registry
+                Registry::set($sRegistryKey, $aResult);
+            }
+
             return array();
         }
 
@@ -818,7 +859,19 @@ class Db
 
         if (true === isset($aResult[$sFieldName]) && false === empty($aResult[$sFieldName]))
         {
+            if (true === $bCacheAtRuntime)
+            {
+                // save to Registry
+                Registry::set($sRegistryKey, $aResult[$sFieldName]);
+            }
+
             return $aResult[$sFieldName];
+        }
+
+        if (true === $bCacheAtRuntime)
+        {
+            // save to Registry
+            Registry::set($sRegistryKey, $aResult);
         }
 
         return $aResult;
@@ -1036,12 +1089,23 @@ class Db
 
     /**
      * @param \MVC\DB\DataType\DB\TableDataType|null $oTableDataType
+     * @param bool                                   $bCacheAtRuntime
      * @return \MVC\DB\DataType\DB\TableDataType
      * @throws \ReflectionException
      */
-    public function retrieveTupel(?TableDataType $oTableDataType = null) : TableDataType
+    public function retrieveTupel(?TableDataType $oTableDataType = null, bool $bCacheAtRuntime = true) : TableDataType
     {
         Event::run('mvc.db.model.db.retrieveTupel.before', $oTableDataType);
+
+        if (true === $bCacheAtRuntime)
+        {
+            $sRegistryKey = $this->sTableName . '.' . __METHOD__ . '.' . md5(json_encode(Convert::objectToArray($oTableDataType)));
+
+            if (true === Registry::isRegistered($sRegistryKey))
+            {
+                return Registry::get($sRegistryKey);
+            }
+        }
 
         if (0 === $oTableDataType->get_id())
         {
@@ -1063,6 +1127,12 @@ class Db
         {
             $sTableDataType = get_class($oTableDataType);
             return $sTableDataType::create();
+        }
+
+        if (true === $bCacheAtRuntime)
+        {
+            // save to Registry
+            Registry::set($sRegistryKey, current($aResult));
         }
 
         return current($aResult);
@@ -1105,11 +1175,22 @@ class Db
     /**
      * @param \MVC\DataType\DTDBWhere[]  $aDTDBWhere
      * @param \MVC\DataType\DTDBOption[] $aDTDBOption
-     * @return \MVC\DB\DataType\DB\TableDataType[]
+     * @param bool                       $bCacheAtRuntime
+     * @return array
      * @throws \ReflectionException
      */
-    public function retrieve(array $aDTDBWhere = array(), array $aDTDBOption = array()) : array
+    public function retrieve(array $aDTDBWhere = array(), array $aDTDBOption = array(), bool $bCacheAtRuntime = true) : array
     {
+        if (true === $bCacheAtRuntime)
+        {
+            $sRegistryKey = $this->sTableName . '.' . __METHOD__ . '.' . md5(serialize($aDTDBWhere) . serialize($aDTDBOption));
+
+            if (true === Registry::isRegistered($sRegistryKey))
+            {
+                return Registry::get($sRegistryKey);
+            }
+        }
+
         $oDTValue = DTValue::create()->set_mValue(array('aDTDBWhere' => $aDTDBWhere, 'aDTDBOption' => $aDTDBOption));
         Event::run('mvc.db.model.db.retrieve.before', $oDTValue);
         /** @var \MVC\DataType\DTDBWhere[] $aDTDBWhere */
@@ -1197,6 +1278,12 @@ class Db
         $oDTValue = DTValue::create()->set_mValue($aObject);
         Event::run('mvc.db.model.db.retrieve.after', $oDTValue);
         $aObject = $oDTValue->get_mValue();
+
+        if (true === $bCacheAtRuntime)
+        {
+            // save to Registry
+            Registry::set($sRegistryKey, $aObject);
+        }
 
         return $aObject;
     }
@@ -1484,14 +1571,25 @@ class Db
     /**
      * @param string $sSql
      * @param bool   $bReturnDatatypeObject
+     * @param bool   $bCacheAtRuntime
      * @return array|mixed
      * @throws \ReflectionException
      */
-    public function fetchRow(string $sSql = '', bool $bReturnDatatypeObject = false)
+    public function fetchRow(string $sSql = '', bool $bReturnDatatypeObject = false, bool $bCacheAtRuntime = false)
     {
         if (true === empty($sSql))
         {
             return array();
+        }
+
+        if (true === $bCacheAtRuntime)
+        {
+            $sRegistryKey = $this->sTableName . '.' . __FUNCTION__ . '.' . md5($sSql . $bReturnDatatypeObject);
+
+            if (true === Registry::isRegistered($sRegistryKey))
+            {
+                return Registry::get($sRegistryKey);
+            }
         }
 
         $mResult = self::getDbPdo()->fetchRow($sSql);
@@ -1503,20 +1601,37 @@ class Db
             $mResult = $sDataTypeClass::create($mResult);
         }
 
+        if (true === $bCacheAtRuntime)
+        {
+            // save to Registry
+            Registry::set($sRegistryKey, $mResult);
+        }
+
         return $mResult;
     }
 
     /**
      * @param string $sSql
      * @param bool   $bReturnDatatypeArray
+     * @param bool   $bCacheAtRuntime
      * @return array
      * @throws \ReflectionException
      */
-    public function fetchAll(string $sSql = '', bool $bReturnDatatypeArray = false)
+    public function fetchAll(string $sSql = '', bool $bReturnDatatypeArray = false, bool $bCacheAtRuntime = false)
     {
         if (true === empty($sSql))
         {
             return array();
+        }
+
+        if (true === $bCacheAtRuntime)
+        {
+            $sRegistryKey = $this->sTableName . '.' . __FUNCTION__ . '.' . md5($sSql . $bReturnDatatypeArray);
+
+            if (true === Registry::isRegistered($sRegistryKey))
+            {
+                return Registry::get($sRegistryKey);
+            }
         }
 
         $mResult = self::getDbPdo()->fetchAll($sSql);
@@ -1531,6 +1646,12 @@ class Db
                 },
                 $mResult
             );
+        }
+
+        if (true === $bCacheAtRuntime)
+        {
+            // save to Registry
+            Registry::set($sRegistryKey, $mResult);
         }
 
         return $mResult;
@@ -1602,18 +1723,41 @@ class Db
     /**
      * @param int    $iId
      * @param string $sFieldName
+     * @param bool   $bCacheAtRuntime
      * @return mixed
      * @throws \ReflectionException
      */
-    public function getOnId(int $iId = 0, string $sFieldName = '') : mixed
+    public function getOnId(int $iId = 0, string $sFieldName = '', bool $bCacheAtRuntime = true) : mixed
     {
+        if (true === $bCacheAtRuntime)
+        {
+            $sRegistryKey = $this->sTableName . '.' . __FUNCTION__ . '.' . md5(json_encode($iId . $sFieldName));
+
+            if (true === Registry::isRegistered($sRegistryKey))
+            {
+                return Registry::get($sRegistryKey);
+            }
+        }
+
         $oTableDataType = $this->retrieveTupel(TableDataType::create()->set_id($iId));
 
         if ('' !== $sFieldName)
         {
             $aTableDataType = $oTableDataType->getPropertyArray();
 
+            if (true === $bCacheAtRuntime)
+            {
+                // save to Registry
+                Registry::set($sRegistryKey, get($aTableDataType[$sFieldName]));
+            }
+
             return get($aTableDataType[$sFieldName]);
+        }
+
+        if (true === $bCacheAtRuntime)
+        {
+            // save to Registry
+            Registry::set($sRegistryKey, $oTableDataType);
         }
 
         return $oTableDataType;
