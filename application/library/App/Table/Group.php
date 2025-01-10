@@ -18,7 +18,6 @@ class Group extends Db
 
     /**
      * @param array $aDbConfig
-     * @param       $sProperty
      * @throws \ReflectionException
      */
     public function __construct(array $aDbConfig = array())
