@@ -32,5 +32,35 @@ class Index extends View
         parent::__construct();
 
         $this->caching = true;
+        $this->registerForSmarty();
+    }
+
+    /**
+     * @return void
+     * @throws \SmartyException
+     */
+    protected function registerForSmarty()
+    {
+        // classes
+        $this->registerClass('App\Model\Menu', 'App\Model\Menu');
+        $this->registerClass('MVC\Asset', 'MVC\Asset');
+        $this->registerClass('MVC\Config', 'MVC\Config');
+        $this->registerClass('MVC\Convert', 'MVC\Convert');
+        $this->registerClass('MVC\Error', 'MVC\Error');
+        $this->registerClass('MVC\Request', 'MVC\Request');
+        $this->registerClass('MVC\Route', 'MVC\Route');
+        $this->registerClass('MVC\Strings', 'MVC\Strings');
+        $this->registerClass('MVC\Session', 'MVC\Session');
+        $this->registerClass('MVC\View', 'MVC\View');
+        $this->registerClass('Parsedown', 'Parsedown');
+        $this->registerClass('\Parsedown', '\Parsedown');
+        $this->registerClass('Emvicy\Emvicy', 'Emvicy\Emvicy');
+
+        // modifiers
+        $this->registerPlugin('modifier','str_replace', 'str_replace');
+        $this->registerPlugin('modifier','print_r', 'print_r');
+        $this->registerPlugin('modifier','getenv', 'getenv');
+        $this->registerPlugin('modifier','get_class', 'get_class');
+        $this->registerPlugin('modifier','floor', 'floor');
     }
 }

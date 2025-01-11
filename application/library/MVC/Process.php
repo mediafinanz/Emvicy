@@ -204,8 +204,7 @@ class Process
     protected static function getPidFileArray(int $iFlag = 1)
     {
         $sCmd = 'cd ' . self::getPidFileFolder() . '; aPid=`ls`; for iPid in ${aPid}; do ' . whereis('ps') . ' --pid $iPid > /dev/null; if [ "$?" -eq ' . $iFlag . ' ]; then echo "$iPid"; fi; done;';
-        $aPid = array_filter(explode("\n", shell_exec($sCmd)));
-
+        $aPid = array_filter(explode("\n", (string) shell_exec($sCmd)));
         $aPid = array_map(
             function($sPid){
                 return self::getPidFileFolder() . $sPid;

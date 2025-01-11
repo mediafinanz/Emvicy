@@ -1,6 +1,6 @@
 <?php
 /**
- * Type_Application_alto_cdnifilter_json.php
+ * Type_Application_vnd_3gpp_5gsv2x_local_service_information.php
  * @package Emvicy
  * @copyright ueffing.net
  * @author Guido K.B.W. Üffing <emvicy@ueffing.net>
@@ -11,12 +11,12 @@ namespace MVC\Media;
 
 use MVC\MVCTrait\TraitMediaType;
 
-class Type_Application_alto_cdnifilter_json
+class Type_Application_vnd_3gpp_5gsv2x_local_service_information
 {
     use TraitMediaType;
 
     /**
-     * @reference [RFC9241]
+     * @reference [_3GPP_CT1][Dongwook_Kim]
      */
-    const DESCRIPTION = 'application/alto-cdnifilter+json';
+    const DESCRIPTION = 'application/vnd.3gpp.5gsv2x-local-service-information';
 }

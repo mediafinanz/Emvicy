@@ -1,6 +1,6 @@
 <?php
 /**
- * Type_Application_alto_cdnifilter_json.php
+ * Type_Image_jais.php
  * @package Emvicy
  * @copyright ueffing.net
  * @author Guido K.B.W. Üffing <emvicy@ueffing.net>
@@ -11,12 +11,12 @@ namespace MVC\Media;
 
 use MVC\MVCTrait\TraitMediaType;
 
-class Type_Application_alto_cdnifilter_json
+class Type_Image_jais
 {
     use TraitMediaType;
 
     /**
-     * @reference [RFC9241]
+     * @reference [ISO-IEC_JTC_1_SC_29_WG_1][Ye-Kui_Wang]
      */
-    const DESCRIPTION = 'application/alto-cdnifilter+json';
+    const DESCRIPTION = 'image/jais';
 }

@@ -1,6 +1,6 @@
 <?php
 /**
- * Type_Application_alto_cdnifilter_json.php
+ * Type_Application_vnd_kdl.php
  * @package Emvicy
  * @copyright ueffing.net
  * @author Guido K.B.W. Üffing <emvicy@ueffing.net>
@@ -11,12 +11,12 @@ namespace MVC\Media;
 
 use MVC\MVCTrait\TraitMediaType;
 
-class Type_Application_alto_cdnifilter_json
+class Type_Application_vnd_kdl
 {
     use TraitMediaType;
 
     /**
-     * @reference [RFC9241]
+     * @reference [Katerina_Zoé_Marchán_Salvá]
      */
-    const DESCRIPTION = 'application/alto-cdnifilter+json';
+    const DESCRIPTION = 'application/vnd.kdl';
 }
