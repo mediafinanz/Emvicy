@@ -3,6 +3,8 @@
 namespace MVC;
 
 
+use App\DataType\DTAppTableQueue;
+
 class Process
 {
     /**
@@ -43,6 +45,7 @@ class Process
      */
     public static function callRouteAsync(string $sRoute = '')
     {
+Log::write($sRoute, Config::get_MVC_LOG_FILE_PROCESS());
         Event::run('mvc.process.callRouteAsync.before', $sRoute);
 
         if (true === empty($sRoute))
@@ -58,6 +61,17 @@ class Process
 
         $sCommand = 'cd ' . Config::get_MVC_PUBLIC_PATH() . '; ' . Config::get_MVC_BIN_PHP_BINARY() . ' index.php "' . $sRoute . '"' . ' > /dev/null 2>/dev/null & echo $!';
         $iPid = (int) trim(shell_exec($sCommand));
+
+Log::write($iPid, Config::get_MVC_LOG_FILE_PROCESS());
+
+        $oDTAppTableQueue = Queue::push(
+            oDTAppTableQueue: DTAppTableQueue::create()
+                ->set_key('pid::' . $iPid)
+                ->set_key2(Session::is()->getSessionId())
+                ->set_value($sRoute)
+                ->set_expirySeconds(60),
+            bPreventMultipleCreation: true
+        );
 
         /** @todo event logging */
         Event::run('mvc.process.callRouteAsync.after', array('sRoute' => $sRoute, 'iPid' => $iPid));
@@ -250,6 +264,9 @@ class Process
                 ? unlink($sPidFile)
                 : false
             ;
+
+            // remove job from queue
+            Queue::pop(sKey: 'pid::' . $iPid);
 
             if (true === $bUnlink)
             {
