@@ -30,7 +30,7 @@
                 return false;
             }
 
-            \MVC\Log::write($oDTRequestIn->get_requestMethod() . ' ' . $oDTRequestIn->get_full(), \MVC\Config::get_MVC_LOG_FILE_REQUEST());
+            \MVC\Log::write(php_sapi_name () . ' ' . $oDTRequestIn->get_requestMethod() . ' ' . $oDTRequestIn->get_path(), \MVC\Config::get_MVC_LOG_FILE_REQUEST());
         },
     ],
 ]);
