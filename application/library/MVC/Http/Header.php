@@ -382,4 +382,15 @@ class Header
 
         return $this;
     }
+
+    /**
+     * @param string $sStatus
+     * @return $this
+     */
+    public function X_Accel_Buffering(string $sStatus = 'no')
+    {
+        header('X-Accel-Buffering: ' . $sStatus);
+
+        return $this;
+    }
 }

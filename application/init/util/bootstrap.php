@@ -98,18 +98,3 @@ MVC_AUTOLOADING: {
         require_once $sFileName;
     });
 }
-
-FIRST_LOG_ENTRY_ON_NEW_REQUEST: {
-
-    if ('cli' === php_sapi_name())
-    {
-        \MVC\Application::setServerVarsForCli();
-    }
-
-    $sMessage = str_repeat ('#', 10) . "\tnew Request"
-        . "\t" . php_sapi_name ()
-        . "\t" . (array_key_exists ('REQUEST_METHOD', $_SERVER) ? (string) $_SERVER['REQUEST_METHOD'] : '')
-        . ' ' . (array_key_exists ('REQUEST_URI', $_SERVER) ? (string) $_SERVER['REQUEST_URI'] : '');
-
-    \MVC\Log::write($sMessage);
-}

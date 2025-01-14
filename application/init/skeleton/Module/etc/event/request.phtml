@@ -30,7 +30,7 @@
                 return false;
             }
 
-            \MVC\Log::write(json_encode(\MVC\Convert::objectToArray($oDTRequestIn)), \MVC\Config::get_MVC_LOG_FILE_REQUEST());
+            \MVC\Log::write($oDTRequestIn->get_requestMethod() . ' ' . $oDTRequestIn->get_full(), \MVC\Config::get_MVC_LOG_FILE_REQUEST());
         },
     ],
 ]);

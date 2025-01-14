@@ -45,7 +45,6 @@ class Process
      */
     public static function callRouteAsync(string $sRoute = '')
     {
-Log::write($sRoute, Config::get_MVC_LOG_FILE_PROCESS());
         Event::run('mvc.process.callRouteAsync.before', $sRoute);
 
         if (true === empty($sRoute))
@@ -61,8 +60,6 @@ Log::write($sRoute, Config::get_MVC_LOG_FILE_PROCESS());
 
         $sCommand = 'cd ' . Config::get_MVC_PUBLIC_PATH() . '; ' . Config::get_MVC_BIN_PHP_BINARY() . ' index.php "' . $sRoute . '"' . ' > /dev/null 2>/dev/null & echo $!';
         $iPid = (int) trim(shell_exec($sCommand));
-
-Log::write($iPid, Config::get_MVC_LOG_FILE_PROCESS());
 
         $oDTAppTableQueue = Queue::push(
             oDTAppTableQueue: DTAppTableQueue::create()
