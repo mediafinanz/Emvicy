@@ -21,7 +21,7 @@ class DTAppTableUser extends \MVC\DB\DataType\DB\TableDataType
 	 * @required true
 	 * @var string
 	 */
-	protected $email;
+	protected $email {set => substr($value, 0, 255);}
 
 	/**
 	 * @required true
@@ -33,43 +33,43 @@ class DTAppTableUser extends \MVC\DB\DataType\DB\TableDataType
 	 * @required true
 	 * @var string
 	 */
-	protected $uuid;
+	protected $uuid {set => substr($value, 0, 36);}
 
 	/**
 	 * @required true
 	 * @var string
 	 */
-	protected $uuidtmp;
+	protected $uuidtmp {set => substr($value, 0, 36);}
 
 	/**
 	 * @required true
 	 * @var string
 	 */
-	protected $password;
+	protected $password {set => substr($value, 0, 60);}
 
 	/**
 	 * @required true
 	 * @var string
 	 */
-	protected $nickname;
+	protected $nickname {set => substr($value, 0, 10);}
 
 	/**
 	 * @required true
 	 * @var string
 	 */
-	protected $forename;
+	protected $forename {set => substr($value, 0, 25);}
 
 	/**
 	 * @required true
 	 * @var string
 	 */
-	protected $lastname;
+	protected $lastname {set => substr($value, 0, 25);}
 
 	/**
 	 * @required true
 	 * @var string
 	 */
-	protected $description;
+	protected $description {set => substr($value, 0, 16000);}
 
 	/**
 	 * DTAppTableUser constructor.
