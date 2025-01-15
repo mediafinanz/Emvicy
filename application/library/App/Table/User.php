@@ -33,7 +33,7 @@ class User extends Db
             'nickname'  => "varchar(10)         NULL                COMMENT 'Abbreviation'",
             'forename'  => "varchar(25)         NULL                COMMENT 'First name'",
             'lastname'  => "varchar(25)         NULL                COMMENT 'Last name'",
-            "description"   => "tinytext        NULL                COMMENT 'Description'",
+            "description"   => "text            NULL                COMMENT 'Description'",
         );
 
         // run setup after "foreign tables"

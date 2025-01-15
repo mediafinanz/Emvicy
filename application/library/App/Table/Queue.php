@@ -32,7 +32,7 @@ class Queue extends Db
             'valueMd5'      => "varchar(32)                         NOT NULL    COMMENT 'md5 on value'",
             'expirySeconds' => "int(10)         DEFAULT             NULL NULL   COMMENT 'expiry seconds'",
             'expiryStamp'   => "int(10)                             NULL        COMMENT 'expiry timestamp'",
-            "description"   => "tinytext        DEFAULT ''          NULL        COMMENT 'Description'",
+            "description"   => "text            DEFAULT ''          NULL        COMMENT 'Description'",
         );
 
         // basic creation of the table

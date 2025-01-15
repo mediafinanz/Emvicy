@@ -27,7 +27,7 @@ class Group extends Db
             'gid'           => "int(6)          DEFAULT '1000'          NOT NULL            COMMENT 'GID'",
             'active'        => "int(1)          DEFAULT '0'             NOT NULL            COMMENT 'active'",
             'uuid'          => "varchar(36)     COLLATE utf8_general_ci NOT NULL    UNIQUE  COMMENT 'uuid permanent'",
-            "description"   => "tinytext        DEFAULT ''              NOT NULL            COMMENT 'Description'",
+            "description"   => "text            DEFAULT ''              NOT NULL            COMMENT 'Description'",
         );
 
         // run setup after "createTable"
