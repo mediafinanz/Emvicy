@@ -837,6 +837,22 @@ class Db
                 {
                     $mValueType = self::getArrayFromEnum(get($sDefString, ''));
                 }
+                elseif ('tinytext' === $sType)
+                {
+                    $mValueType = 64;
+                }
+                elseif ('text' === $sType)
+                {
+                    $mValueType = 16000;
+                }
+                elseif ('mediumtext' === $sType)
+                {
+                    $mValueType = 419430375;
+                }
+                elseif ('mediumtext' === $sType)
+                {
+                    $mValueType = 2000000000;
+                }
 
                 $aResult[$sKey]['_typeValue'] = $mValueType;
             }
