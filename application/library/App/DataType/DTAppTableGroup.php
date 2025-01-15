@@ -39,7 +39,7 @@ class DTAppTableGroup extends \MVC\DB\DataType\DB\TableDataType
 	 * @required true
 	 * @var string
 	 */
-	protected $description;
+    protected $description {set => substr($value, 0, 16000);}
 
 	/**
 	 * DTAppTableGroup constructor.
