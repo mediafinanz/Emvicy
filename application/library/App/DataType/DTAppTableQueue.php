@@ -51,7 +51,7 @@ class DTAppTableQueue extends \MVC\DB\DataType\DB\TableDataType
 	 * @required true
 	 * @var string|null
 	 */
-    protected $description {set => substr($value, 0, 16000);}
+	protected $description;
 
 	/**
 	 * DTAppTableQueue constructor.
