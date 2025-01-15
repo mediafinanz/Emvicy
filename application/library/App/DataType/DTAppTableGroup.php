@@ -15,7 +15,7 @@ class DTAppTableGroup extends \MVC\DB\DataType\DB\TableDataType
 	 * @required true
 	 * @var string
 	 */
-	protected $name {set => substr($value, 0, 255);}
+	protected $name;
 
 	/**
 	 * @required true
@@ -33,13 +33,13 @@ class DTAppTableGroup extends \MVC\DB\DataType\DB\TableDataType
 	 * @required true
 	 * @var string
 	 */
-	protected $uuid {set => substr($value, 0, 36);}
+	protected $uuid;
 
 	/**
 	 * @required true
 	 * @var string
 	 */
-	protected $description {set => substr($value, 0, 16000);}
+	protected $description;
 
 	/**
 	 * DTAppTableGroup constructor.
