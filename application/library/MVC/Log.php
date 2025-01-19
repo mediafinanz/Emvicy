@@ -89,6 +89,7 @@ class Log
 
         $sReport = '';
         (true === (boolean) get($GLOBALS['aConfig']['MVC_LOG_DETAIL']['date'])) ? $sReport.= date ("Y-m-d H:i:s") : false;
+        $sReport.= "\t" . getmypid();
         (true === (boolean) get($GLOBALS['aConfig']['MVC_LOG_DETAIL']['host'])) ? $sReport.= "\t" . ((array_key_exists('HTTP_HOST', $_SERVER)) ? $_SERVER['HTTP_HOST'] : '0.0.0.0') : false;
         (true === (boolean) get($GLOBALS['aConfig']['MVC_LOG_DETAIL']['env'])) ? $sReport.= "\t" . ((false !== getenv('MVC_ENV')) ? getenv('MVC_ENV') : '---?---') : false;
         (true === (boolean) get($GLOBALS['aConfig']['MVC_LOG_DETAIL']['ip'])) ? $sReport.= "\t" . ((array_key_exists('REMOTE_ADDR', $_SERVER)) ? $_SERVER['REMOTE_ADDR'] : '0.0.0.0') : false;

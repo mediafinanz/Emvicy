@@ -57,6 +57,7 @@ class Process
 
         $sCommand = 'cd ' . Config::get_MVC_PUBLIC_PATH() . '; ' . Config::get_MVC_BIN_PHP_BINARY() . ' index.php "' . $sRoute . '"' . ' > /dev/null 2>/dev/null & echo $!';
         $iPid = (int) trim(shell_exec($sCommand));
+        self::savePid($iPid);
 
         /** @todo event logging */
         Event::run('mvc.process.callRouteAsync.after', array('sRoute' => $sRoute, 'iPid' => $iPid));
