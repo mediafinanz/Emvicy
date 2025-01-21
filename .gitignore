@@ -11,6 +11,7 @@ application/library/MVC/xarray.php
 .ddev
 ._datatype.php
 .phpstorm.meta.php
+.mvc-websocket-run*
 application/.composer
 application/cache/*
 application/log/*
