@@ -105,7 +105,7 @@ trait TraitDataType
             {
                 if (true === method_exists($sType, 'create'))
                 {
-                    $aData[$sKey] = $sType::create($aData[$sKey]);
+                    $aData[$sKey] = $sType::create((array) $aData[$sKey]);
                 }
             }
 
