@@ -44,6 +44,7 @@ vendor
 modules/*
 public/.env
 public/openapi
+public/Ws
 public/api
 _gitPull.sh
 _gitPush.sh
