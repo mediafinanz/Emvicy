@@ -66,6 +66,50 @@ class Process
     }
 
     /**
+     * @param object $oObject
+     * @param string $sMethod
+     * @param array  $aArgument
+     * @return void
+     * @throws \ReflectionException
+     */
+    public static function callClassMethodAsync(object $oObject, string $sMethod, array $aArgument = array())
+    {
+        // The PCNTL extension is meant to be restricted to operating in CLI only;
+        // You cannot use it in other server environments (fpm, mod_php, etc).
+        // It is not possible to use the function 'pcntl_fork' when PHP is used as Apache module (such as XAMPP).
+        // You can only use pcntl_fork in CGI mode or from command-line.
+        // Using this function will result in: 'Fatal error: Call to undefined function: pcntl_fork()'
+        if (false === ('cli' === php_sapi_name()))
+        {
+            return;
+        }
+
+        /*
+         * On success,
+         * the PID of the child process is returned in the parent's thread of execution,
+         * and a 0 is returned in the child's thread of execution.
+         *
+         * On failure,
+         * a -1 will be returned in the parent's context,
+         * no child process will be created, and a PHP error is raised.
+         */
+        $bFork = (0 === pcntl_fork());
+
+        // from here it is forked, non-blocking and has its own pid
+        if (true === $bFork)
+        {
+            \register_shutdown_function('\MVC\Process::deletePidFile', getmypid());
+            self::savePid(getmypid());
+
+            $sControllerClassName = get_class($oObject);
+            $oReflectionMethod = new \ReflectionMethod($sControllerClassName, $sMethod);
+            $oReflectionMethod->invoke($oObject, $aArgument);
+
+            exit();
+        }
+    }
+
+    /**
      * @return string
      * @throws \ReflectionException
      */
@@ -122,6 +166,33 @@ class Process
 
         // save pidfile containing JSON queue object
         return (boolean) file_put_contents(self::getPidFileFolder() . $iPid, json_encode(Convert::objectToArray($mContent)));
+    }
+
+    /**
+     * @param int $iPid
+     * @return bool
+     * @throws \ReflectionException
+     */
+    public static function hasPidFile(int $iPid)
+    {
+        return file_exists(self::getPidFileFolder() . $iPid);
+    }
+
+    /**
+     * @param int $iPid
+     * @return bool
+     * @throws \ReflectionException
+     */
+    public static function deletePidFile(int $iPid)
+    {
+        if (true === self::hasPidFile($iPid))
+        {
+            return unlink(
+                self::getPidFileFolder() . $iPid
+            );
+        }
+
+        return false;
     }
 
     /**
@@ -245,13 +316,7 @@ class Process
 
         if (true === is_int($iPid))
         {
-            $sPidFile = self::getPidFileFolder() . $iPid;
-            $bUnlink = (true === file_exists($sPidFile))
-                ? unlink($sPidFile)
-                : false
-            ;
-
-            if (true === $bUnlink)
+            if (true === self::deletePidFile($iPid))
             {
                 Event::run('mvc.process.destruct.after', $iPid);
             }
