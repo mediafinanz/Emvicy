@@ -45,13 +45,6 @@ class Lock
         $sPrefix = str_pad($sPrefix, 10, '_');
         $sKey = $sPrefix . '.' . str_pad(strlen($sKey), 2, '_', STR_PAD_LEFT) . '.' . md5($sKey) . '.' . md5(serialize($aBacktrace)) . '.lock';
         $sFile = $sCacheDir . '/' . $sKey;
-
-        Log::write(
-            'Lock: ' . $aBacktrace['sFile'] . ', ' . $aBacktrace['sLine'],
-            Config::get_MVC_LOG_FILE_DEFAULT(),
-            false
-        );
-
         $oDTArrayObject = DTArrayObject::create()
             ->add_aKeyValue(DTKeyValue::create()
                 ->set_sKey('aBacktrace')
