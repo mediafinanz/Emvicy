@@ -27,7 +27,7 @@ trait TraitDataType
         try {
             $oReflectionProperty = new \ReflectionProperty($this, $sProperty);
         } catch (\ReflectionException $oReflectionException) {
-            Error::error($oReflectionException->getMessage());
+            Error::notice($oReflectionException->getMessage());
             return '';
         }
 
