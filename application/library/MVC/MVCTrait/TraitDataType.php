@@ -11,6 +11,7 @@
 namespace MVC\MVCTrait;
 
 use MVC\DataType\DTValue;
+use MVC\Error;
 
 trait TraitDataType
 {
@@ -23,7 +24,13 @@ trait TraitDataType
      */
     function getDocCommentValueOfProperty(string $sProperty = '', string $sDocCommentKey = '@var')
     {
-        $oReflectionProperty = new \ReflectionProperty($this, $sProperty);
+        try {
+            $oReflectionProperty = new \ReflectionProperty($this, $sProperty);
+        } catch (\ReflectionException $oReflectionException) {
+            Error::error($oReflectionException->getMessage());
+            return '';
+        }
+
         $sDocComment = $oReflectionProperty->getDocComment();
         $sResult = trim(str_replace(['*', '/', $sDocCommentKey], '', current(array_filter(array_map(
             function($sLine) use ($sDocCommentKey) {
