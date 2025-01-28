@@ -45,6 +45,7 @@ modules/*
 public/.env
 public/openapi
 public/Ws
+public/Ws_old
 public/api
 _gitPull.sh
 _gitPush.sh
