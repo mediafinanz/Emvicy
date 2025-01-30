@@ -296,10 +296,9 @@ class Process
 
         foreach ($aZombie as $sPidFile)
         {
-            $bUnlink = unlink($sPidFile);
-
-            if (true === $bUnlink)
+            if (true === file_exists($sPidFile))
             {
+                unlink($sPidFile);
                 Event::run('mvc.process.deleteZombieFiles.after', $sPidFile);
             }
         }
