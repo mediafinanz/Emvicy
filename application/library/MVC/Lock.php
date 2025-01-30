@@ -68,7 +68,7 @@ class Lock
             exit();
         }
 
-        \register_shutdown_function('rmdir', $sFile);
+        \register_shutdown_function('\MVC\Dir::remove', $sFile);
 
         $oDTArrayObject->add_aKeyValue(DTKeyValue::create()
             ->set_sKey('bLocked')

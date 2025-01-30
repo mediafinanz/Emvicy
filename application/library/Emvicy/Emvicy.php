@@ -140,7 +140,7 @@ class Emvicy
             {
                 $aSubFile = glob($sPath . '/{,.}[!.,!..]*', GLOB_MARK|GLOB_BRACE);
                 array_map('unlink', $aSubFile);
-                rmdir($sPath);
+                \MVC\Dir::remove($sPath);
             }
         }
     }

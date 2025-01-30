@@ -42,7 +42,7 @@ class Dir
             glob($sDirectory . '/{,.}[!.,!..]*', GLOB_BRACE)
         );
 
-        return rmdir($sDirectory);
+        return (true === file_exists($sDirectory)) ? rmdir($sDirectory) : true;
     }
 
     /**
