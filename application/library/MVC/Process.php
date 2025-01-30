@@ -298,7 +298,7 @@ class Process
         {
             if (true === file_exists($sPidFile))
             {
-                unlink($sPidFile);
+                @unlink($sPidFile);
                 Event::run('mvc.process.deleteZombieFiles.after', $sPidFile);
             }
         }
