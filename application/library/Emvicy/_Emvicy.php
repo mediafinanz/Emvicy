@@ -251,7 +251,7 @@ $oSymfonyComponentConsoleApplication
 $oSymfonyComponentConsoleApplication
     ->register('module:createController')
     ->setAliases(['mcc'])
-    ->setDescription($sColCmd . "php emvicy module:createController Bar Foo" . $sColOff . " => creates controller `Bar` in the given module `Foo`")
+    ->setDescription($sColCmd . "php emvicy module:createController Bar Foo" . $sColOff . " => creates controller `Bar` in the given module `Foo`. If module `Foo` does not exist, it will be created as a primary if possible, otherwise as a secondary one.")
     ->addArgument('sController', \Symfony\Component\Console\Input\InputArgument::REQUIRED)
     ->addArgument('sModuleName', \Symfony\Component\Console\Input\InputArgument::REQUIRED)
     ->setCode(function (\Symfony\Component\Console\Input\InputInterface $oInputInterface, \Symfony\Component\Console\Output\OutputInterface $oOutputInterface): int {

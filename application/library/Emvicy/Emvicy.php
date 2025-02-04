@@ -387,6 +387,16 @@ class Emvicy
             return false;
         }
 
+        if (false === file_exists(Config::get_MVC_MODULES_DIR() . '/' . $sModuleName))
+        {
+            $bPrimary = ((true === empty(get(self::modules(true)['PRIMARY']))) ? true : false);
+            self::moduleCreate(
+                bForce: true,
+                bPrimary: $bPrimary,
+                sModule: $sModuleName
+            );
+        }
+
         $sTargetControllerFile = Config::get_MVC_MODULES_DIR() . '/' . $sModuleName . '/Controller/' . $sController . '.php';
 
         if (true === file_exists($sTargetControllerFile))
