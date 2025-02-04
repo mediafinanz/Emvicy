@@ -1,0 +1,53 @@
+<?php
+
+/**
+ * @name ${controller}Controller
+ */
+namespace Foo\Controller;
+
+use App\Controller;
+use MVC\DataType\DTRequestIn;
+use MVC\DataType\DTRoute;
+
+class {controller} extends Controller
+{
+    /**
+     * @return void
+     * @throws \ReflectionException
+     */
+    public static function __preconstruct()
+    {
+        parent::__preconstruct();
+    }
+
+    /**
+     * @param \MVC\DataType\DTRequestIn $oDTRequestIn
+     * @param \MVC\DataType\DTRoute     $oDTRoute
+     * @throws \ReflectionException
+     */
+    public function __construct(DTRequestIn $oDTRequestIn, DTRoute $oDTRoute)
+    {
+        parent::__construct($oDTRequestIn, $oDTRoute);
+    }
+
+    /**
+     * @param \MVC\DataType\DTRequestIn $oDTRequestIn
+     * @param \MVC\DataType\DTRoute     $oDTRoute
+     * @return void
+     * @throws \ReflectionException
+     */
+    public function index(DTRequestIn $oDTRequestIn, DTRoute $oDTRoute)
+    {
+        view()->autoAssign();
+    }
+
+    /**
+     * @throws \ReflectionException
+     * @throws \SmartyException
+     */
+    public function __destruct ()
+    {
+        parent::__destruct();
+        view()->render();
+    }
+}

@@ -6,6 +6,7 @@ use MVC\Config;
 use MVC\Convert;
 use MVC\DataType\DTRoute;
 use MVC\Debug;
+use MVC\Dir;
 use MVC\Event;
 use MVC\Process;
 use MVC\Route;
@@ -202,6 +203,10 @@ class Emvicy
         echo "\n";
     }
 
+    /**
+     * @return void
+     * @throws \ReflectionException
+     */
     public static function queueworker()
     {
         $aQueue = Config::MODULE()['queue'];
@@ -326,7 +331,7 @@ class Emvicy
      * @return false|void
      * @throws \ReflectionException
      */
-    public static function create(?bool $bForce = null, ?bool $bPrimary = null, string $sModule = '')
+    public static function moduleCreate(?bool $bForce = null, ?bool $bPrimary = null, string $sModule = '')
     {
         $bForce = (false === isset($bForce)) ? self::get_force() : $bForce;
         $sModule = ucfirst(trim((true === empty($sModule)) ? self::get_module() : $sModule));
@@ -370,11 +375,95 @@ class Emvicy
     }
 
     /**
-     * @return void
+     * @param string $sController
+     * @param string $sModuleName
+     * @return false|void
+     * @throws \ReflectionException
      */
-    public static function c()
+    public static function moduleCreateController(string $sController = '', string $sModuleName = '')
     {
-        self::create();
+        if (true === empty($sModuleName) || true === empty($sController))
+        {
+            return false;
+        }
+
+        $sTargetControllerFile = Config::get_MVC_MODULES_DIR() . '/' . $sModuleName . '/Controller/' . $sController . '.php';
+
+        if (true === file_exists($sTargetControllerFile))
+        {
+            echo str_pad('❌ Controller already exists: ', 30, ' ') . $sTargetControllerFile . "\n";
+            echo 'Abort.';
+            nl();
+
+            return false;
+        }
+
+        echo str_pad('Controller to be created:', 30, ' ') . $sTargetControllerFile;
+        nl();
+        echo 'creating...';
+        nl();
+
+        copy(
+            Config::get_MVC_APPLICATION_INIT_DIR() . '/skeleton/Controller.phtml',
+            $sTargetControllerFile
+        );
+
+        // replace placeholder
+        Emvicy::shellExecute(whereis('grep') . ' -rl "{controller}" ' . $sTargetControllerFile . ' | '
+                             . whereis('xargs') . ' '
+                             . whereis('sed') . ' -i "s/{controller}/' . $sController . '/g"'
+        );
+
+        echo '✔ Controller created: ' . $sTargetControllerFile;
+        nl();
+    }
+
+    /**
+     * @param string $sModel
+     * @param string $sModuleName
+     * @return false|void
+     * @throws \ReflectionException
+     */
+    public static function moduleCreateModel(string $sModel = '', string $sModuleName = '')
+    {
+        if (true === empty($sModuleName) || true === empty($sModel))
+        {
+            return false;
+        }
+
+        $sTargetModelFile = Config::get_MVC_MODULES_DIR() . '/' . $sModuleName . '/Model/' . $sModel . '.php';
+
+        if (true === file_exists($sTargetModelFile))
+        {
+            echo str_pad('❌ Model already exists: ', 30, ' ') . $sTargetModelFile . "\n";
+            echo 'Abort.';
+            nl();
+
+            return false;
+        }
+
+        echo str_pad('Model to be created:', 30, ' ') . $sTargetModelFile;
+        nl();
+        echo 'creating...';
+        nl();
+
+        copy(
+            Config::get_MVC_APPLICATION_INIT_DIR() . '/skeleton/Model.phtml',
+            $sTargetModelFile
+        );
+
+        // replace placeholder
+        Emvicy::shellExecute(whereis('grep') . ' -rl "{module}" ' . $sTargetModelFile . ' | '
+                             . whereis('xargs') . ' '
+                             . whereis('sed') . ' -i "s/{module}/' . $sModuleName . '/g"'
+        );
+        Emvicy::shellExecute(whereis('grep') . ' -rl "{model}" ' . $sTargetModelFile . ' | '
+                             . whereis('xargs') . ' '
+                             . whereis('sed') . ' -i "s/{model}/' . $sModel . '/g"'
+        );
+
+        echo '✔ Model created: ' . $sTargetModelFile;
+        nl();
     }
 
     /**
@@ -472,37 +561,38 @@ class Emvicy
 
         UPDATE_FRAMEWORK: {
 
-        if (false === empty($xGit))
-        {
-            $sCmd = $xGit . ' pull';
+            if (false === empty($xGit))
+            {
+                $sCmd = $xGit . ' pull';
+                self::shellExecute($sCmd, true);
+            }
+
+            $sCmd = 'cd ' . Config::get_MVC_APPLICATION_PATH() . '; ' . PHP_BINARY . ' composer.phar update;';
             self::shellExecute($sCmd, true);
         }
 
-        $sCmd = 'cd ' . Config::get_MVC_APPLICATION_PATH() . '; ' . PHP_BINARY . ' composer.phar update;';
-        self::shellExecute($sCmd, true);
-    }
-
         UPDATE_MODULES_VENDOR_LIBS: {
-        $aModule = preg_grep('/^([^.])/', scandir($GLOBALS['aConfig']['MVC_MODULES_DIR']));
 
-        foreach ($aModule as $sModule)
-        {
-            $sModuleConfigPathAbs = $GLOBALS['aConfig']['MVC_MODULES_DIR'] . '/' . $sModule . '/etc/config/' . $sModule;
-            $sComposerJson = $sModuleConfigPathAbs . '/composer.json';
+            $aModule = preg_grep('/^([^.])/', scandir($GLOBALS['aConfig']['MVC_MODULES_DIR']));
 
-            if (false === empty($xGit))
+            foreach ($aModule as $sModule)
             {
-                $sCmd = 'cd ' . $GLOBALS['aConfig']['MVC_MODULES_DIR'] . '/' . $sModule . '; ' . $xGit . ' pull';
-                self::shellExecute($sCmd, true);
-            }
+                $sModuleConfigPathAbs = $GLOBALS['aConfig']['MVC_MODULES_DIR'] . '/' . $sModule . '/etc/config/' . $sModule;
+                $sComposerJson = $sModuleConfigPathAbs . '/composer.json';
 
-            if (true === file_exists($sComposerJson))
-            {
-                $sCmd = 'cd ' . $sModuleConfigPathAbs . '; ' . PHP_BINARY . ' ' . Config::get_MVC_APPLICATION_PATH() . '/composer.phar update;';
-                self::shellExecute($sCmd, true);
+                if (false === empty($xGit))
+                {
+                    $sCmd = 'cd ' . $GLOBALS['aConfig']['MVC_MODULES_DIR'] . '/' . $sModule . '; ' . $xGit . ' pull';
+                    self::shellExecute($sCmd, true);
+                }
+
+                if (true === file_exists($sComposerJson))
+                {
+                    $sCmd = 'cd ' . $sModuleConfigPathAbs . '; ' . PHP_BINARY . ' ' . Config::get_MVC_APPLICATION_PATH() . '/composer.phar update;';
+                    self::shellExecute($sCmd, true);
+                }
             }
         }
-    }
     }
 
     /**

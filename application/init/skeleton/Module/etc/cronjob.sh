@@ -9,15 +9,15 @@ sCalledFrom=`/usr/bin/pwd`;
 # absolute path to this file itself
 sHereDir=$(dirname -- "$0");
 sHereDirAbs=`realpath "$sHereDir"`;
-sPublicDirAbs=`realpath "$sHereDir/../../../public"`;
+sBaseDirAbs=`realpath "$sHereDir/../../../"`;
 # this file's name
 sThisFile=$(basename "$0");
 # php binary
 xPhp=`type -p php`;
 #=======================================================================================================================
 
-cd "$sPublicDirAbs";
+cd "$sBaseDirAbs";
 
-# für alle aufgerufenen Jobs
+# for alle requested routes
 # @see etc/config/{module}/config/_cron.php
-$xPhp index.php '/cron/run' > /dev/null 2>/dev/null & echo $!
+$xPhp emvicy cron:run > /dev/null 2>/dev/null & echo $!

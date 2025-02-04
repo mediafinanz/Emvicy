@@ -3,6 +3,10 @@
 
 use MVC\Config;
 
+$sColCmd = "\033[0;36m";
+$sColOff = "\033[0m";
+#-----------------------------
+
 $oSymfonyComponentConsoleApplication = new \Symfony\Component\Console\Application('Emvicy', '2.x');
 
 #---
@@ -10,7 +14,7 @@ $oSymfonyComponentConsoleApplication = new \Symfony\Component\Console\Applicatio
 $oSymfonyComponentConsoleApplication
     ->register('version')
     ->setAliases(['v'])
-    ->setDescription('displays Emvicy version')
+    ->setDescription($sColCmd . "php emvicy version" . $sColOff . ' => displays Emvicy version')
     ->setCode(function (\Symfony\Component\Console\Input\InputInterface $oInputInterface, \Symfony\Component\Console\Output\OutputInterface $oOutputInterface): int {
         \Emvicy\Emvicy::version();
         return \Symfony\Component\Console\Command\Command::SUCCESS;
@@ -19,88 +23,95 @@ $oSymfonyComponentConsoleApplication
 $oSymfonyComponentConsoleApplication
     ->register('serve')
     ->setAliases(['s'])
-    ->setDescription('provides a local php server')
+    ->setDescription($sColCmd . "php emvicy serve" . $sColOff . ' => provides a local php-builtIn server')
     ->setCode(function (\Symfony\Component\Console\Input\InputInterface $oInputInterface, \Symfony\Component\Console\Output\OutputInterface $oOutputInterface): int {
         \Emvicy\Emvicy::serve();
         return \Symfony\Component\Console\Command\Command::SUCCESS;
     });
 
-$oSymfonyComponentConsoleApplication
-    ->register('clear:cache')
-    ->setAliases(['cc'])
-    ->setDescription('clears all contents of cache directory: - /application/cache/')
-    ->setCode(function (\Symfony\Component\Console\Input\InputInterface $oInputInterface, \Symfony\Component\Console\Output\OutputInterface $oOutputInterface): int {
-        \Emvicy\Emvicy::clearcache();
-        return \Symfony\Component\Console\Command\Command::SUCCESS;
-    });
+#-----------------------------------------------------------------------------------------------------------------------
+# cron
 
 $oSymfonyComponentConsoleApplication
     ->register('cron:run')
     ->setAliases(['crr'])
-    ->setDescription('runs emvicy cron configuration')
+    ->setDescription($sColCmd . "php emvicy cron:run" . $sColOff . ' => runs emvicy cron configuration')
     ->setCode(function (\Symfony\Component\Console\Input\InputInterface $oInputInterface, \Symfony\Component\Console\Output\OutputInterface $oOutputInterface): int {
         \Emvicy\Emvicy::cronrun();
         return \Symfony\Component\Console\Command\Command::SUCCESS;
     });
-
 $oSymfonyComponentConsoleApplication
     ->register('cron:list')
     ->setAliases(['crl'])
-    ->setDescription('list cron configuration')
+    ->setDescription($sColCmd . "php emvicy cron:list" . $sColOff . ' => list cron configuration')
     ->setCode(function (\Symfony\Component\Console\Input\InputInterface $oInputInterface, \Symfony\Component\Console\Output\OutputInterface $oOutputInterface): int {
         \Emvicy\Emvicy::cronlist();
         return \Symfony\Component\Console\Command\Command::SUCCESS;
     });
 
+#-----------------------------------------------------------------------------------------------------------------------
+# queue
+
 $oSymfonyComponentConsoleApplication
     ->register('queue:worker')
     ->setAliases(['qw'])
-    ->setDescription('list Queue key / Worker configuration')
+    ->setDescription($sColCmd . "php emvicy queue:worker" . $sColOff . ' => list Queue key / Worker configuration')
     ->setCode(function (\Symfony\Component\Console\Input\InputInterface $oInputInterface, \Symfony\Component\Console\Output\OutputInterface $oOutputInterface): int {
         \Emvicy\Emvicy::queueworker();
         return \Symfony\Component\Console\Command\Command::SUCCESS;
     });
 
+#-----------------------------------------------------------------------------------------------------------------------
+# clear
+
+$oSymfonyComponentConsoleApplication
+    ->register('clear:cache')
+    ->setAliases(['cc'])
+    ->setDescription($sColCmd . "php emvicy clear:cache" . $sColOff . ' => clears all contents of cache directory: - /application/cache/')
+    ->setCode(function (\Symfony\Component\Console\Input\InputInterface $oInputInterface, \Symfony\Component\Console\Output\OutputInterface $oOutputInterface): int {
+        \Emvicy\Emvicy::clearcache();
+        return \Symfony\Component\Console\Command\Command::SUCCESS;
+    });
 $oSymfonyComponentConsoleApplication
     ->register('clear:log')
     ->setAliases(['cl'])
-    ->setDescription('clears all contents of log directory: - /application/log/')
+    ->setDescription($sColCmd . "php emvicy clear:log" . $sColOff  . ' => clears all contents of log directory: - /application/log/')
     ->setCode(function (\Symfony\Component\Console\Input\InputInterface $oInputInterface, \Symfony\Component\Console\Output\OutputInterface $oOutputInterface): int {
         \Emvicy\Emvicy::clearlog();
         return \Symfony\Component\Console\Command\Command::SUCCESS;
     });
-
 $oSymfonyComponentConsoleApplication
     ->register('clear:session')
     ->setAliases(['cs'])
-    ->setDescription('clears all contents of session directory: - /application/session/')
+    ->setDescription($sColCmd . "php emvicy clear:session" . $sColOff . ' => clears all contents of session directory: - /application/session/')
     ->setCode(function (\Symfony\Component\Console\Input\InputInterface $oInputInterface, \Symfony\Component\Console\Output\OutputInterface $oOutputInterface): int {
         \Emvicy\Emvicy::clearsession();
         return \Symfony\Component\Console\Command\Command::SUCCESS;
     });
-
 $oSymfonyComponentConsoleApplication
     ->register('clear:temp')
     ->setAliases(['ct'])
-    ->setDescription('clears all contents of templates_c directory: - /application/templates_c/')
+    ->setDescription($sColCmd . "php emvicy clear:temp" . $sColOff . ' => clears all contents of templates_c directory: - /application/templates_c/')
     ->setCode(function (\Symfony\Component\Console\Input\InputInterface $oInputInterface, \Symfony\Component\Console\Output\OutputInterface $oOutputInterface): int {
         \Emvicy\Emvicy::cleartemp();
         return \Symfony\Component\Console\Command\Command::SUCCESS;
     });
-
 $oSymfonyComponentConsoleApplication
     ->register('clear:all')
     ->setAliases(['ca'])
-    ->setDescription('clears all contents of temp directories: - `/application/cache/`, - /application/log/, - /application/session/, - /application/templates_c/')
+    ->setDescription($sColCmd . "php emvicy clear:all" . $sColOff . ' => clears all contents of temp directories: - `/application/cache/`, - /application/log/, - /application/session/, - /application/templates_c/')
     ->setCode(function (\Symfony\Component\Console\Input\InputInterface $oInputInterface, \Symfony\Component\Console\Output\OutputInterface $oOutputInterface): int {
         \Emvicy\Emvicy::clearall();
         return \Symfony\Component\Console\Command\Command::SUCCESS;
     });
 
+#-----------------------------------------------------------------------------------------------------------------------
+# datatype
+
 $oSymfonyComponentConsoleApplication
     ->register('datatype:all')
     ->setAliases(['dt'])
-    ->setDescription('creates datatype classes for all modules')
+    ->setDescription($sColCmd . "php emvicy datatype:all" . $sColOff . ' => creates datatype classes for all modules')
     ->setCode(function (\Symfony\Component\Console\Input\InputInterface $oInputInterface, \Symfony\Component\Console\Output\OutputInterface $oOutputInterface): int {
         \Emvicy\Emvicy::datatype();
         return \Symfony\Component\Console\Command\Command::SUCCESS;
@@ -108,17 +119,20 @@ $oSymfonyComponentConsoleApplication
 $oSymfonyComponentConsoleApplication
     ->register('datatype:module')
     ->setAliases(['dtm'])
-    ->setDescription('creates datatype classes for a given module. Example: php emvicy dtm Foo')
+    ->setDescription($sColCmd . "php emvicy datatype:module Foo" . $sColOff . ' => creates datatype classes for module `Foo`')
     ->addArgument('module', \Symfony\Component\Console\Input\InputArgument::REQUIRED)
     ->setCode(function (\Symfony\Component\Console\Input\InputInterface $oInputInterface, \Symfony\Component\Console\Output\OutputInterface $oOutputInterface): int {
         \Emvicy\Emvicy::datatype($oInputInterface->getArgument('module'));
         return \Symfony\Component\Console\Command\Command::SUCCESS;
     });
 
+#-----------------------------------------------------------------------------------------------------------------------
+# routes
+
 $oSymfonyComponentConsoleApplication
     ->register('routes:array')
     ->setAliases(['rt'])
-    ->setDescription('lists available routes as array/var_export')
+    ->setDescription($sColCmd . "php emvicy routes:array" . $sColOff  . ' => lists available routes as array/var_export')
     ->setCode(function (\Symfony\Component\Console\Input\InputInterface $oInputInterface, \Symfony\Component\Console\Output\OutputInterface $oOutputInterface): int {
         \Emvicy\Emvicy::routes();
         return \Symfony\Component\Console\Command\Command::SUCCESS;
@@ -126,7 +140,7 @@ $oSymfonyComponentConsoleApplication
 $oSymfonyComponentConsoleApplication
     ->register('routes:json')
     ->setAliases(['rtj'])
-    ->setDescription('lists available routes in JSON format')
+    ->setDescription($sColCmd . "php emvicy routes:json" . $sColOff . ' => lists available routes in JSON format')
     ->setCode(function (\Symfony\Component\Console\Input\InputInterface $oInputInterface, \Symfony\Component\Console\Output\OutputInterface $oOutputInterface): int {
         \Emvicy\Emvicy::routes('json');
         return \Symfony\Component\Console\Command\Command::SUCCESS;
@@ -134,16 +148,18 @@ $oSymfonyComponentConsoleApplication
 $oSymfonyComponentConsoleApplication
     ->register('routes:list')
     ->setAliases(['rtl'])
-    ->setDescription('lists available routes in a markdown table')
+    ->setDescription($sColCmd . "php emvicy routes:list" . $sColOff . ' => lists available routes in a markdown table')
     ->setCode(function (\Symfony\Component\Console\Input\InputInterface $oInputInterface, \Symfony\Component\Console\Output\OutputInterface $oOutputInterface): int {
         \Emvicy\Emvicy::routes('list');
         return \Symfony\Component\Console\Command\Command::SUCCESS;
     });
 
+#-----------------------------------------------------------------------------------------------------------------------
+
 $oSymfonyComponentConsoleApplication
     ->register('update')
     ->setAliases(['up'])
-    ->setDescription('updates: - Emvicy Framework and its vendor installed libraries, - vendor installed libraries of existing modules. requires: - Emvicy installed via `git clone` command, - bash, git')
+    ->setDescription($sColCmd . "php emvicy update" . $sColOff . ' => updates: - Emvicy Framework and its vendor installed libraries, - vendor installed libraries of existing modules. requires: - Emvicy installed via `git clone` command, - bash, git')
     ->setCode(function (\Symfony\Component\Console\Input\InputInterface $oInputInterface, \Symfony\Component\Console\Output\OutputInterface $oOutputInterface): int {
         \Emvicy\Emvicy::update();
         return \Symfony\Component\Console\Command\Command::SUCCESS;
@@ -151,11 +167,7 @@ $oSymfonyComponentConsoleApplication
 
 $oSymfonyComponentConsoleApplication
     ->register('log')
-    ->setDescription("aggregates a unique log extract on STDOUT from all existing logfiles (*.log) matching to given logId (=== MVC_UNIQUE_ID)
-\t\t\tExamples:
-\t\t\tphp emvicy log 2023070711413964a7ddd36254a    # aggregates a unique log extract
-\t\t\tphp emvicy log 2023070711413964a7ddd36254a 0  # same
-\t\t\tphp emvicy log 2023070711413964a7ddd36254a 1  # replaces newline \\n by a real linebreak")
+    ->setDescription($sColCmd . "php emvicy log 2023070711413964a7ddd36254a" . $sColOff . " => aggregates a unique log extract on STDOUT from all existing logfiles (*.log) matching to given logId `2023070711413964a7ddd36254a`")
     ->addArgument('id', \Symfony\Component\Console\Input\InputArgument::REQUIRED)
     ->addArgument('nl', \Symfony\Component\Console\Input\InputArgument::OPTIONAL)
     ->setCode(function (\Symfony\Component\Console\Input\InputInterface $oInputInterface, \Symfony\Component\Console\Output\OutputInterface $oOutputInterface): int {
@@ -166,10 +178,13 @@ $oSymfonyComponentConsoleApplication
         return \Symfony\Component\Console\Command\Command::SUCCESS;
     });
 
+#-----------------------------------------------------------------------------------------------------------------------
+# lint
+
 $oSymfonyComponentConsoleApplication
     ->register('lint:all')
     ->setAliases(['l'])
-    ->setDescription('checks the whole application on errors and returns a parsable JSON containing bool `bSuccess` and array `aMessage`.')
+    ->setDescription("\t" . $sColCmd . "php emvicy lint:all" . $sColOff . ' => checks the whole application on errors and returns a parsable JSON containing bool `bSuccess` and array `aMessage`.')
     ->setCode(function (\Symfony\Component\Console\Input\InputInterface $oInputInterface, \Symfony\Component\Console\Output\OutputInterface $oOutputInterface): int {
         \Emvicy\Emvicy::lint();
         return \Symfony\Component\Console\Command\Command::SUCCESS;
@@ -177,7 +192,7 @@ $oSymfonyComponentConsoleApplication
 $oSymfonyComponentConsoleApplication
     ->register('lint:module')
     ->setAliases(['lm'])
-    ->setDescription("checks module on errors and returns a parsable JSON containing bool `bSuccess` and array `aMessage`.\n\t\t\tExample: php emvicy lm Foo")
+    ->setDescription($sColCmd . "php emvicy lint:module Foo" . $sColOff . " => checks module `Foo` on errors and returns a parsable JSON containing bool `bSuccess` and array `aMessage`.")
     ->addArgument('module', \Symfony\Component\Console\Input\InputArgument::REQUIRED)
     ->setCode(function (\Symfony\Component\Console\Input\InputInterface $oInputInterface, \Symfony\Component\Console\Output\OutputInterface $oOutputInterface): int {
         \Emvicy\Emvicy::lint(
@@ -186,10 +201,13 @@ $oSymfonyComponentConsoleApplication
         return \Symfony\Component\Console\Command\Command::SUCCESS;
     });
 
+#-----------------------------------------------------------------------------------------------------------------------
+# test
+
 $oSymfonyComponentConsoleApplication
     ->register('test:module')
     ->setAliases(['t'])
-    ->setDescription('runs modules phpunit test. Example: `php emvicy test:module modules/Foo/Test/`')
+    ->setDescription($sColCmd . "php emvicy test:module modules/Foo/Test/" . $sColOff . ' => runs modules phpunit test in module `Foo`')
     ->addArgument('module', \Symfony\Component\Console\Input\InputArgument::REQUIRED)
     ->setCode(function (\Symfony\Component\Console\Input\InputInterface $oInputInterface, \Symfony\Component\Console\Output\OutputInterface $oOutputInterface): int {
         \Emvicy\Emvicy::test(
@@ -198,17 +216,16 @@ $oSymfonyComponentConsoleApplication
         return \Symfony\Component\Console\Command\Command::SUCCESS;
     });
 
+#-----------------------------------------------------------------------------------------------------------------------
+# module
+
 $oSymfonyComponentConsoleApplication
     ->register('module:create')
     ->setAliases(['mc'])
-    ->setDescription("module creation.
-\t\t\tprimary module creation
-\t\t\t\tphp emvicy mc Foo p                     # creates primary module 'Foo'
-\t\t\t\tphp emvicy module:create Foo primary    # creates primary module 'Foo'
-\t\t\tsecondary module creation
-\t\t\t\tphp emvicy mc Bar s                     # creates secondary module 'Bar'
-\t\t\t\tphp emvicy module:create Foo secondary  # creates secondary module 'Bar'
-    ")
+    ->setDescription(
+        $sColCmd . "php emvicy module:create Foo primary" . $sColOff . " => creates primary module `Foo`\n" .
+        "\t\t\t\t" . $sColCmd . "php emvicy module:create Bar secondary" . $sColOff . " => creates secondary module `Bar`\n"
+    )
     ->addArgument('sModule', \Symfony\Component\Console\Input\InputArgument::REQUIRED)
     ->addArgument('sModuleType', \Symfony\Component\Console\Input\InputArgument::REQUIRED)
     ->setCode(function (\Symfony\Component\Console\Input\InputInterface $oInputInterface, \Symfony\Component\Console\Output\OutputInterface $oOutputInterface): int {
@@ -216,7 +233,7 @@ $oSymfonyComponentConsoleApplication
         $sModuleType = $oInputInterface->getArgument('sModuleType');
         $bPrimary = (str_starts_with(strtolower(get($sModuleType, '')), 'p')) ? true : false;
 
-        \Emvicy\Emvicy::create(
+        \Emvicy\Emvicy::moduleCreate(
             bForce: true,
             bPrimary: $bPrimary,
             sModule: $oInputInterface->getArgument('sModule')
@@ -226,15 +243,45 @@ $oSymfonyComponentConsoleApplication
 $oSymfonyComponentConsoleApplication
     ->register('module:list')
     ->setAliases(['md'])
-    ->setDescription('lists available modules in JSON format. Example: {"SECONDARY":{"0":"Captcha","1":"DB","2":"Email","4":"Idolon","5":"InfoService","6":"OpenApi"},"PRIMARY":["Emvicy"]}')
+    ->setDescription($sColCmd . "php emvicy module:list" . $sColOff . ' => lists available modules in JSON format. Example: {"SECONDARY":{"0":"Captcha","1":"DB","2":"Email","4":"Idolon","5":"InfoService","6":"OpenApi"},"PRIMARY":["Emvicy"]}')
     ->setCode(function (\Symfony\Component\Console\Input\InputInterface $oInputInterface, \Symfony\Component\Console\Output\OutputInterface $oOutputInterface): int {
         \Emvicy\Emvicy::modules();
         return \Symfony\Component\Console\Command\Command::SUCCESS;
     });
 $oSymfonyComponentConsoleApplication
+    ->register('module:createController')
+    ->setAliases(['mcc'])
+    ->setDescription($sColCmd . "php emvicy module:createController Bar Foo" . $sColOff . " => creates controller `Bar` in the given module `Foo`")
+    ->addArgument('sController', \Symfony\Component\Console\Input\InputArgument::REQUIRED)
+    ->addArgument('sModuleName', \Symfony\Component\Console\Input\InputArgument::REQUIRED)
+    ->setCode(function (\Symfony\Component\Console\Input\InputInterface $oInputInterface, \Symfony\Component\Console\Output\OutputInterface $oOutputInterface): int {
+        \Emvicy\Emvicy::moduleCreateController(
+            sController: $oInputInterface->getArgument('sController'),
+            sModuleName: $oInputInterface->getArgument('sModuleName')
+        );
+        return \Symfony\Component\Console\Command\Command::SUCCESS;
+    });
+$oSymfonyComponentConsoleApplication
+    ->register('module:createModel')
+    ->setAliases(['mcc'])
+    ->setDescription($sColCmd . "php emvicy module:createModel Bar Foo" . $sColOff . " => creates Model `Bar` in the given module `Foo`")
+    ->addArgument('sModel', \Symfony\Component\Console\Input\InputArgument::REQUIRED)
+    ->addArgument('sModuleName', \Symfony\Component\Console\Input\InputArgument::REQUIRED)
+    ->setCode(function (\Symfony\Component\Console\Input\InputInterface $oInputInterface, \Symfony\Component\Console\Output\OutputInterface $oOutputInterface): int {
+        \Emvicy\Emvicy::moduleCreateModel(
+            sModel: $oInputInterface->getArgument('sModel'),
+            sModuleName: $oInputInterface->getArgument('sModuleName')
+        );
+        return \Symfony\Component\Console\Command\Command::SUCCESS;
+    });
+
+#-----------------------------------------------------------------------------------------------------------------------
+# event
+
+$oSymfonyComponentConsoleApplication
     ->register('event:list')
     ->setAliases(['el'])
-    ->setDescription('lists all known event listeners in a markdown table ')
+    ->setDescription($sColCmd . " php emvicy event:list" . $sColOff . " => lists all known event listeners in a markdown table")
     ->setCode(function (\Symfony\Component\Console\Input\InputInterface $oInputInterface, \Symfony\Component\Console\Output\OutputInterface $oOutputInterface): int {
         \Emvicy\Emvicy::eventListener();
         return \Symfony\Component\Console\Command\Command::SUCCESS;
