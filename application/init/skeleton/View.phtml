@@ -1,0 +1,42 @@
+<?php
+
+/**
+ * @name ${module}View
+ */
+namespace {module}\View;
+
+use App\View;
+use MVC\MVCTrait\TraitViewInit;
+
+/**
+ * {view}
+ * @extends \MVC\View
+ */
+class {view} extends View
+{
+    use TraitViewInit;
+
+    /**
+     * @throws \ReflectionException
+     */
+    protected function __construct()
+    {
+        parent::__construct();
+
+        $this->caching = false;
+        $this->registerForSmarty();
+    }
+
+    /**
+     * @return void
+     * @throws \SmartyException
+     */
+    protected function registerForSmarty()
+    {
+        // classes
+        $this->registerClass('App\Model\Menu', 'App\Model\Menu');
+
+        // modifiers
+        $this->registerPlugin('modifier','str_replace', 'str_replace');
+    }
+}

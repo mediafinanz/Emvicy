@@ -477,6 +477,54 @@ class Emvicy
     }
 
     /**
+     * @param string $sView
+     * @param string $sModuleName
+     * @return false|void
+     * @throws \ReflectionException
+     */
+    public static function moduleCreateView(string $sView = '', string $sModuleName = '')
+    {
+        if (true === empty($sModuleName) || true === empty($sView))
+        {
+            return false;
+        }
+
+        $sTargetViewFile = Config::get_MVC_MODULES_DIR() . '/' . $sModuleName . '/View/' . $sView . '.php';
+
+        if (true === file_exists($sTargetViewFile))
+        {
+            echo str_pad('❌ View already exists: ', 30, ' ') . $sTargetViewFile . "\n";
+            echo 'Abort.';
+            nl();
+
+            return false;
+        }
+
+        echo str_pad('View to be created:', 30, ' ') . $sTargetViewFile;
+        nl();
+        echo 'creating...';
+        nl();
+
+        copy(
+            Config::get_MVC_APPLICATION_INIT_DIR() . '/skeleton/View.phtml',
+            $sTargetViewFile
+        );
+
+        // replace placeholder
+        Emvicy::shellExecute(whereis('grep') . ' -rl "{module}" ' . $sTargetViewFile . ' | '
+                             . whereis('xargs') . ' '
+                             . whereis('sed') . ' -i "s/{module}/' . $sModuleName . '/g"'
+        );
+        Emvicy::shellExecute(whereis('grep') . ' -rl "{view}" ' . $sTargetViewFile . ' | '
+                             . whereis('xargs') . ' '
+                             . whereis('sed') . ' -i "s/{view}/' . $sView . '/g"'
+        );
+
+        echo '✔ View created: ' . $sTargetViewFile;
+        nl();
+    }
+
+    /**
      * php emvicy serve
      * @return void
      * @throws \ReflectionException

@@ -274,6 +274,19 @@ $oSymfonyComponentConsoleApplication
         );
         return \Symfony\Component\Console\Command\Command::SUCCESS;
     });
+$oSymfonyComponentConsoleApplication
+    ->register('module:createView')
+    ->setAliases(['mcv'])
+    ->setDescription($sColCmd . "php emvicy module:createView Bar Foo" . $sColOff . " => creates View `Bar` in the given module `Foo`")
+    ->addArgument('sView', \Symfony\Component\Console\Input\InputArgument::REQUIRED)
+    ->addArgument('sModuleName', \Symfony\Component\Console\Input\InputArgument::REQUIRED)
+    ->setCode(function (\Symfony\Component\Console\Input\InputInterface $oInputInterface, \Symfony\Component\Console\Output\OutputInterface $oOutputInterface): int {
+        \Emvicy\Emvicy::moduleCreateView(
+            sView: $oInputInterface->getArgument('sView'),
+            sModuleName: $oInputInterface->getArgument('sModuleName')
+        );
+        return \Symfony\Component\Console\Command\Command::SUCCESS;
+    });
 
 #-----------------------------------------------------------------------------------------------------------------------
 # event
