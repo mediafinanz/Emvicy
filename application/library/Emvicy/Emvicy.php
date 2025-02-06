@@ -561,8 +561,7 @@ class Emvicy
     public static function dbCreateDbTable(string $sTable = '', string $sModuleName = '')
     {
         $sTable = ucfirst(trim($sTable));
-
-        #-----------------------
+        
         if (true === empty($sModuleName) || true === empty($sTable))
         {
             return false;
@@ -612,27 +611,27 @@ class Emvicy
         echo '✔ Table class created: ' . $sTargetTableFile;
 
         nl();
-        echo '⚠ add the following lines to your DB init File to implement the table.';
+        echo '🛈 add the following lines to your DB init File to implement the table.';
         nl(2);
 
-        echo "\033[0;36m" . str_repeat('~', 3) . 'php' . "\033[0m";
-        echo "\033[0;31m" . '
+        echo "\033[0;37m" . str_repeat('~', 3) . 'php' . "\033[0m";
+        echo "\033[0;36m" . '
 /**
  * @var \\' . $sModuleName . '\Model\Table\\' . $sTable . '
  */
 public $o' . $sModuleName . 'ModelTable' . $sTable . ' {get => $this->activate(__PROPERTY__);}
 ' . "\033[0m";
-        echo "\033[0;36m" . str_repeat('~', 3) . "\033[0m";
+        echo "\033[0;37m" . str_repeat('~', 3) . "\033[0m";
         nl(2);
 
         echo '🛈 use this command to access this table:';
         nl(2);
 
-        echo "\033[0;36m" . str_repeat('~', 3) . 'php' . "\033[0m";
+        echo "\033[0;37m" . str_repeat('~', 3) . 'php' . "\033[0m";
         nl();
-        echo "\033[0;31m" . "DB::use()->oAppTableUser" . "\033[0m";
+        echo "\033[0;36m" . "DB::use()->o" . $sModuleName . 'ModelTable' . $sTable . "\033[0m";
         nl();
-        echo "\033[0;36m" . str_repeat('~', 3) . "\033[0m";
+        echo "\033[0;37m" . str_repeat('~', 3) . "\033[0m";
         nl(3);
 
         return true;
