@@ -242,7 +242,7 @@ $oSymfonyComponentConsoleApplication
     });
 $oSymfonyComponentConsoleApplication
     ->register('module:list')
-    ->setAliases(['md'])
+    ->setAliases(['mdl'])
     ->setDescription($sColCmd . "php emvicy module:list" . $sColOff . ' => lists available modules in JSON format. Example: {"SECONDARY":{"0":"Captcha","1":"DB","2":"Email","4":"Idolon","5":"InfoService","6":"OpenApi"},"PRIMARY":["Emvicy"]}')
     ->setCode(function (\Symfony\Component\Console\Input\InputInterface $oInputInterface, \Symfony\Component\Console\Output\OutputInterface $oOutputInterface): int {
         \Emvicy\Emvicy::modules();
