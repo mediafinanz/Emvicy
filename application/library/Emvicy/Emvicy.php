@@ -382,6 +382,8 @@ class Emvicy
      */
     public static function moduleCreateController(string $sController = '', string $sModuleName = '')
     {
+        $sController = ucfirst(trim($sController));
+
         if (true === empty($sModuleName) || true === empty($sController))
         {
             return false;
@@ -436,6 +438,8 @@ class Emvicy
      */
     public static function moduleCreateModel(string $sModel = '', string $sModuleName = '')
     {
+        $sModel = ucfirst(trim($sModel));
+
         if (true === empty($sModuleName) || true === empty($sModel))
         {
             return false;
@@ -494,6 +498,8 @@ class Emvicy
      */
     public static function moduleCreateView(string $sView = '', string $sModuleName = '')
     {
+        $sView = ucfirst(trim($sView));
+
         if (true === empty($sModuleName) || true === empty($sView))
         {
             return false;
@@ -542,6 +548,94 @@ class Emvicy
 
         echo '✔ View created: ' . $sTargetViewFile;
         nl();
+    }
+
+    //------------------------------------------------------------------------------------------------------------------
+
+    /**
+     * @param string $sTable
+     * @param string $sModuleName
+     * @return false|void
+     * @throws \ReflectionException
+     */
+    public static function dbCreateDbTable(string $sTable = '', string $sModuleName = '')
+    {
+        $sTable = ucfirst(trim($sTable));
+
+        #-----------------------
+        if (true === empty($sModuleName) || true === empty($sTable))
+        {
+            return false;
+        }
+
+        if (false === file_exists(Config::get_MVC_MODULES_DIR() . '/' . $sModuleName))
+        {
+            $bPrimary = ((true === empty(get(self::modules(true)['PRIMARY']))) ? true : false);
+            self::moduleCreate(
+                bForce: true,
+                bPrimary: $bPrimary,
+                sModule: $sModuleName
+            );
+        }
+
+        $sTargetTableFile = Config::get_MVC_MODULES_DIR() . '/' . $sModuleName . '/Model/Table/' . $sTable . '.php';
+
+        if (true === file_exists($sTargetTableFile))
+        {
+            echo str_pad('❌ Table class already exists: ', 30, ' ') . $sTargetTableFile . "\n";
+            echo 'Abort.';
+            nl();
+
+            return false;
+        }
+
+        echo str_pad('Table class to be created:', 30, ' ') . $sTargetTableFile;
+        nl();
+        echo 'creating...';
+        nl();
+
+        copy(
+            Config::get_MVC_APPLICATION_INIT_DIR() . '/skeleton/DBTable.phtml',
+            $sTargetTableFile
+        );
+
+        // replace placeholder
+        Emvicy::shellExecute(whereis('grep') . ' -rl "{module}" ' . $sTargetTableFile . ' | '
+                             . whereis('xargs') . ' '
+                             . whereis('sed') . ' -i "s/{module}/' . $sModuleName . '/g"'
+        );
+        Emvicy::shellExecute(whereis('grep') . ' -rl "{table}" ' . $sTargetTableFile . ' | '
+                             . whereis('xargs') . ' '
+                             . whereis('sed') . ' -i "s/{table}/' . $sTable . '/g"'
+        );
+
+        echo '✔ Table class created: ' . $sTargetTableFile;
+
+        nl();
+        echo '⚠ add the following lines to your DB init File to implement the table.';
+        nl(2);
+
+        echo "\033[0;36m" . str_repeat('~', 3) . 'php' . "\033[0m";
+        echo "\033[0;31m" . '
+/**
+ * @var \\' . $sModuleName . '\Model\Table\\' . $sTable . '
+ */
+public $o' . $sModuleName . 'ModelTable' . $sTable . ' {get => $this->activate(__PROPERTY__);}
+' . "\033[0m";
+        echo "\033[0;36m" . str_repeat('~', 3) . "\033[0m";
+        nl(2);
+
+        echo '🛈 use this command to access this table:';
+        nl(2);
+
+        echo "\033[0;36m" . str_repeat('~', 3) . 'php' . "\033[0m";
+        nl();
+        echo "\033[0;31m" . "DB::use()->oAppTableUser" . "\033[0m";
+        nl();
+        echo "\033[0;36m" . str_repeat('~', 3) . "\033[0m";
+        nl(3);
+
+        return true;
     }
 
     /**

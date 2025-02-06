@@ -1,0 +1,35 @@
+<?php
+
+namespace {module}\Model\Table;
+
+use MVC\DB\Model\Db;
+use MVC\DataType\DTDBWhere;
+use MVC\DataType\DTDBOption;
+use MVC\DataType\DTDBWhereRelation;
+use MVC\DB\Trait\DbInitTrait;
+
+class {table} extends Db
+{
+    use DbInitTrait;
+
+    /**
+     * @var array
+     */
+    protected $aField = array(
+        'uuid'          => "varchar(36)     NOT NULL DEFAULT uuid() COMMENT 'uuid'",
+        "name"          => "varchar(255)    NOT NULL DEFAULT '' COMMENT 'Name'",
+        "description"   => "text            NOT NULL DEFAULT '' COMMENT 'Description'",
+    );
+
+    /**
+     * @param array $aDbConfig
+     * @throws \ReflectionException
+     */
+    public function __construct(array $aDbConfig = array())
+    {
+        parent::__construct(
+            $this->aField,
+            $aDbConfig
+        );
+    }
+}

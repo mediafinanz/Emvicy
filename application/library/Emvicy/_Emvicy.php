@@ -289,6 +289,23 @@ $oSymfonyComponentConsoleApplication
     });
 
 #-----------------------------------------------------------------------------------------------------------------------
+# database
+
+$oSymfonyComponentConsoleApplication
+    ->register('db:createTable')
+    ->setAliases(['dbct'])
+    ->setDescription($sColCmd . "php emvicy db:createTable Bar Foo" . $sColOff . " => creates DB Table `Bar` in the given module `Foo`. If module `Foo` does not exist, it will be created as a primary if possible, otherwise as a secondary one.")
+    ->addArgument('sTable', \Symfony\Component\Console\Input\InputArgument::REQUIRED)
+    ->addArgument('sModuleName', \Symfony\Component\Console\Input\InputArgument::REQUIRED)
+    ->setCode(function (\Symfony\Component\Console\Input\InputInterface $oInputInterface, \Symfony\Component\Console\Output\OutputInterface $oOutputInterface): int {
+        \Emvicy\Emvicy::dbCreateDbTable(
+            sTable: $oInputInterface->getArgument('sTable'),
+            sModuleName: $oInputInterface->getArgument('sModuleName')
+        );
+        return \Symfony\Component\Console\Command\Command::SUCCESS;
+    });
+
+#-----------------------------------------------------------------------------------------------------------------------
 # event
 
 $oSymfonyComponentConsoleApplication
