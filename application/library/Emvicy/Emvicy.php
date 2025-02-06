@@ -561,7 +561,7 @@ class Emvicy
     public static function dbCreateDbTable(string $sTable = '', string $sModuleName = '')
     {
         $sTable = ucfirst(trim($sTable));
-        
+
         if (true === empty($sModuleName) || true === empty($sTable))
         {
             return false;
@@ -610,7 +610,7 @@ class Emvicy
 
         echo '✔ Table class created: ' . $sTargetTableFile;
 
-        nl();
+        nl(2);
         echo '🛈 add the following lines to your DB init File to implement the table.';
         nl(2);
 
