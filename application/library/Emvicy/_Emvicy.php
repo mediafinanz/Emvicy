@@ -263,7 +263,7 @@ $oSymfonyComponentConsoleApplication
     });
 $oSymfonyComponentConsoleApplication
     ->register('module:createModel')
-    ->setAliases(['mcc'])
+    ->setAliases(['mcm'])
     ->setDescription($sColCmd . "php emvicy module:createModel Bar Foo" . $sColOff . " => creates Model `Bar` in the given module `Foo`")
     ->addArgument('sModel', \Symfony\Component\Console\Input\InputArgument::REQUIRED)
     ->addArgument('sModuleName', \Symfony\Component\Console\Input\InputArgument::REQUIRED)
