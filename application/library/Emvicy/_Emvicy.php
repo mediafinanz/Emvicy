@@ -264,7 +264,7 @@ $oSymfonyComponentConsoleApplication
 $oSymfonyComponentConsoleApplication
     ->register('module:createModel')
     ->setAliases(['mcm'])
-    ->setDescription($sColCmd . "php emvicy module:createModel Bar Foo" . $sColOff . " => creates Model `Bar` in the given module `Foo`")
+    ->setDescription($sColCmd . "php emvicy module:createModel Bar Foo" . $sColOff . " => creates Model `Bar` in the given module `Foo`. If module `Foo` does not exist, it will be created as a primary if possible, otherwise as a secondary one.")
     ->addArgument('sModel', \Symfony\Component\Console\Input\InputArgument::REQUIRED)
     ->addArgument('sModuleName', \Symfony\Component\Console\Input\InputArgument::REQUIRED)
     ->setCode(function (\Symfony\Component\Console\Input\InputInterface $oInputInterface, \Symfony\Component\Console\Output\OutputInterface $oOutputInterface): int {
@@ -277,7 +277,7 @@ $oSymfonyComponentConsoleApplication
 $oSymfonyComponentConsoleApplication
     ->register('module:createView')
     ->setAliases(['mcv'])
-    ->setDescription($sColCmd . "php emvicy module:createView Bar Foo" . $sColOff . " => creates View `Bar` in the given module `Foo`")
+    ->setDescription($sColCmd . "php emvicy module:createView Bar Foo" . $sColOff . " => creates View `Bar` in the given module `Foo`. If module `Foo` does not exist, it will be created as a primary if possible, otherwise as a secondary one.")
     ->addArgument('sView', \Symfony\Component\Console\Input\InputArgument::REQUIRED)
     ->addArgument('sModuleName', \Symfony\Component\Console\Input\InputArgument::REQUIRED)
     ->setCode(function (\Symfony\Component\Console\Input\InputInterface $oInputInterface, \Symfony\Component\Console\Output\OutputInterface $oOutputInterface): int {

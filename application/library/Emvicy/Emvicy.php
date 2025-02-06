@@ -441,6 +441,16 @@ class Emvicy
             return false;
         }
 
+        if (false === file_exists(Config::get_MVC_MODULES_DIR() . '/' . $sModuleName))
+        {
+            $bPrimary = ((true === empty(get(self::modules(true)['PRIMARY']))) ? true : false);
+            self::moduleCreate(
+                bForce: true,
+                bPrimary: $bPrimary,
+                sModule: $sModuleName
+            );
+        }
+
         $sTargetModelFile = Config::get_MVC_MODULES_DIR() . '/' . $sModuleName . '/Model/' . $sModel . '.php';
 
         if (true === file_exists($sTargetModelFile))
@@ -487,6 +497,16 @@ class Emvicy
         if (true === empty($sModuleName) || true === empty($sView))
         {
             return false;
+        }
+
+        if (false === file_exists(Config::get_MVC_MODULES_DIR() . '/' . $sModuleName))
+        {
+            $bPrimary = ((true === empty(get(self::modules(true)['PRIMARY']))) ? true : false);
+            self::moduleCreate(
+                bForce: true,
+                bPrimary: $bPrimary,
+                sModule: $sModuleName
+            );
         }
 
         $sTargetViewFile = Config::get_MVC_MODULES_DIR() . '/' . $sModuleName . '/View/' . $sView . '.php';
