@@ -558,7 +558,7 @@ class Emvicy
      * @return false|void
      * @throws \ReflectionException
      */
-    public static function dbCreateDbTable(string $sTable = '', string $sModuleName = '')
+    public static function dbCreateTableClass(string $sTable = '', string $sModuleName = '')
     {
         $sTable = ucfirst(trim($sTable));
 
@@ -583,14 +583,14 @@ class Emvicy
         {
             echo str_pad('❌ Table class already exists: ', 30, ' ') . $sTargetTableFile . "\n";
             echo 'Abort.';
-            nl();
+            nl(2);
 
             return false;
         }
 
         echo str_pad('Table class to be created:', 30, ' ') . $sTargetTableFile;
         nl();
-        echo 'creating...';
+        echo 'creating ...';
         nl();
 
         copy(
@@ -608,33 +608,84 @@ class Emvicy
                              . whereis('sed') . ' -i "s/{table}/' . $sTable . '/g"'
         );
 
-        echo '✔ Table class created: ' . $sTargetTableFile;
+        echo '✔ Table class created: ' . $sTargetTableFile;nl(2);
 
-        nl(2);
-        echo '🛈 add the following lines to your DB init File to implement the table.';
-        nl(2);
-
-        echo "\033[0;37m" . str_repeat('~', 3) . 'php' . "\033[0m";
-        echo "\033[0;36m" . '
-/**
- * @var \\' . $sModuleName . '\Model\Table\\' . $sTable . '
- */
-public $o' . $sModuleName . 'ModelTable' . $sTable . ' {get => $this->activate(__PROPERTY__);}
-' . "\033[0m";
-        echo "\033[0;37m" . str_repeat('~', 3) . "\033[0m";
-        nl(2);
-
-        echo '🛈 use this command to access this table:';
-        nl(2);
-
-        echo "\033[0;37m" . str_repeat('~', 3) . 'php' . "\033[0m";
-        nl();
-        echo "\033[0;36m" . "DB::use()->o" . $sModuleName . 'ModelTable' . $sTable . "\033[0m";
-        nl();
-        echo "\033[0;37m" . str_repeat('~', 3) . "\033[0m";
-        nl(3);
+        echo '🛈 use this command to access the table directly:';nl(1);
+        echo "\033[0;37m" . str_repeat('~', 3) . 'php' . "\033[0m";nl();
+        echo "\033[0;36m" . '\\' . $sModuleName . '\Model\Table\\' . $sTable . '::init()' . "\033[0m";nl();
+        echo "\033[0;37m" . str_repeat('~', 3) . "\033[0m";nl(3);
 
         return true;
+    }
+
+    /**
+     * @param string $sClass
+     * @param string $sModuleName
+     * @return false|void
+     * @throws \ReflectionException
+     */
+    public static function dbCreateTableClassCollection(string $sClass = '', string $sModuleName = '')
+    {
+        $sClass = ucfirst(trim($sClass));
+
+        if (true === empty($sModuleName) || true === empty($sClass))
+        {
+            return false;
+        }
+
+        // make sure it has Prefix uppercase 'DB'
+        if (false === ('db' === substr(strtolower($sClass), 0, 2)))
+        {
+            $sClass = 'DB' . ucfirst($sClass);
+        }
+
+        if (false === file_exists(Config::get_MVC_MODULES_DIR() . '/' . $sModuleName))
+        {
+            $bPrimary = ((true === empty(get(self::modules(true)['PRIMARY']))) ? true : false);
+            self::moduleCreate(
+                bForce: true,
+                bPrimary: $bPrimary,
+                sModule: $sModuleName
+            );
+        }
+
+        $sTargetTableFile = Config::get_MVC_MODULES_DIR() . '/' . $sModuleName . '/Model/' . $sClass . '.php';
+
+        if (true === file_exists($sTargetTableFile))
+        {
+            echo str_pad('❌ DB table collection class already exists: ', 30, ' ') . $sTargetTableFile . "\n";
+            echo 'Abort.';
+            nl(2);
+
+            return false;
+        }
+
+        echo str_pad('DB table collection class to be created:', 30, ' ') . $sTargetTableFile;
+        nl();
+        echo 'creating ...';
+        nl();
+
+        copy(
+            Config::get_MVC_APPLICATION_INIT_DIR() . '/skeleton/DBCollection.phtml',
+            $sTargetTableFile
+        );
+
+        // replace placeholder
+        Emvicy::shellExecute(whereis('grep') . ' -rl "{module}" ' . $sTargetTableFile . ' | '
+                             . whereis('xargs') . ' '
+                             . whereis('sed') . ' -i "s/{module}/' . $sModuleName . '/g"'
+        );
+        Emvicy::shellExecute(whereis('grep') . ' -rl "{class}" ' . $sTargetTableFile . ' | '
+                             . whereis('xargs') . ' '
+                             . whereis('sed') . ' -i "s/{class}/' . $sClass . '/g"'
+        );
+
+        echo '✔ DB table collection class created: ' . $sTargetTableFile;nl(2);
+
+        echo '🛈 use this command to access DB tables via the collection:';nl(1);
+        echo "\033[0;37m" . str_repeat('~', 3) . 'php' . "\033[0m";nl();
+        echo "\033[0;36m" . '\\' . $sModuleName . '\Model\Table\\' . $sClass . '::use()->…table…' . "\033[0m";nl();
+        echo "\033[0;37m" . str_repeat('~', 3) . "\033[0m";nl(3);
     }
 
     /**

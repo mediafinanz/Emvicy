@@ -1,0 +1,28 @@
+<?php
+
+/**
+ * - add your db table classes as public properties
+ * - add a doctype to each property, containing the var type information about the certain class
+ * @example
+ *      @var {module}\Model\Table\Example
+ *      public $oFooModelTableExample;
+ * ---
+ * [!]  it is important to declare the var type expanded with a full path
+ *      avoid to make use of `use ...` support
+ *      otherwise the classes could not be read correctly
+ */
+
+namespace {module}\Model;
+
+use MVC\DB\Model\DbInit;
+use MVC\DB\Trait\DbInitTrait;
+
+class {class} extends DbInit
+{
+    use DbInitTrait;
+
+    /*
+     * To instantiate all tables:
+     * It is sufficient to get object vars of DB class once: `get_object_vars(\{module}\Model\DB::init());`
+     */
+}

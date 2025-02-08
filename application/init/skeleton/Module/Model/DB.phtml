@@ -1,12 +1,12 @@
 <?php
 
 /**
- * - register your db table classes as static properties.
+ * - register your db table classes as public properties.
  * - add a doctype to each static property
  * - these doctypes must contain the vartype information about the certain class
  * @example
  *      @var {module}\Model\Table\Example
- *      public static $oFooModelTableExample;
+ *      public $oFooModelTableExample;
  * ---
  * [!]  it is important to declare the vartype expanded with a full path
  *      avoid to make use of `use ...` support
