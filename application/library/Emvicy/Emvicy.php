@@ -682,9 +682,9 @@ class Emvicy
 
         echo '✔ DB table collection class created: ' . $sTargetTableFile;nl(2);
 
-        echo '🛈 use this command to access DB tables via the collection:';nl(1);
+        echo '🛈 use this command to access DB table collection class and its tables:';nl(1);
         echo "\033[0;37m" . str_repeat('~', 3) . 'php' . "\033[0m";nl();
-        echo "\033[0;36m" . '\\' . $sModuleName . '\Model\Table\\' . $sClass . '::use()->…table…' . "\033[0m";nl();
+        echo "\033[0;36m" . '\\' . $sModuleName . '\Model\Table\\' . $sClass . '::use()' . "\033[0m";nl();
         echo "\033[0;37m" . str_repeat('~', 3) . "\033[0m";nl(3);
     }
 
