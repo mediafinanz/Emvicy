@@ -39,7 +39,7 @@
                 // generate /modules/{MODULE}/DataType/DTTables.yaml
                 $sYamlFile = \MVC\DB\Model\Openapi::createDTYamlOnDTClasses(
                     // pass instance of your concrete DB Class
-                    \{module}\Model\DB::init()
+                    \{module}\Model\DB\Collection\DB::init()
                 );
             }
         },

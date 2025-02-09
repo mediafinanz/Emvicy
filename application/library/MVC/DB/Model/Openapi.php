@@ -19,14 +19,14 @@ class Openapi
     /**
      * builds an openapi.yaml "DTTables.yaml" in the primary module's DataType folder based on data type classes of the
      * DB tables
-     * @param \MVC\DB\Model\DbInit|null $oDB
-     * @param string                    $sDtClassPrefix
-     * @param string                    $sOpenApiVersion
-     * @param string                    $sYamlFileName
+     * @param \MVC\DB\Model\DbCollection|null $oDB
+     * @param string                          $sDtClassPrefix
+     * @param string                          $sOpenApiVersion
+     * @param string                          $sYamlFileName
      * @return string /absolute/path/to/file.yaml | empty=fail
      * @throws \ReflectionException
      */
-    public static function createDTYamlOnDTClasses(?DbInit $oDB = null, string $sDtClassPrefix = 'DT', string $sOpenApiVersion = '3.0.1', string $sYamlFileName = 'DTTables.yaml') : string
+    public static function createDTYamlOnDTClasses(?DbCollection $oDB = null, string $sDtClassPrefix = 'DT', string $sOpenApiVersion = '3.0.1', string $sYamlFileName = 'DTTables.yaml') : string
     {
         if (null === $oDB)
         {

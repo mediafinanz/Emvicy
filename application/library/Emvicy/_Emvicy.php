@@ -183,8 +183,8 @@ $oSymfonyComponentConsoleApplication
 
 $oSymfonyComponentConsoleApplication
     ->register('lint:all')
-    ->setAliases(['l'])
-    ->setDescription("\t" . $sColCmd . "php emvicy lint:all" . $sColOff . ' => checks the whole application on errors and returns a parsable JSON containing bool `bSuccess` and array `aMessage`.')
+    ->setAliases(['la'])
+    ->setDescription($sColCmd . "php emvicy lint:all" . $sColOff . ' => checks the whole application on errors and returns a parsable JSON containing bool `bSuccess` and array `aMessage`.')
     ->setCode(function (\Symfony\Component\Console\Input\InputInterface $oInputInterface, \Symfony\Component\Console\Output\OutputInterface $oOutputInterface): int {
         \Emvicy\Emvicy::lint();
         return \Symfony\Component\Console\Command\Command::SUCCESS;
@@ -220,11 +220,11 @@ $oSymfonyComponentConsoleApplication
 # module
 
 $oSymfonyComponentConsoleApplication
-    ->register('module:create')
-    ->setAliases(['mc'])
+    ->register('module:add')
+    ->setAliases(['mda'])
     ->setDescription(
-        $sColCmd . "php emvicy module:create Foo primary" . $sColOff . " => creates primary module `Foo`\n" .
-        "\t\t\t\t\t" . $sColCmd . "php emvicy module:create Bar secondary" . $sColOff . " => creates secondary module `Bar`\n"
+        $sColCmd . "\tphp emvicy module:add Foo primary" . $sColOff . " => creates primary module `Foo`\n" .
+        "\t\t\t\t" . $sColCmd . "php emvicy module:add Bar secondary" . $sColOff . " => creates secondary module `Bar`\n"
     )
     ->addArgument('sModule', \Symfony\Component\Console\Input\InputArgument::REQUIRED)
     ->addArgument('sModuleType', \Symfony\Component\Console\Input\InputArgument::REQUIRED)
@@ -249,9 +249,9 @@ $oSymfonyComponentConsoleApplication
         return \Symfony\Component\Console\Command\Command::SUCCESS;
     });
 $oSymfonyComponentConsoleApplication
-    ->register('module:createController')
-    ->setAliases(['mcc'])
-    ->setDescription($sColCmd . "php emvicy module:createController Bar Foo" . $sColOff . " => creates controller `Bar` in the given module `Foo`. ")
+    ->register('module:controller')
+    ->setAliases(['mdc'])
+    ->setDescription($sColCmd . "php emvicy module:controller Bar Foo" . $sColOff . " => creates controller `Bar` in the given module `Foo`. ")
     ->addArgument('sController', \Symfony\Component\Console\Input\InputArgument::REQUIRED)
     ->addArgument('sModuleName', \Symfony\Component\Console\Input\InputArgument::REQUIRED)
     ->setCode(function (\Symfony\Component\Console\Input\InputInterface $oInputInterface, \Symfony\Component\Console\Output\OutputInterface $oOutputInterface): int {
@@ -262,9 +262,9 @@ $oSymfonyComponentConsoleApplication
         return \Symfony\Component\Console\Command\Command::SUCCESS;
     });
 $oSymfonyComponentConsoleApplication
-    ->register('module:createModel')
-    ->setAliases(['mcm'])
-    ->setDescription($sColCmd . "php emvicy module:createModel Bar Foo" . $sColOff . " => creates Model `Bar` in the given module `Foo`. ")
+    ->register('module:model')
+    ->setAliases(['mdm'])
+    ->setDescription($sColCmd . "php emvicy module:model Bar Foo" . $sColOff . " => creates Model `Bar` in the given module `Foo`. ")
     ->addArgument('sModel', \Symfony\Component\Console\Input\InputArgument::REQUIRED)
     ->addArgument('sModuleName', \Symfony\Component\Console\Input\InputArgument::REQUIRED)
     ->setCode(function (\Symfony\Component\Console\Input\InputInterface $oInputInterface, \Symfony\Component\Console\Output\OutputInterface $oOutputInterface): int {
@@ -275,9 +275,9 @@ $oSymfonyComponentConsoleApplication
         return \Symfony\Component\Console\Command\Command::SUCCESS;
     });
 $oSymfonyComponentConsoleApplication
-    ->register('module:createView')
-    ->setAliases(['mcv'])
-    ->setDescription($sColCmd . "php emvicy module:createView Bar Foo" . $sColOff . " => creates View `Bar` in the given module `Foo`. ")
+    ->register('module:view')
+    ->setAliases(['mdv'])
+    ->setDescription($sColCmd . "php emvicy module:view Bar Foo" . $sColOff . " => creates View `Bar` in the given module `Foo`. ")
     ->addArgument('sView', \Symfony\Component\Console\Input\InputArgument::REQUIRED)
     ->addArgument('sModuleName', \Symfony\Component\Console\Input\InputArgument::REQUIRED)
     ->setCode(function (\Symfony\Component\Console\Input\InputInterface $oInputInterface, \Symfony\Component\Console\Output\OutputInterface $oOutputInterface): int {
@@ -292,9 +292,9 @@ $oSymfonyComponentConsoleApplication
 # database
 
 $oSymfonyComponentConsoleApplication
-    ->register('db:createTableClass')
-    ->setAliases(['dbct'])
-    ->setDescription($sColCmd . "php emvicy db:createTableClass Bar Foo" . $sColOff . " => creates DB Table `Bar` in the given module `Foo`. ")
+    ->register('db:table')
+    ->setAliases(['dbt'])
+    ->setDescription($sColCmd . "php emvicy db:table Bar Foo" . $sColOff . " => creates DB Table `Bar` in the given module `Foo`. ")
     ->addArgument('sTable', \Symfony\Component\Console\Input\InputArgument::REQUIRED)
     ->addArgument('sModuleName', \Symfony\Component\Console\Input\InputArgument::REQUIRED)
     ->setCode(function (\Symfony\Component\Console\Input\InputInterface $oInputInterface, \Symfony\Component\Console\Output\OutputInterface $oOutputInterface): int {
@@ -305,9 +305,9 @@ $oSymfonyComponentConsoleApplication
         return \Symfony\Component\Console\Command\Command::SUCCESS;
     });
 $oSymfonyComponentConsoleApplication
-    ->register('db:createTableClassCollection')
-    ->setAliases(['dbctc'])
-    ->setDescription($sColCmd . "php emvicy db:createTableClassCollection Bar Foo" . $sColOff . " => creates DB table collection class `Bar` in the given module `Foo`. ")
+    ->register('db:tableCollection')
+    ->setAliases(['dbtc'])
+    ->setDescription($sColCmd . "php emvicy db:tableCollection Bar Foo" . $sColOff . " => creates DB table collection class `Bar` in the given module `Foo`. ")
     ->addArgument('sClass', \Symfony\Component\Console\Input\InputArgument::REQUIRED)
     ->addArgument('sModuleName', \Symfony\Component\Console\Input\InputArgument::REQUIRED)
     ->setCode(function (\Symfony\Component\Console\Input\InputInterface $oInputInterface, \Symfony\Component\Console\Output\OutputInterface $oOutputInterface): int {

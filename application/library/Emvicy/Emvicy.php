@@ -577,7 +577,7 @@ class Emvicy
             );
         }
 
-        $sTargetTableFile = Config::get_MVC_MODULES_DIR() . '/' . $sModuleName . '/Model/Table/' . $sTable . '.php';
+        $sTargetTableFile = Config::get_MVC_MODULES_DIR() . '/' . $sModuleName . '/Model/DB/Table/' . $sTable . '.php';
 
         if (true === file_exists($sTargetTableFile))
         {
@@ -612,7 +612,7 @@ class Emvicy
 
         echo '🛈 use this command to access the table directly:';nl(1);
         echo "\033[0;37m" . str_repeat('~', 3) . 'php' . "\033[0m";nl();
-        echo "\033[0;36m" . '\\' . $sModuleName . '\Model\Table\\' . $sTable . '::init()' . "\033[0m";nl();
+        echo "\033[0;36m" . '\\' . $sModuleName . '\Model\DB\Table\\' . $sTable . '::init()' . "\033[0m";nl();
         echo "\033[0;37m" . str_repeat('~', 3) . "\033[0m";nl(3);
 
         return true;
@@ -634,7 +634,7 @@ class Emvicy
         }
 
         // make sure it has Prefix uppercase 'DB'
-        if (false === ('db' === substr(strtolower($sClass), 0, 2)))
+        if (false === ('dbc' === substr(strtolower($sClass), 0, 2)))
         {
             $sClass = 'DB' . ucfirst($sClass);
         }
@@ -649,7 +649,7 @@ class Emvicy
             );
         }
 
-        $sTargetTableFile = Config::get_MVC_MODULES_DIR() . '/' . $sModuleName . '/Model/' . $sClass . '.php';
+        $sTargetTableFile = Config::get_MVC_MODULES_DIR() . '/' . $sModuleName . '/Model/DB/Collection/' . $sClass . '.php';
 
         if (true === file_exists($sTargetTableFile))
         {
@@ -684,7 +684,7 @@ class Emvicy
 
         echo '🛈 use this command to access DB table collection class and its tables:';nl(1);
         echo "\033[0;37m" . str_repeat('~', 3) . 'php' . "\033[0m";nl();
-        echo "\033[0;36m" . '\\' . $sModuleName . '\Model\Table\\' . $sClass . '::use()' . "\033[0m";nl();
+        echo "\033[0;36m" . '\\' . $sModuleName . '\Model\DB\Collection\\' . $sClass . '::use()' . "\033[0m";nl();
         echo "\033[0;37m" . str_repeat('~', 3) . "\033[0m";nl(3);
     }
 

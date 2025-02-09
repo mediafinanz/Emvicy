@@ -3,7 +3,7 @@
 namespace MVC;
 
 use App\DataType\DTAppTableQueue;
-use MVC\DB\Model\DbInit;
+use MVC\DB\Model\DbCollection;
 
 class Queue
 {
@@ -16,7 +16,7 @@ class Queue
      */
     public static function push(DTAppTableQueue $oDTAppTableQueue, bool $bPreventMultipleCreation = false)
     {
-        return \App\Table\Queue::init( DbInit::getConfig() )->push($oDTAppTableQueue, $bPreventMultipleCreation);
+        return \App\Table\Queue::init( DbCollection::getConfig() )->push($oDTAppTableQueue, $bPreventMultipleCreation);
     }
 
     /**
@@ -28,7 +28,7 @@ class Queue
      */
     public static function pop(string $sKey = '', string $sKey2 = '')
     {
-        return \App\Table\Queue::init( DbInit::getConfig() )->pop($sKey, $sKey2);
+        return \App\Table\Queue::init( DbCollection::getConfig() )->pop($sKey, $sKey2);
     }
 
     /**
@@ -40,11 +40,11 @@ class Queue
     public static function popOnId(?int $iIdQueue = null)
     {
         /** @var DTAppTableQueue $oDTAppTableQueue */
-        $oDTAppTableQueue = \App\Table\Queue::init( DbInit::getConfig() )->getOnId($iIdQueue);
+        $oDTAppTableQueue = \App\Table\Queue::init( DbCollection::getConfig() )->getOnId($iIdQueue);
 
         if (false === empty($oDTAppTableQueue->get_id()))
         {
-            \App\Table\Queue::init( DbInit::getConfig() )->deleteTupel($oDTAppTableQueue);
+            \App\Table\Queue::init( DbCollection::getConfig() )->deleteTupel($oDTAppTableQueue);
         }
 
         return $oDTAppTableQueue;
@@ -59,7 +59,7 @@ class Queue
      */
     public static function next(int $iLimit = 1, array $aDTDBWhere = array())
     {
-        return \App\Table\Queue::init( DbInit::getConfig() )->next($iLimit, $aDTDBWhere);
+        return \App\Table\Queue::init( DbCollection::getConfig() )->next($iLimit, $aDTDBWhere);
     }
 
     /**
@@ -70,7 +70,7 @@ class Queue
      */
     public static function popAll(string $sKey = '', string $sKey2 = '')
     {
-        return \App\Table\Queue::init( DbInit::getConfig() )->popAll($sKey, $sKey2);
+        return \App\Table\Queue::init( DbCollection::getConfig() )->popAll($sKey, $sKey2);
     }
 
     /**
@@ -79,7 +79,7 @@ class Queue
      */
     public static function getAllKeys()
     {
-        return \App\Table\Queue::init( DbInit::getConfig() )->getAllKeys();
+        return \App\Table\Queue::init( DbCollection::getConfig() )->getAllKeys();
     }
 
     /**
@@ -90,7 +90,7 @@ class Queue
      */
     public static function keyExists(string $sKey = '', string $sKey2 = '')
     {
-        return \App\Table\Queue::init( DbInit::getConfig() )->keyExists($sKey, $sKey2);
+        return \App\Table\Queue::init( DbCollection::getConfig() )->keyExists($sKey, $sKey2);
     }
 
     /**
@@ -100,7 +100,7 @@ class Queue
      */
     public static function getAmount(string $sKey = '')
     {
-        return \App\Table\Queue::init( DbInit::getConfig() )->getAmount($sKey);
+        return \App\Table\Queue::init( DbCollection::getConfig() )->getAmount($sKey);
     }
 
     /**
@@ -109,6 +109,6 @@ class Queue
      */
     public static function expire()
     {
-        \App\Table\Queue::init( DbInit::getConfig() )->expire();
+        \App\Table\Queue::init( DbCollection::getConfig() )->expire();
     }
 }

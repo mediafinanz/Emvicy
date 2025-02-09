@@ -2,9 +2,9 @@
 
 namespace MVC\DB\Trait;
 
-use MVC\DB\Model\DbInit;
+use MVC\DB\Model\DbCollection;
 
-trait DbInitTrait
+trait DbCollectionTrait
 {
     protected static $_oInstance = null;
 
@@ -17,7 +17,7 @@ trait DbInitTrait
     {
         if (null === self::$_oInstance)
         {
-            (true === empty($aConfig)) ? $aConfig = DbInit::getConfig() : false;
+            (true === empty($aConfig)) ? $aConfig = DbCollection::getConfig() : false;
             self::$_oInstance = new self($aConfig);
         }
 

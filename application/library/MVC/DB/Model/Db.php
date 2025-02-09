@@ -188,7 +188,7 @@ class Db
     {
         if (false === Registry::isRegistered(self::$sRegistryKeyDbPDO))
         {
-            $oDbPDO = new DbPDO(DbInit::getConfig());
+            $oDbPDO = new DbPDO(DbCollection::getConfig());
             Registry::set(self::$sRegistryKeyDbPDO, $oDbPDO);
         }
 

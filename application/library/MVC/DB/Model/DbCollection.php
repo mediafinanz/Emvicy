@@ -18,7 +18,7 @@ use MVC\Event;
 use MVC\MVCTrait\TraitDataType;
 use MVC\Registry;
 
-class DbInit
+class DbCollection
 {
     use TraitDataType;
 
@@ -60,7 +60,7 @@ class DbInit
             }
         }
 
-        Event::run('mvc.db.model.dbinit.construct.after', Registry::get(Db::$sRegistryKeyDbPDO));
+        Event::run('mvc.db.model.dbcollection.construct.after', Registry::get(Db::$sRegistryKeyDbPDO));
     }
 
     /**

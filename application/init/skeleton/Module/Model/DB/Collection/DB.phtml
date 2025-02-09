@@ -5,25 +5,25 @@
  * - add a doctype to each static property
  * - these doctypes must contain the vartype information about the certain class
  * @example
- *      @var {module}\Model\Table\Example
- *      public $oFooModelTableExample;
+ *      @var {module}\Model\DB\Table\Example
+ *      public $o{module}ModelDBTableExample;
  * ---
  * [!]  it is important to declare the vartype expanded with a full path
  *      avoid to make use of `use ...` support
  *      otherwise the classes could not be read correctly
  */
 
-namespace {module}\Model;
+namespace {module}\Model\DB\Collection;
 
-use MVC\DB\Model\DbInit;
-use MVC\DB\Trait\DbInitTrait;
+use MVC\DB\Model\DbCollection;
+use MVC\DB\Trait\DbCollectionTrait;
 
 /**
  * DB
  */
-class DB extends DbInit
+class DB extends DbCollection
 {
-    use DbInitTrait;
+    use DbCollectionTrait;
 
     /*
      * To instantiate all tables:
