@@ -4,7 +4,7 @@ namespace MVC\DB\Trait;
 
 use MVC\DB\Model\DbCollection;
 
-trait DbCollectionTrait
+trait TraitDbInit
 {
     protected static $_oInstance = null;
 

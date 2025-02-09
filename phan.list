@@ -2258,7 +2258,7 @@ application/library/MVC/DB/DataType/DB/TableDataType.php
 application/library/MVC/DB/DataType/DB/Field.php
 application/library/MVC/DB/DataType/DB/Constraint.php
 application/library/MVC/DB/DataType/DB/Foreign.php
-application/library/MVC/DB/Trait/DbCollectionTrait.php
+application/library/MVC/DB/Trait/TraitDbInit.php
 application/library/MVC/DB/Model/DbCollection.php
 application/library/MVC/DB/Model/Openapi.php
 application/library/MVC/DB/Model/DbPDO.php

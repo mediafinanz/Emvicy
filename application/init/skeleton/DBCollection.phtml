@@ -14,11 +14,11 @@
 namespace {module}\Model\DB\Collection;
 
 use MVC\DB\Model\DbCollection;
-use MVC\DB\Trait\DbCollectionTrait;
+use MVC\DB\Trait\TraitDbInit;
 
 class {class} extends DbCollection
 {
-    use DbInitTrait;
+    use TraitDbInit;
 
     /*
      * To instantiate all tables of this collection: `get_object_vars(\{module}\Model\DB::init());`

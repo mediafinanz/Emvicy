@@ -4,13 +4,13 @@ namespace App\Table;
 
 use MVC\DB\DataType\DB\Foreign;
 use MVC\DB\Model\Db;
-use MVC\DB\Trait\DbCollectionTrait;
+use MVC\DB\Trait\TraitDbInit;
 use MVC\Event;
 use MVC\Strings;
 
 class User extends Db
 {
-    use DbCollectionTrait;
+    use TraitDbInit;
 
     /**
      * @var array

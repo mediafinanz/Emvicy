@@ -3,13 +3,13 @@
 namespace App\Table;
 
 use MVC\DB\Model\Db;
-use MVC\DB\Trait\DbCollectionTrait;
+use MVC\DB\Trait\TraitDbInit;
 use MVC\Event;
 use MVC\Strings;
 
 class Group extends Db
 {
-    use DbCollectionTrait;
+    use TraitDbInit;
 
     /**
      * @var array

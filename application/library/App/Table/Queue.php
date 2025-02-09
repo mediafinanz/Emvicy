@@ -7,12 +7,12 @@ use MVC\DataType\DTDBOption;
 use MVC\DataType\DTDBWhere;
 use MVC\DataType\DTDBWhereRelation;
 use MVC\DB\Model\Db;
-use MVC\DB\Trait\DbCollectionTrait;
+use MVC\DB\Trait\TraitDbInit;
 use MVC\Event;
 
 class Queue extends Db
 {
-    use DbCollectionTrait;
+    use TraitDbInit;
 
     /**
      * @var array

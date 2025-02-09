@@ -6,11 +6,11 @@ use MVC\DB\Model\Db;
 use MVC\DataType\DTDBWhere;
 use MVC\DataType\DTDBOption;
 use MVC\DataType\DTDBWhereRelation;
-use MVC\DB\Trait\DbCollectionTrait;
+use MVC\DB\Trait\TraitDbInit;
 
 class {table} extends Db
 {
-    use DbInitTrait;
+    use TraitDbInit;
 
     /**
      * @var array
