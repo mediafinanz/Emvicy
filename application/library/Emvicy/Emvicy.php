@@ -561,6 +561,7 @@ class Emvicy
     public static function dbCreateTableClass(string $sTable = '', string $sModuleName = '')
     {
         $sTable = ucfirst(trim($sTable));
+        $sTraitTable = 'Trait' . $sTable;
 
         if (true === empty($sModuleName) || true === empty($sTable))
         {
@@ -578,6 +579,7 @@ class Emvicy
         }
 
         $sTargetTableFile = Config::get_MVC_MODULES_DIR() . '/' . $sModuleName . '/Model/DB/Table/' . $sTable . '.php';
+        $sTargetTraitTableFile = Config::get_MVC_MODULES_DIR() . '/' . $sModuleName . '/Model/DB/Collection/' . $sTraitTable . '.php';
 
         if (true === file_exists($sTargetTableFile))
         {
@@ -608,7 +610,24 @@ class Emvicy
                              . whereis('sed') . ' -i "s/{table}/' . $sTable . '/g"'
         );
 
-        echo '✔ Table class created: ' . $sTargetTableFile;nl(2);
+        echo '✔ Table class created: ' . $sTargetTableFile;nl();
+
+        copy(
+            Config::get_MVC_APPLICATION_INIT_DIR() . '/skeleton/TraitTable.phtml',
+            $sTargetTraitTableFile
+        );
+
+        // replace placeholder
+        Emvicy::shellExecute(whereis('grep') . ' -rl "{module}" ' . $sTargetTraitTableFile . ' | '
+                             . whereis('xargs') . ' '
+                             . whereis('sed') . ' -i "s/{module}/' . $sModuleName . '/g"'
+        );
+        Emvicy::shellExecute(whereis('grep') . ' -rl "{table}" ' . $sTargetTraitTableFile . ' | '
+                             . whereis('xargs') . ' '
+                             . whereis('sed') . ' -i "s/{table}/' . $sTable . '/g"'
+        );
+
+        echo '✔ TraitTable class created: ' . $sTargetTraitTableFile;nl(2);
 
         echo '🛈 use this command to access the table directly:';nl(1);
         echo "\033[0;37m" . str_repeat('~', 3) . 'php' . "\033[0m";nl();

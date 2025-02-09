@@ -8,8 +8,11 @@ application/library/App/View.php
 application/library/App/Model/Menu.php
 application/library/App/Controller.php
 application/library/App/Table/Queue.php
+application/library/App/Table/TraitAppTableQueue.php
 application/library/App/Table/Group.php
 application/library/App/Table/User.php
+application/library/App/Table/TraitAppTableUser.php
+application/library/App/Table/TraitAppTableGroup.php
 application/library/MVC/Dir.php
 application/library/MVC/Closure.php
 application/library/MVC/Http/Status_Partial_Content_206.php

@@ -15,6 +15,9 @@
 
 namespace {module}\Model\DB\Collection;
 
+use App\Table\TraitAppTableGroup;
+use App\Table\TraitAppTableQueue;
+use App\Table\TraitAppTableUser;
 use MVC\DB\Model\DbCollection;
 use MVC\DB\Trait\TraitDbInit;
 
@@ -25,23 +28,10 @@ class DB extends DbCollection
 {
     use TraitDbInit;
 
-    /*
-     * To instantiate all tables:
-     * It is sufficient to get object vars of DB class once: `get_object_vars(\{module}\Model\DB::init());`
-     */
+    #-------------------------------------------------------------------------------------------------------------------
+    # tables
 
-    /**
-     * @var \App\Table\Queue
-     */
-    public $oAppTableQueue {get => $this->activate(__PROPERTY__);}
-
-    /**
-     * @var \App\Table\User
-     */
-    public $oAppTableUser {get => $this->activate(__PROPERTY__);}
-
-    /**
-     * @var \App\Table\Group
-     */
-    public $oAppTableGroup {get => $this->activate(__PROPERTY__);}
+    use TraitAppTableQueue;
+    use TraitAppTableUser;
+    use TraitAppTableGroup;
 }
