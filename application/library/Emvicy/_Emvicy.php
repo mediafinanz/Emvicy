@@ -53,11 +53,23 @@ $oSymfonyComponentConsoleApplication
 # queue
 
 $oSymfonyComponentConsoleApplication
+    ->register('queue:list')
+    ->setAliases(['ql'])
+    ->setDescription($sColCmd . "php emvicy queue:list" . $sColOff . ' => list "Queue Key <=> Worker" configuration')
+    ->setCode(function (\Symfony\Component\Console\Input\InputInterface $oInputInterface, \Symfony\Component\Console\Output\OutputInterface $oOutputInterface): int {
+        \Emvicy\Emvicy::queueList();
+        return \Symfony\Component\Console\Command\Command::SUCCESS;
+    });
+$oSymfonyComponentConsoleApplication
     ->register('queue:worker')
     ->setAliases(['qw'])
-    ->setDescription($sColCmd . "php emvicy queue:worker" . $sColOff . ' => list Queue key / Worker configuration')
+    ->setDescription($sColCmd . "php emvicy queue:worker Bar Foo" . $sColOff . ' => creates a Worker class `Bar` in the given module `Foo`.')
+    ->addArgument('sClass', \Symfony\Component\Console\Input\InputArgument::REQUIRED)
+    ->addArgument('sModuleName', \Symfony\Component\Console\Input\InputArgument::REQUIRED)
     ->setCode(function (\Symfony\Component\Console\Input\InputInterface $oInputInterface, \Symfony\Component\Console\Output\OutputInterface $oOutputInterface): int {
-        \Emvicy\Emvicy::queueworker();
+        \Emvicy\Emvicy::queueCreateWorker(
+            sClass: $oInputInterface->getArgument('sClass'),
+            sModuleName: $oInputInterface->getArgument('sModuleName'));
         return \Symfony\Component\Console\Command\Command::SUCCESS;
     });
 

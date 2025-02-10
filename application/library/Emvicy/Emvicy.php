@@ -207,7 +207,7 @@ class Emvicy
      * @return void
      * @throws \ReflectionException
      */
-    public static function queueworker()
+    public static function queueList()
     {
         $aQueue = Config::MODULE()['queue'];
         ksort($aQueue);
@@ -244,6 +244,70 @@ class Emvicy
         }
 
         echo "\n";
+    }
+
+    /**
+     * @param string $sClass
+     * @param string $sModuleName
+     * @return false|void
+     * @throws \ReflectionException
+     */
+    public static function queueCreateWorker(string $sClass = '', string $sModuleName = '')
+    {
+        $sClass = ucfirst(trim($sClass));
+
+        if (true === empty($sModuleName) || true === empty($sClass))
+        {
+            return false;
+        }
+
+        if (false === file_exists(Config::get_MVC_MODULES_DIR() . '/' . $sModuleName))
+        {
+            $bPrimary = ((true === empty(get(self::modules(true)['PRIMARY']))) ? true : false);
+            self::moduleCreate(
+                bForce: true,
+                bPrimary: $bPrimary,
+                sModule: $sModuleName
+            );
+        }
+
+        $sTargetWorkerFile = Config::get_MVC_MODULES_DIR() . '/' . $sModuleName . '/Model/Worker/' . $sClass . '.php';
+
+        if (true === file_exists($sTargetWorkerFile))
+        {
+            echo str_pad('❌ Worker class already exists: ', 30, ' ') . $sTargetWorkerFile . "\n";
+            echo 'Abort.';
+            nl(2);
+
+            return false;
+        }
+
+        echo str_pad('Worker class to be created:', 30, ' ') . $sTargetWorkerFile;
+        nl();
+        echo 'creating ...';
+        nl();
+
+        copy(
+            Config::get_MVC_APPLICATION_INIT_DIR() . '/skeleton/Worker.phtml',
+            $sTargetWorkerFile
+        );
+
+        // replace placeholder
+        Emvicy::shellExecute(whereis('grep') . ' -rl "{module}" ' . $sTargetWorkerFile . ' | '
+                             . whereis('xargs') . ' '
+                             . whereis('sed') . ' -i "s/{module}/' . $sModuleName . '/g"'
+        );
+        Emvicy::shellExecute(whereis('grep') . ' -rl "{class}" ' . $sTargetWorkerFile . ' | '
+                             . whereis('xargs') . ' '
+                             . whereis('sed') . ' -i "s/{class}/' . $sClass . '/g"'
+        );
+
+        echo '✔ Worker class created: ' . $sTargetWorkerFile;nl(2);
+
+        echo '🛈 path to this Worker class:';nl(1);
+        echo "\033[0;37m" . str_repeat('~', 3) . 'php' . "\033[0m";nl();
+        echo "\033[0;36m" . '\\' . $sModuleName . '\Model\Worker\\' . $sClass . "\033[0m";nl();
+        echo "\033[0;37m" . str_repeat('~', 3) . "\033[0m";nl(3);
     }
 
     /**
