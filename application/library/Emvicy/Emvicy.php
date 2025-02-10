@@ -255,6 +255,7 @@ class Emvicy
     public static function queueCreateWorker(string $sClass = '', string $sModuleName = '')
     {
         $sClass = ucfirst(trim($sClass));
+        $sModuleName = self::createModuleName($sModuleName);
 
         if (true === empty($sModuleName) || true === empty($sClass))
         {
@@ -398,7 +399,7 @@ class Emvicy
     public static function moduleCreate(?bool $bForce = null, ?bool $bPrimary = null, string $sModule = '')
     {
         $bForce = (false === isset($bForce)) ? self::get_force() : $bForce;
-        $sModule = ucfirst(trim((true === empty($sModule)) ? self::get_module() : $sModule));
+        $sModule = self::createModuleName($sModule);
         $bPrimary = (false === isset($bPrimary)) ? self::get_primary() : $bPrimary;
 
         if (true === empty($sModule))
@@ -447,6 +448,7 @@ class Emvicy
     public static function moduleCreateController(string $sController = '', string $sModuleName = '')
     {
         $sController = ucfirst(trim($sController));
+        $sModuleName = self::createModuleName($sModuleName);
 
         if (true === empty($sModuleName) || true === empty($sController))
         {
@@ -503,6 +505,7 @@ class Emvicy
     public static function moduleCreateModel(string $sModel = '', string $sModuleName = '')
     {
         $sModel = ucfirst(trim($sModel));
+        $sModuleName = self::createModuleName($sModuleName);
 
         if (true === empty($sModuleName) || true === empty($sModel))
         {
@@ -563,6 +566,7 @@ class Emvicy
     public static function moduleCreateView(string $sView = '', string $sModuleName = '')
     {
         $sView = ucfirst(trim($sView));
+        $sModuleName = self::createModuleName($sModuleName);
 
         if (true === empty($sModuleName) || true === empty($sView))
         {
@@ -626,6 +630,7 @@ class Emvicy
     {
         $sTable = ucfirst(trim($sTable));
         $sTraitTable = 'Trait' . $sTable;
+        $sModuleName = self::createModuleName($sModuleName);
 
         if (true === empty($sModuleName) || true === empty($sTable))
         {
@@ -710,6 +715,7 @@ class Emvicy
     public static function dbCreateTableClassCollection(string $sClass = '', string $sModuleName = '')
     {
         $sClass = ucfirst(trim($sClass));
+        $sModuleName = self::createModuleName($sModuleName);
 
         if (true === empty($sModuleName) || true === empty($sClass))
         {
@@ -1273,5 +1279,14 @@ class Emvicy
 
             return $sList;
         }
+    }
+
+    /**
+     * @param string $sModule
+     * @return string
+     */
+    public static function createModuleName(string $sModule)
+    {
+        return ucfirst(trim((true === empty($sModule)) ? self::get_module() : $sModule));
     }
 }
