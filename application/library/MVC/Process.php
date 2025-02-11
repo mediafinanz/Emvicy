@@ -36,11 +36,22 @@ class Process
     }
 
     /**
+     * @deprecated
+     * @param string $sRoute
+     * @return void
+     * @throws \ReflectionException
+     */
+    public static function callRouteAsync(string $sRoute = '')
+    {
+        self::callRoute($sRoute);
+    }
+
+    /**
      * @param string $sRoute Route (path)
      * @return int PID
      * @throws \ReflectionException
      */
-    public static function callRouteAsync(string $sRoute = '')
+    public static function callRoute(string $sRoute = '')
     {
         Event::run('mvc.process.callRouteAsync.before', $sRoute);
 
@@ -72,7 +83,7 @@ class Process
      * @return void
      * @throws \ReflectionException
      */
-    public static function callClassMethodAsync(object $oObject, string $sMethod, array $aArgument = array())
+    public static function callClassMethod(object $oObject, string $sMethod, array $aArgument = array())
     {
         // The PCNTL extension is meant to be restricted to operating in CLI only;
         // You cannot use it in other server environments (fpm, mod_php, etc).

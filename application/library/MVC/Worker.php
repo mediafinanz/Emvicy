@@ -84,7 +84,7 @@ class Worker
 
                     // call worker via autoRoute async (non-blocking)
                     $sRoute = $sQueueWorkerAutoRoutePrefix . '/' . $oDTAppTableQueue->get_key() . '/' . $oDTAppTableQueue->get_id();
-                    $iPid = Process::callRouteAsync($sRoute);
+                    $iPid = Process::callRoute($sRoute);
 
                     // worked, there is a PID
                     if (false === empty($iPid))

@@ -165,7 +165,7 @@ class Emvicy
      */
     public static function cronrun()
     {
-        Process::callRouteAsync(
+        Process::callRoute(
             Config::get_MVC_CRON_ROUTE()
         );
     }
@@ -258,7 +258,7 @@ class Emvicy
      */
     public static function workerRun()
     {
-        Process::callRouteAsync(
+        Process::callRoute(
             Config::get_MVC_QUEUE_RUN()
         );
     }

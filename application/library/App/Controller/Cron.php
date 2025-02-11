@@ -59,7 +59,7 @@ class Cron extends Controller
 
         foreach ($aCron as $sRoute)
         {
-            $iPid = Process::callRouteAsync($sRoute);
+            $iPid = Process::callRoute($sRoute);
 
             // did not work, there is no PID
             if (0 === $iPid)
