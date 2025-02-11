@@ -84,9 +84,9 @@ class Cache
         (is_null(self::$bCaching)) ? (self::$bCaching						= (isset($aConfig['bCaching']))				? $aConfig['bCaching']				: true)					: false;
         (is_null(self::$sCacheDir)) ? (self::$sCacheDir						= (isset($aConfig['sCacheDir']))			? $aConfig['sCacheDir']				: sys_get_temp_dir())	: false;
         (is_null(self::$iDeleteAfterMinutes)) ? (self::$iDeleteAfterMinutes	= (isset($aConfig['iDeleteAfterMinutes']))	? $aConfig['iDeleteAfterMinutes']	: 1440)					: false;	// 1440min === 1 day
-        (is_null(self::$sBinRemove)) ? (self::$sBinRemove					= (isset($aConfig['sBinRemove']))			? $aConfig['sBinRemove']			: '/bin/rm')			: false;
-        (is_null(self::$sBinFind)) ? (self::$sBinFind						= (isset($aConfig['sBinFind']))				? $aConfig['sBinFind']				: '/usr/bin/find')		: false;
-        (is_null(self::$sBinGrep)) ? (self::$sBinGrep						= (isset($aConfig['sBinGrep']))				? $aConfig['sBinGrep']				: '/bin/grep')			: false;
+        (is_null(self::$sBinRemove)) ? (self::$sBinRemove					= (isset($aConfig['sBinRemove']))			? $aConfig['sBinRemove']			: Config::get_MVC_BIN_REMOVE()) : false;
+        (is_null(self::$sBinFind)) ? (self::$sBinFind						= (isset($aConfig['sBinFind']))				? $aConfig['sBinFind']				: Config::get_MVC_BIN_FIND()) : false;
+        (is_null(self::$sBinGrep)) ? (self::$sBinGrep						= (isset($aConfig['sBinGrep']))				? $aConfig['sBinGrep']				: Config::get_MVC_BIN_GREP()) : false;
     }
 
     /**
