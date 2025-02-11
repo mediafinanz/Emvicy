@@ -170,10 +170,7 @@ MVC_APPLICATION_SETTINGS_I: {
     $aConfig['MVC_CACHE_CONFIG'] = array(
         'bCaching' => true,
         'sCacheDir' => $aConfig['MVC_CACHE_DIR'],
-        'iDeleteAfterMinutes' => 1440,
-        'sBinRemove' => $aConfig['MVC_BIN_REMOVE'],
-        'sBinFind' => $aConfig['MVC_BIN_FIND'],
-        'sBinGrep' => $aConfig['MVC_BIN_GREP']
+        'iDeleteAfterMinutes' => 1440
     );
 
     /**-----------------------------------------------------------------------------------------------------------------
@@ -311,10 +308,10 @@ MVC_QUEUE: {
     // Route for running Queue; calling Worker on Jobs
     // @see modules/{module}/etc/config/{module}/config/_queue.php
     // @see modules/{module}/etc/routing/service.php
-    $aConfig['MVC_QUEUE_RUN'] = $aConfig['MVC_QUEUE_ROUTE_PREFIX'] . '/run';
+    $aConfig['MVC_QUEUE_RUN'] = $aConfig['MVC_QUEUE_ROUTE_PREFIX'] . '/worker/run';
 
     // Class::method responsible for running Queue
-    $aConfig['MVC_QUEUE_RUN_CLASSMETHOD'] = '\App\Controller\Queue::run';
+    $aConfig['MVC_QUEUE_RUN_CLASSMETHOD'] = '\App\Controller\Queue::workerRun';
 
     // Worker Route Structure
     $aConfig['MVC_QUEUE_WORKER_AUTO_ROUTE_PREFIX'] = $aConfig['MVC_QUEUE_ROUTE_PREFIX'] . '/worker';

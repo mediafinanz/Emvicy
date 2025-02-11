@@ -18,6 +18,6 @@ xPhp=`type -p php`;
 
 cd "$sBaseDirAbs";
 
-# for alle requested routes
 # @see etc/config/{module}/config/_cron.php
+# @see etc/config/{module}/config/_queue.php
 $xPhp emvicy cron:run > /dev/null 2>/dev/null & echo $!

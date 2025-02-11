@@ -39,7 +39,7 @@ class Queue extends Controller
      * @return void
      * @throws \ReflectionException
      */
-    public function run(DTRequestIn $oDTRequestIn, DTRoute $oDTRoute)
+    public function workerRun(DTRequestIn $oDTRequestIn, DTRoute $oDTRoute)
     {
         Lock::create();
         Worker::run();

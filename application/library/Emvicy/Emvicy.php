@@ -165,7 +165,9 @@ class Emvicy
      */
     public static function cronrun()
     {
-        Process::callRouteAsync(Config::get_MVC_CRON_ROUTE());
+        Process::callRouteAsync(
+            Config::get_MVC_CRON_ROUTE()
+        );
     }
 
     /**
@@ -254,10 +256,11 @@ class Emvicy
      * @return void
      * @throws \ReflectionException
      */
-    public static function queueRun()
+    public static function workerRun()
     {
-        Lock::create();
-        Worker::run();
+        Process::callRouteAsync(
+            Config::get_MVC_QUEUE_RUN()
+        );
     }
 
     /**
@@ -266,7 +269,7 @@ class Emvicy
      * @return false|void
      * @throws \ReflectionException
      */
-    public static function queueCreateWorker(string $sClass = '', string $sModuleName = '')
+    public static function createWorker(string $sClass = '', string $sModuleName = '')
     {
         $sClass = ucfirst(trim($sClass));
         $sModuleName = self::createModuleName($sModuleName);

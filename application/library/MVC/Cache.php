@@ -64,29 +64,27 @@ class Cache
      * sets configuration; if none is given by param, defaults are set
      * @access public
      * @static
-     * @param array $aConfig array(
+     * @param array $aCacheConfig array(
      *		'bCaching' => true,
      *		'sCacheDir' => '/tmp/',
-     *		'iDeleteAfterMinutes' => 1440,
-     *		'sBinRemove' => '/bin/rm',
-     * 		'sBinFind' => '/usr/bin/find',
-     * 		'sBinGrep' => '/bin/grep',
+     *		'iDeleteAfterMinutes' => 1440
      * )
      * @throws \ReflectionException
      */
-    public static function init(array $aConfig = array())
+    public static function init(array $aCacheConfig = array())
     {
-        if (true === empty($aConfig))
+        if (true === empty($aCacheConfig))
         {
-            $aConfig = Config::get_MVC_CACHE_CONFIG();
+            $aCacheConfig = Config::get_MVC_CACHE_CONFIG();
         }
 
-        (is_null(self::$bCaching)) ? (self::$bCaching						= (isset($aConfig['bCaching']))				? $aConfig['bCaching']				: true)					: false;
-        (is_null(self::$sCacheDir)) ? (self::$sCacheDir						= (isset($aConfig['sCacheDir']))			? $aConfig['sCacheDir']				: sys_get_temp_dir())	: false;
-        (is_null(self::$iDeleteAfterMinutes)) ? (self::$iDeleteAfterMinutes	= (isset($aConfig['iDeleteAfterMinutes']))	? $aConfig['iDeleteAfterMinutes']	: 1440)					: false;	// 1440min === 1 day
-        (is_null(self::$sBinRemove)) ? (self::$sBinRemove					= (isset($aConfig['sBinRemove']))			? $aConfig['sBinRemove']			: '/bin/rm')			: false;
-        (is_null(self::$sBinFind)) ? (self::$sBinFind						= (isset($aConfig['sBinFind']))				? $aConfig['sBinFind']				: '/usr/bin/find')		: false;
-        (is_null(self::$sBinGrep)) ? (self::$sBinGrep						= (isset($aConfig['sBinGrep']))				? $aConfig['sBinGrep']				: '/bin/grep')			: false;
+        (is_null(self::$bCaching)) ? (self::$bCaching						= (isset($aCacheConfig['bCaching']))			? $aCacheConfig['bCaching']				: true)					: false;
+        (is_null(self::$sCacheDir)) ? (self::$sCacheDir						= (isset($aCacheConfig['sCacheDir']))			? $aCacheConfig['sCacheDir']			: sys_get_temp_dir())	: false;
+        (is_null(self::$iDeleteAfterMinutes)) ? (self::$iDeleteAfterMinutes	= (isset($aCacheConfig['iDeleteAfterMinutes']))	? $aCacheConfig['iDeleteAfterMinutes']	: 1440)					: false;	// 1440min === 1 day
+
+        self::$sBinRemove = Config::get_MVC_BIN_REMOVE();
+        self::$sBinFind = Config::get_MVC_BIN_FIND();
+        self::$sBinGrep = Config::get_MVC_BIN_GREP();
     }
 
     /**
