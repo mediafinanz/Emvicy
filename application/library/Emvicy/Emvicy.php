@@ -2,15 +2,19 @@
 
 namespace Emvicy;
 
+use App\Controller\Queue;
 use MVC\Config;
 use MVC\Convert;
 use MVC\DataType\DTRoute;
 use MVC\Debug;
 use MVC\Dir;
 use MVC\Event;
+use MVC\Lock;
 use MVC\Process;
+use MVC\Request;
 use MVC\Route;
 use MVC\Strings;
+use MVC\Worker;
 
 #------------------------------------
 
@@ -244,6 +248,16 @@ class Emvicy
         }
 
         echo "\n";
+    }
+
+    /**
+     * @return void
+     * @throws \ReflectionException
+     */
+    public static function queueRun()
+    {
+        Lock::create();
+        Worker::run();
     }
 
     /**

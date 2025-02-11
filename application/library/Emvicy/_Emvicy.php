@@ -61,6 +61,14 @@ $oSymfonyComponentConsoleApplication
         return \Symfony\Component\Console\Command\Command::SUCCESS;
     });
 $oSymfonyComponentConsoleApplication
+    ->register('queue:run')
+    ->setAliases(['qr'])
+    ->setDescription($sColCmd . "php emvicy queue:run" . $sColOff . ' => runs "Queue Key <=> Worker" configuration')
+    ->setCode(function (\Symfony\Component\Console\Input\InputInterface $oInputInterface, \Symfony\Component\Console\Output\OutputInterface $oOutputInterface): int {
+        \Emvicy\Emvicy::queueRun();
+        return \Symfony\Component\Console\Command\Command::SUCCESS;
+    });
+$oSymfonyComponentConsoleApplication
     ->register('queue:worker')
     ->setAliases(['qw'])
     ->setDescription($sColCmd . "php emvicy queue:worker Bar Foo" . $sColOff . ' => creates a Worker class `Bar` in the given module `Foo`.')
