@@ -175,7 +175,7 @@ class Process
             $iPid = getmypid();
         }
 
-        // save pidfile containing JSON queue object
+        // save pidfile containing JSON $mContent
         return (boolean) file_put_contents(self::getPidFileFolder() . $iPid, json_encode(Convert::objectToArray($mContent)));
     }
 
@@ -184,8 +184,10 @@ class Process
      * @return bool
      * @throws \ReflectionException
      */
-    public static function hasPidFile(int $iPid)
+    public static function hasPidFile(int $iPid = 0)
     {
+        (true === empty($iPid)) ? $iPid = getmypid() : false;
+
         return file_exists(self::getPidFileFolder() . $iPid);
     }
 
@@ -194,7 +196,7 @@ class Process
      * @return bool
      * @throws \ReflectionException
      */
-    public static function deletePidFile(int $iPid)
+    public static function deletePidFile(int $iPid = 0)
     {
         if (true === self::hasPidFile($iPid))
         {
