@@ -62,7 +62,7 @@ class Header
      * @param string $sType
      * @return $this
      */
-    public function Content_Type(string $sType = '')
+    public function Content_Type(string $sType = '') : Header
     {
         header('Content-Type: ' . $sType);
 
@@ -73,7 +73,7 @@ class Header
      * @param int $iFilesize
      * @return $this
      */
-    public function Content_Length(int $iFilesize = 0)
+    public function Content_Length(int $iFilesize = 0) : Header
     {
         header('Content-Length: ' . $iFilesize);
 
@@ -84,7 +84,7 @@ class Header
      * @param string $sFilename
      * @return $this
      */
-    public function Content_Disposition_Attachment(string $sFilename = '')
+    public function Content_Disposition_Attachment(string $sFilename = '') : Header
     {
         header('Content-Disposition: attachment; filename=' . urlencode($sFilename));
 
@@ -94,7 +94,7 @@ class Header
     /**
      * @return $this
      */
-    public function Content_Type_application_download()
+    public function Content_Type_application_download() : Header
     {
         header('Content-Type: application/download');
 
@@ -105,7 +105,7 @@ class Header
 
      * @return $this
      */
-    public function Content_Type_application_force_download()
+    public function Content_Type_application_force_download() : Header
     {
         header('Content-Type: application/force-download');
 
@@ -115,7 +115,7 @@ class Header
     /**
      * @return $this
      */
-    public function Content_Type_application_octet_stream()
+    public function Content_Type_application_octet_stream() : Header
     {
         header('Content-Type: application/octet-stream');
 
@@ -125,7 +125,7 @@ class Header
     /**
      * @return $this
      */
-    public function Content_Description_File_Transfer()
+    public function Content_Description_File_Transfer() : Header
     {
         header('Content-Description: File Transfer');
 
@@ -136,7 +136,7 @@ class Header
      * @param string $sOrigin
      * @return $this
      */
-    public function Access_Control_Allow_Origin(string $sOrigin = '*')
+    public function Access_Control_Allow_Origin(string $sOrigin = '*') : Header
     {
         header('Access-Control-Allow-Origin: ' . $sOrigin);
 
@@ -149,7 +149,7 @@ class Header
      * @example Header::init()->Cache_Control(EnumCacheControl::NoCache);
      * *          Header::init()->Cache_Control(array(EnumCacheControl::NoCache, EnumCacheControl::MustRevalidate));
      */
-    public function Cache_Control(EnumHttpHeaderCacheControl | array $mEnumCacheControl)
+    public function Cache_Control(EnumHttpHeaderCacheControl | array $mEnumCacheControl) : Header
     {
         $sCacheControl = '';
 
@@ -203,7 +203,7 @@ class Header
      * @example Header::init()->Expires(iExpireSeconds: (60 * 60 * 24)) # +1 day (future)
      *          Header::init()->Expires(iExpireSeconds: -(60 * 60 * 24)) # -1 day (past)
      */
-    public function Expires(int $iExpireSeconds = 0)
+    public function Expires(int $iExpireSeconds = 0) : Header
     {
         header('Expires: ' . gmdate('D, d M Y H:i:s \G\M\T', time() + $iExpireSeconds));
 
@@ -215,7 +215,7 @@ class Header
      * @return $this
      * @see https://datatracker.ietf.org/doc/html/rfc7232#section-2.3
      */
-    public function Etag(string $sEtag = '""')
+    public function Etag(string $sEtag = '""') : Header
     {
         header('Etag: ' . $sEtag);
 
@@ -226,7 +226,7 @@ class Header
      * @param int $iUnixTimestamp
      * @return $this
      */
-    public function Last_Modified(int $iUnixTimestamp = 0)
+    public function Last_Modified(int $iUnixTimestamp = 0) : Header
     {
         header('Last-Modified: ' . gmdate('D, d M Y H:i:s', $iUnixTimestamp) . ' GMT');
 
@@ -236,15 +236,16 @@ class Header
     /**
      * @param string $sName
      * @param string $sValue
-     * @param int    $iExpireUnixTimestamp unix timestamp
+     * @param int    $iExpireUnixTimestamp
      * @param string $sPath
      * @param string $sDomain
+     * @param string $sSameSite
      * @param bool   $bSecure
      * @param bool   $bHttpOnly
      * @return $this
      * @throws \ReflectionException
      */
-    public function Set_Cookie(string $sName, string $sValue, int $iExpireUnixTimestamp = 0, string $sPath = '/', string $sDomain = '', bool $bSecure = false, bool $bHttpOnly = false)
+    public function Set_Cookie(string $sName, string $sValue, int $iExpireUnixTimestamp = 0, string $sPath = '/', string $sDomain = '', string $sSameSite = '', bool $bSecure = false, bool $bHttpOnly = false) : Header
     {
         $sValue = rawurlencode($sValue);
         $sDate = date('D, d M Y H:i:s \G\M\T', $iExpireUnixTimestamp);
@@ -261,6 +262,10 @@ class Header
 
         (false === empty($sDomain))
             ? $sHeader.= 'domain=' . $sDomain . ';'
+            : false;
+
+        (false === empty($sSameSite))
+            ? $sHeader.= 'SameSite=' . $sSameSite . ';'
             : false;
 
         (true === $bSecure)
@@ -286,7 +291,7 @@ class Header
         $sHeader = 'Refresh: ' . $iRefreshSeconds . ';';
 
         (false === empty($sUrl))
-            ? $sHeader.= 'url=' . trim($sUrl) . ';'
+            ? $sHeader.= 'url=' . trim($sUrl)
             : false
         ;
 
@@ -343,7 +348,7 @@ class Header
      * @param \MVC\Enum\EnumHttpHeaderRetryAfter $eEnumRetryAfter
      * @return $this
      */
-    public function Retry_After(int $iValue = 0, EnumHttpHeaderRetryAfter $eEnumRetryAfter = EnumHttpHeaderRetryAfter::UnixTimestamp)
+    public function Retry_After(int $iValue = 0, EnumHttpHeaderRetryAfter $eEnumRetryAfter = EnumHttpHeaderRetryAfter::UnixTimestamp) : Header
     {
         ('UnixTimestamp' === $eEnumRetryAfter->value())
             ? header('Retry-After: ' . gmdate('D, d M Y H:i:s \G\M\T', $iValue))
@@ -359,11 +364,11 @@ class Header
 
     /**
      * sets CSP ("Content Security Policy") HTTP Header
-     * @param array $aCSP
+     * @param array $aCSPpublic function ContentSecurityPolicy(array $aCSP = array()) : Header
      * @return $this
      * @throws \ReflectionException
      */
-    public function ContentSecurityPolicy(array $aCSP = array())
+    public function ContentSecurityPolicy(array $aCSP = array()) : Header
     {
         (true === empty($aCSP))
             ? $aCSP = get(Config::MODULE()['CSP'], array())
@@ -387,7 +392,7 @@ class Header
      * @param string $sStatus
      * @return $this
      */
-    public function X_Accel_Buffering(string $sStatus = 'no')
+    public function X_Accel_Buffering(string $sStatus = 'no') : Header
     {
         header('X-Accel-Buffering: ' . $sStatus);
 
