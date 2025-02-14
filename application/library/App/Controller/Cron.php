@@ -40,6 +40,8 @@ class Cron extends Controller
         // check on maintenance modus
         if (true === Application::isMaintenance())
         {
+            Event::run('app.controller.cron.run.maintenance');
+
             return false;
         }
 
