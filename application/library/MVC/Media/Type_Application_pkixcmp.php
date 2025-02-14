@@ -16,7 +16,7 @@ class Type_Application_pkixcmp
     use TraitMediaType;
 
     /**
-     * @reference [RFC2510]
+     * @reference [RFC-ietf-lamps-rfc6712bis-10]
      */
     const DESCRIPTION = 'application/pkixcmp';
 }

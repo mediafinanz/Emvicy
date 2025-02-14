@@ -1,6 +1,6 @@
 <?php
 /**
- * Type_Application_token_introspection_jwt.php
+ * Type_Video_vnd_planar.php
  * @package Emvicy
  * @copyright ueffing.net
  * @author Guido K.B.W. Üffing <emvicy@ueffing.net>
@@ -11,12 +11,12 @@ namespace MVC\Media;
 
 use MVC\MVCTrait\TraitMediaType;
 
-class Type_Application_token_introspection_jwt
+class Type_Video_vnd_planar
 {
     use TraitMediaType;
 
     /**
-     * @reference [RFC9701]
+     * @reference [David_Atkins]
      */
-    const DESCRIPTION = 'application/token-introspection+jwt';
+    const DESCRIPTION = 'video/vnd.planar';
 }
