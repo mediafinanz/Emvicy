@@ -1,4 +1,3 @@
-
 {* @see https://getbootstrap.com/docs/5.3/components/navbar/ *}
 <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-primary shadow">
     <div class="container">
@@ -16,3 +15,5 @@
         </div>
     </div>
 </nav>
+
+{include file="Frontend/content/_maintenance.tpl"}
