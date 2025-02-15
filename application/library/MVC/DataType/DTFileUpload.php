@@ -6,7 +6,6 @@
  * @author    Guido K.B.W. Üffing <emvicy@ueffing.net>
  * @license   GNU GENERAL PUBLIC LICENSE Version 3. See application/doc/COPYING
  */
-# 2024-05-23 14:30:09
 
 /**
  * @name $MVCDataType

@@ -1,5 +1,4 @@
 <?php
-# 2023-12-12 09:22:36
 
 /**
  * @name $MVCDataType
