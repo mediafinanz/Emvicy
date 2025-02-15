@@ -53,7 +53,7 @@ class Process
      */
     public static function callRoute(string $sRoute = '')
     {
-        Event::run('mvc.process.callRouteAsync.before', $sRoute);
+        Event::run('mvc.process.callRoute.before', $sRoute);
 
         if (true === empty($sRoute))
         {
@@ -71,7 +71,7 @@ class Process
         self::savePid($iPid);
 
         /** @todo event logging */
-        Event::run('mvc.process.callRouteAsync.after', array('sRoute' => $sRoute, 'iPid' => $iPid));
+        Event::run('mvc.process.callRoute.after', array('sRoute' => $sRoute, 'iPid' => $iPid));
 
         return $iPid;
     }
