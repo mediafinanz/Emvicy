@@ -215,7 +215,7 @@ class Emvicy
      */
     public static function queueList()
     {
-        $aQueue = Config::MODULE()['queue'];
+        $aQueue = get(Config::MODULE()['queue'], array());
         ksort($aQueue);
 
         echo "\n# Queue List\n";
