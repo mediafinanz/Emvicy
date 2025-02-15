@@ -176,7 +176,7 @@ class Emvicy
      */
     public static function cronlist()
     {
-        $aCron = Config::MODULE()['cron'];
+        $aCron = get(Config::MODULE()['cron'], array());
         ksort($aCron);
 
         echo "\n# Cron List\n";
@@ -840,12 +840,15 @@ class Emvicy
         }
 
         $sCmd = whereis('find') . ' ' . $sPath . ' -type f -name "*.php" '
-                . ' -exec ' . PHP_BINARY . ' -l {} \; 2>&1 '
-                . '| (! ' . whereis('grep') . ' -v "errors detected")';
+                . ' -exec ' . PHP_BINARY . ' -l {} \;'
+                .' 2>&1 '
+                #. '| (! ' . whereis('grep') . ' -v "errors detected")'
+        ;
         $sResult = self::shellExecute($sCmd, false);
         $aMessage = preg_split("@\n@", $sResult, -1, PREG_SPLIT_NO_EMPTY);
+        $aMessage = preg_grep("/error\:/i", $aMessage); # , PREG_GREP_INVERT);
 
-        if (true === empty(get($sResult, '')))
+        if (true === empty($aMessage))
         {
             self::response(true);
         }
@@ -865,9 +868,10 @@ class Emvicy
     }
 
     /**
-     * @param bool   $bSuccess
-     * @param array  $aMessage
+     * @param bool  $bSuccess
+     * @param array $aMessage
      * @return void
+     * @throws \ReflectionException
      */
     public static function response(bool $bSuccess = false, array $aMessage = array())
     {
@@ -1239,7 +1243,7 @@ class Emvicy
         }
 
         (false === isset(Config::get_MVC_EVENT()['BIND'])) ? Event::init() : false;
-        $aBonded = Config::get_MVC_EVENT()['BIND'];
+        $aBonded = get(Config::get_MVC_EVENT()['BIND'], array());
         ksort($aBonded);
 
         if (true === $bReturn)
