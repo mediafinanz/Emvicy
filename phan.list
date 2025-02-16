@@ -1009,6 +1009,7 @@ application/library/MVC/Media/Type_Audio_PCMU.php
 application/library/MVC/Media/Type_Application_x_www_form_urlencoded.php
 application/library/MVC/Media/Type_Application_p21_zip.php
 application/library/MVC/Media/Type_Application_vnd_yamaha_hv_script.php
+application/library/MVC/Media/Type_Application_coap_eap.php
 application/library/MVC/Media/Type_Application_td_json.php
 application/library/MVC/Media/Type_Application_vnd_gnu_taler_exchange_json.php
 application/library/MVC/Media/Type_Image_vnd_tencent_tap.php
