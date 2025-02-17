@@ -62,50 +62,53 @@ trait TraitDataType
         {
             // value should be type of
             $mType = $this->getDocCommentValueOfProperty($sKey);
-            $sType = trim(strtok($mType, '|'));
+            $aTypeAll = array_map('trim', explode('|', $mType));
 
-            $sVar = $aData[$sKey];
-            ((false === empty($sType) && true === in_array($sType, ["bool", "boolean", "int", "integer", "float", "double", "string", "array", "object", "null"]))
-                ? settype($sVar, $sType)
-                : false);
-            $aData[$sKey] = $sVar;
-
-            // if it can be null, set it to null
-            if ('null' === $sType && true === empty($mValue))
+            // if value is empty and can be null, set it to type null
+            if (true === empty($mValue) && true === in_array('null', $aTypeAll))
             {
-                $aSetTmp['value'] = 'null';
+                $aData[$sKey] = null;
+                settype($aData[$sKey], 'null');
             }
-            // value types
-            elseif ('string' === $sType)
-            {
-                $aData[$sKey] = (string) $aData[$sKey];
-            }
-            elseif ('int' === $sType || 'integer' === $sType)
-            {
-                $aData[$sKey] = (int) $aData[$sKey];
-            }
-            elseif ('bool' === $sType || 'boolean' === $sType)
-            {
-                $aData[$sKey] = (boolean) $aData[$sKey];
-            }
-            elseif ('float' === $sType)
-            {
-                $aData[$sKey] = (float) $aData[$sKey];
-            }
-            elseif ('double' === $sType)
-            {
-                $aData[$sKey] = (float) $aData[$sKey];
-            }
-            elseif ('array' === $sType)
-            {
-                $aData[$sKey] = (array) $aData[$sKey];
-            }
-            // assume DataType Class
             else
             {
-                if (true === method_exists($sType, 'create'))
+                $sTypeFirst = reset($aTypeAll);
+                ((false === empty($sTypeFirst) && true === in_array($sTypeFirst, ["bool", "boolean", "int", "integer", "float", "double", "string", "array", "object", "null"]))
+                    ? settype($aData[$sKey], $sTypeFirst)
+                    : false);
+
+                // value types
+                if ('string' === $sTypeFirst)
                 {
-                    $aData[$sKey] = $sType::create((array) $aData[$sKey]);
+                    $aData[$sKey] = (string) $aData[$sKey];
+                }
+                elseif ('int' === $sTypeFirst || 'integer' === $sTypeFirst)
+                {
+                    $aData[$sKey] = (int) $aData[$sKey];
+                }
+                elseif ('bool' === $sTypeFirst || 'boolean' === $sTypeFirst)
+                {
+                    $aData[$sKey] = (boolean) $aData[$sKey];
+                }
+                elseif ('float' === $sTypeFirst)
+                {
+                    $aData[$sKey] = (float) $aData[$sKey];
+                }
+                elseif ('double' === $sTypeFirst)
+                {
+                    $aData[$sKey] = (float) $aData[$sKey];
+                }
+                elseif ('array' === $sTypeFirst)
+                {
+                    $aData[$sKey] = (array) $aData[$sKey];
+                }
+                // assume DataType Class
+                else
+                {
+                    if (true === method_exists($sTypeFirst, 'create'))
+                    {
+                        $aData[$sKey] = $sTypeFirst::create((array) $aData[$sKey]);
+                    }
                 }
             }
 
