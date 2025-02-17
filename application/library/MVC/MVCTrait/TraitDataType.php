@@ -62,14 +62,7 @@ trait TraitDataType
         {
             // value should be type of
             $mType = $this->getDocCommentValueOfProperty($sKey);
-            $sType = $mType;
-
-            if (true === is_array($mType))
-            {
-                (true === empty($mValue))
-                    ? $sType = end($mType) # null
-                    : $sType = current($mType);   # concrete type
-            }
+            $sType = trim(strtok($mType, '|'));
 
             $sVar = $aData[$sKey];
             ((false === empty($sType) && true === in_array($sType, ["bool", "boolean", "int", "integer", "float", "double", "string", "array", "object", "null"]))
