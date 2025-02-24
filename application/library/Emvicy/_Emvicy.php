@@ -1,8 +1,6 @@
 <?php
 
 
-use MVC\Config;
-
 $sColCmd = "\033[0;36m";
 $sColOff = "\033[0m";
 #-----------------------------
@@ -63,14 +61,38 @@ $oSymfonyComponentConsoleApplication
 
 
 #-----------------------------------------------------------------------------------------------------------------------
+# policy
+
+$oSymfonyComponentConsoleApplication
+    ->register('policy:create')
+    ->setAliases(['pc'])
+    ->setDescription($sColCmd . "php emvicy policy:create Bar [?module]" . $sColOff . ' => creates a Policy class `Bar` in the primary module; optional in `module`. ')
+    ->addArgument('sClass', \Symfony\Component\Console\Input\InputArgument::REQUIRED)
+    ->addArgument('sModuleName', \Symfony\Component\Console\Input\InputArgument::OPTIONAL)
+    ->setCode(function (\Symfony\Component\Console\Input\InputInterface $oInputInterface, \Symfony\Component\Console\Output\OutputInterface $oOutputInterface): int {
+        \Emvicy\Emvicy::createPolicy(
+            sClass: $oInputInterface->getArgument('sClass'),
+            sModuleName: $oInputInterface->getArgument('sModuleName'));
+        return \Symfony\Component\Console\Command\Command::SUCCESS;
+    });
+$oSymfonyComponentConsoleApplication
+    ->register('policy:list')
+    ->setAliases(['pl'])
+    ->setDescription($sColCmd . "php emvicy policy:list" . $sColOff . ' => list available Policy configurations in a markdown table')
+    ->setCode(function (\Symfony\Component\Console\Input\InputInterface $oInputInterface, \Symfony\Component\Console\Output\OutputInterface $oOutputInterface): int {
+        \Emvicy\Emvicy::policyList();
+        return \Symfony\Component\Console\Command\Command::SUCCESS;
+    });
+
+#-----------------------------------------------------------------------------------------------------------------------
 # worker
 
 $oSymfonyComponentConsoleApplication
     ->register('worker:create')
     ->setAliases(['wc'])
-    ->setDescription($sColCmd . "php emvicy worker:create Bar Foo" . $sColOff . ' => creates a Worker class `Bar` in the given module `Foo`.')
+    ->setDescription($sColCmd . "php emvicy worker:create Bar [?module]" . $sColOff . ' => creates a Worker class `Bar` in the primary module; optional in `module`. ')
     ->addArgument('sClass', \Symfony\Component\Console\Input\InputArgument::REQUIRED)
-    ->addArgument('sModuleName', \Symfony\Component\Console\Input\InputArgument::REQUIRED)
+    ->addArgument('sModuleName', \Symfony\Component\Console\Input\InputArgument::OPTIONAL)
     ->setCode(function (\Symfony\Component\Console\Input\InputInterface $oInputInterface, \Symfony\Component\Console\Output\OutputInterface $oOutputInterface): int {
         \Emvicy\Emvicy::createWorker(
             sClass: $oInputInterface->getArgument('sClass'),
@@ -145,7 +167,7 @@ $oSymfonyComponentConsoleApplication
     ->register('datatype:module')
     ->setAliases(['dtm'])
     ->setDescription($sColCmd . "php emvicy datatype:module Foo" . $sColOff . ' => creates datatype classes for module `Foo`')
-    ->addArgument('module', \Symfony\Component\Console\Input\InputArgument::REQUIRED)
+    ->addArgument('module', \Symfony\Component\Console\Input\InputArgument::OPTIONAL)
     ->setCode(function (\Symfony\Component\Console\Input\InputInterface $oInputInterface, \Symfony\Component\Console\Output\OutputInterface $oOutputInterface): int {
         \Emvicy\Emvicy::datatype($oInputInterface->getArgument('module'));
         return \Symfony\Component\Console\Command\Command::SUCCESS;
@@ -276,9 +298,9 @@ $oSymfonyComponentConsoleApplication
 $oSymfonyComponentConsoleApplication
     ->register('module:controller')
     ->setAliases(['mdc'])
-    ->setDescription($sColCmd . "php emvicy module:controller Bar Foo" . $sColOff . " => creates controller `Bar` in the given module `Foo`. ")
+    ->setDescription($sColCmd . "php emvicy module:controller Bar [?module]" . $sColOff . " => creates controller `Bar` in the primary module; optional in `module`. ")
     ->addArgument('sController', \Symfony\Component\Console\Input\InputArgument::REQUIRED)
-    ->addArgument('sModuleName', \Symfony\Component\Console\Input\InputArgument::REQUIRED)
+    ->addArgument('sModuleName', \Symfony\Component\Console\Input\InputArgument::OPTIONAL)
     ->setCode(function (\Symfony\Component\Console\Input\InputInterface $oInputInterface, \Symfony\Component\Console\Output\OutputInterface $oOutputInterface): int {
         \Emvicy\Emvicy::moduleCreateController(
             sController: $oInputInterface->getArgument('sController'),
@@ -289,9 +311,9 @@ $oSymfonyComponentConsoleApplication
 $oSymfonyComponentConsoleApplication
     ->register('module:model')
     ->setAliases(['mdm'])
-    ->setDescription($sColCmd . "php emvicy module:model Bar Foo" . $sColOff . " => creates Model `Bar` in the given module `Foo`. ")
+    ->setDescription($sColCmd . "php emvicy module:model Bar [?module]" . $sColOff . " => creates Model `Bar` in the primary module; optional in `module`. ")
     ->addArgument('sModel', \Symfony\Component\Console\Input\InputArgument::REQUIRED)
-    ->addArgument('sModuleName', \Symfony\Component\Console\Input\InputArgument::REQUIRED)
+    ->addArgument('sModuleName', \Symfony\Component\Console\Input\InputArgument::OPTIONAL)
     ->setCode(function (\Symfony\Component\Console\Input\InputInterface $oInputInterface, \Symfony\Component\Console\Output\OutputInterface $oOutputInterface): int {
         \Emvicy\Emvicy::moduleCreateModel(
             sModel: $oInputInterface->getArgument('sModel'),
@@ -302,9 +324,9 @@ $oSymfonyComponentConsoleApplication
 $oSymfonyComponentConsoleApplication
     ->register('module:view')
     ->setAliases(['mdv'])
-    ->setDescription($sColCmd . "php emvicy module:view Bar Foo" . $sColOff . " => creates View `Bar` in the given module `Foo`. ")
+    ->setDescription($sColCmd . "php emvicy module:view Bar [?module]" . $sColOff . " => creates View `Bar` in the primary module; optional in `module`. ")
     ->addArgument('sView', \Symfony\Component\Console\Input\InputArgument::REQUIRED)
-    ->addArgument('sModuleName', \Symfony\Component\Console\Input\InputArgument::REQUIRED)
+    ->addArgument('sModuleName', \Symfony\Component\Console\Input\InputArgument::OPTIONAL)
     ->setCode(function (\Symfony\Component\Console\Input\InputInterface $oInputInterface, \Symfony\Component\Console\Output\OutputInterface $oOutputInterface): int {
         \Emvicy\Emvicy::moduleCreateView(
             sView: $oInputInterface->getArgument('sView'),
@@ -319,9 +341,9 @@ $oSymfonyComponentConsoleApplication
 $oSymfonyComponentConsoleApplication
     ->register('db:table')
     ->setAliases(['dbt'])
-    ->setDescription($sColCmd . "php emvicy db:table Bar Foo" . $sColOff . " => creates DB Table `Bar` in the given module `Foo`. ")
+    ->setDescription($sColCmd . "php emvicy db:table Bar [?module]" . $sColOff . " => creates DB Table `Bar` in the primary module; optional in `module`. ")
     ->addArgument('sTable', \Symfony\Component\Console\Input\InputArgument::REQUIRED)
-    ->addArgument('sModuleName', \Symfony\Component\Console\Input\InputArgument::REQUIRED)
+    ->addArgument('sModuleName', \Symfony\Component\Console\Input\InputArgument::OPTIONAL)
     ->setCode(function (\Symfony\Component\Console\Input\InputInterface $oInputInterface, \Symfony\Component\Console\Output\OutputInterface $oOutputInterface): int {
         \Emvicy\Emvicy::dbCreateTableClass(
             sTable: $oInputInterface->getArgument('sTable'),
@@ -332,9 +354,9 @@ $oSymfonyComponentConsoleApplication
 $oSymfonyComponentConsoleApplication
     ->register('db:tableCollection')
     ->setAliases(['dbtc'])
-    ->setDescription($sColCmd . "php emvicy db:tableCollection Bar Foo" . $sColOff . " => creates DB table collection class `Bar` in the given module `Foo`. ")
+    ->setDescription($sColCmd . "php emvicy db:tableCollection Bar [?module]" . $sColOff . " => creates DB table collection class `Bar` in the primary module; optional in `module`. ")
     ->addArgument('sClass', \Symfony\Component\Console\Input\InputArgument::REQUIRED)
-    ->addArgument('sModuleName', \Symfony\Component\Console\Input\InputArgument::REQUIRED)
+    ->addArgument('sModuleName', \Symfony\Component\Console\Input\InputArgument::OPTIONAL)
     ->setCode(function (\Symfony\Component\Console\Input\InputInterface $oInputInterface, \Symfony\Component\Console\Output\OutputInterface $oOutputInterface): int {
         \Emvicy\Emvicy::dbCreateTableClassCollection(
             sClass: $oInputInterface->getArgument('sClass'),

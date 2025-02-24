@@ -25,12 +25,14 @@ class Policy
     private static $aApplied = array();
 
     /**
+     * @param bool $bApply
+     * @param bool $bEventRun
      * @return void
      * @throws \ReflectionException
      */
-    public static function init() : void
+    public static function init(bool $bApply = true, bool $bEventRun = true) : void
     {
-        Event::RUN('mvc.policy.init.before');
+        (true === $bEventRun) ? Event::run('mvc.policy.init.before') : false;
 
         $sPolicyDir = Config::get_MVC_MODULE_PRIMARY_ETC_DIR() . '/policy';
 
@@ -47,9 +49,9 @@ class Policy
             }
         }
 
-        self::apply();
+        (true === $bApply) ? self::apply() : false;
 
-        Event::RUN('mvc.policy.init.after');
+        (true === $bEventRun) ? Event::run('mvc.policy.init.after') : false;
     }
 
     /**
@@ -64,44 +66,36 @@ class Policy
     {
         $aPolicy = Config::get_MVC_POLICY();
 
-        Event::RUN('mvc.policy.set.before', $aPolicy);
+        Event::run('mvc.policy.set.before', $aPolicy);
 
-        if (true === isset($aPolicy[$sClass]))
+        #-----------------------------------------------------
+        # filter $mTarget; remove non callable targets
+
+        (false === is_array($mTarget)) ? $mTarget = array($mTarget) : false;
+        $mTarget = array_filter(array_map(
+            function($sTarget){ if (is_callable($sTarget)) { return $sTarget; } },
+            $mTarget
+        ));
+
+        #-----------------------------------------------------
+        # create
+
+        if (true === isset($aPolicy[$sClass]) && true === isset($aPolicy[$sClass][$sMethod]))
         {
-            if (true === isset($aPolicy[$sClass][$sMethod]))
+            foreach ($mTarget as $sTarget)
             {
-                if (is_array($mTarget))
+                if (false === in_array($sTarget, $aPolicy[$sClass][$sMethod]))
                 {
-                    foreach ($mTarget as $sTarget)
-                    {
-                        if (false === in_array($sTarget, $aPolicy[$sClass][$sMethod]))
-                        {
-                            $aPolicy[$sClass][$sMethod][] = $sTarget;
-                        }
-                    }
+                    $aPolicy[$sClass][$sMethod][] = $sTarget;
                 }
-                else
-                {
-                    if (false === in_array($mTarget, $aPolicy[$sClass][$sMethod]))
-                    {
-                        $aPolicy[$sClass][$sMethod][] = $mTarget;
-                    }
-                }
-            }
-            else
-            {
-                $aPolicy[$sClass][$sMethod] = $mTarget;
             }
         }
         else
         {
-            (is_array($mTarget))
-                ? $aPolicy[$sClass] = array($sMethod => $mTarget)
-                : $aPolicy[$sClass] = array($sMethod => array($mTarget))
-            ;
+            $aPolicy[$sClass][$sMethod] = $mTarget;
         }
 
-        Event::RUN('mvc.policy.set.after', $aPolicy);
+        Event::run('mvc.policy.set.after', $aPolicy);
 
         Config::set_MVC_POLICY($aPolicy);
     }
@@ -118,7 +112,7 @@ class Policy
     {
         $aPolicy = Config::get_MVC_POLICY();
 
-        Event::RUN('mvc.policy.unset.before', $aPolicy);
+        Event::run('mvc.policy.unset.before', $aPolicy);
 
         // Unset all rules set to controller
         if ('' !== $sClass && '' === $sMethod && null === $mTarget)
@@ -194,7 +188,7 @@ class Policy
             }
         }
 
-        Event::RUN('mvc.policy.unset.after', $aPolicy);
+        Event::run('mvc.policy.unset.after', $aPolicy);
 
         Config::set_MVC_POLICY($aPolicy);
     }
@@ -208,7 +202,7 @@ class Policy
     {
         $aPolicy = self::getPolicyRuleOnCurrentRequest();
 
-        Event::RUN('mvc.policy.apply.before', $aPolicy);
+        Event::run('mvc.policy.apply.before', $aPolicy);
 
         if (!empty ($aPolicy))
         {
@@ -218,18 +212,43 @@ class Policy
                 {
                     $bSuccess = true;
 
-                    // execute policy
-                    if (false === call_user_func($sPolicy))
+                    // policy fails
+                    if (false === is_callable($sPolicy))
                     {
+                        stop();
                         $bSuccess = false;
                         $oDTArrayObject = DTArrayObject::create()
+                            ->add_aKeyValue(DTKeyValue::create()
+                                ->set_sKey('bSuccess')
+                                ->set_sValue($bSuccess))
+                            ->add_aKeyValue(DTKeyValue::create()
+                                ->set_sKey('sMessage')
+                                ->set_sValue("Policy is not callable: " . $sPolicy)
+                            );
+                        Event::run('mvc.error', $oDTArrayObject);
+
+                        continue;
+                    }
+
+                    // policy fails
+                    if (true === is_callable($sPolicy) && false === call_user_func($sPolicy))
+                    {
+                        stop();
+                        $bSuccess = false;
+                        $oDTArrayObject = DTArrayObject::create()
+                            ->add_aKeyValue(DTKeyValue::create()
+                                ->set_sKey('bSuccess')
+                                ->set_sValue($bSuccess))
                             ->add_aKeyValue(DTKeyValue::create()
                                 ->set_sKey('sMessage')
                                 ->set_sValue("Policy could not be executed: " . $sPolicy)
                             );
                         Event::run('mvc.error', $oDTArrayObject);
+
+                        continue;
                     }
 
+                    // success
                     $oDTArrayObject = DTArrayObject::create()
                         ->add_aKeyValue(DTKeyValue::create()
                             ->set_sKey('bSuccess')
@@ -238,6 +257,7 @@ class Policy
                             ->set_sKey('sPolicy')
                             ->set_sValue($sPolicy));
                     self::$aApplied[] = $oDTArrayObject;
+
                     Event::run('mvc.policy.apply.execute', $oDTArrayObject);
                 }
             }

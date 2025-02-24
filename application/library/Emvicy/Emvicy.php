@@ -2,19 +2,16 @@
 
 namespace Emvicy;
 
-use App\Controller\Queue;
+use MVC\Application;
 use MVC\Config;
 use MVC\Convert;
 use MVC\DataType\DTRoute;
 use MVC\Debug;
-use MVC\Dir;
 use MVC\Event;
-use MVC\Lock;
+use MVC\Policy;
 use MVC\Process;
-use MVC\Request;
 use MVC\Route;
 use MVC\Strings;
-use MVC\Worker;
 
 #------------------------------------
 
@@ -264,14 +261,15 @@ class Emvicy
     }
 
     /**
-     * @param string $sClass
-     * @param string $sModuleName
+     * @param string      $sClass
+     * @param string|null $sModuleName
      * @return false|void
      * @throws \ReflectionException
      */
-    public static function createWorker(string $sClass = '', string $sModuleName = '')
+    public static function createWorker(string $sClass = '', ?string $sModuleName = '')
     {
         $sClass = ucfirst(trim($sClass));
+        (true === empty($sModuleName)) ? $sModuleName = current(get(self::modules(bReturn: true)['PRIMARY'], [])) : false;
         $sModuleName = self::createModuleName($sModuleName);
 
         if (true === empty($sModuleName) || true === empty($sClass))
@@ -326,6 +324,127 @@ class Emvicy
         echo "\033[0;37m" . str_repeat('~', 3) . 'php' . "\033[0m";nl();
         echo "\033[0;36m" . '\\' . $sModuleName . '\Model\Worker\\' . $sClass . "\033[0m";nl();
         echo "\033[0;37m" . str_repeat('~', 3) . "\033[0m";nl(3);
+    }
+
+    /**
+     * @param string      $sClass
+     * @param string|null $sModuleName
+     * @return false|void
+     * @throws \ReflectionException
+     */
+    public static function createPolicy(string $sClass = '', ?string $sModuleName = '')
+    {
+        $sClass = ucfirst(trim($sClass));
+        (true === empty($sModuleName)) ? $sModuleName = current(get(self::modules(bReturn: true)['PRIMARY'], [])) : false;
+        $sModuleName = self::createModuleName($sModuleName);
+
+        if (true === empty($sModuleName) || true === empty($sClass))
+        {
+            return false;
+        }
+
+        if (false === file_exists(Config::get_MVC_MODULES_DIR() . '/' . $sModuleName))
+        {
+            $bPrimary = ((true === empty(get(self::modules(true)['PRIMARY']))) ? true : false);
+            self::moduleCreate(
+                bForce: true,
+                bPrimary: $bPrimary,
+                sModule: $sModuleName
+            );
+        }
+
+        $sTargetPolicyFile = Config::get_MVC_MODULES_DIR() . '/' . $sModuleName . '/Policy/' . $sClass . '.php';
+
+        if (true === file_exists($sTargetPolicyFile))
+        {
+            echo str_pad('❌ Policy class already exists: ', 30, ' ') . $sTargetPolicyFile . "\n";
+            echo 'Abort.';
+            nl(2);
+
+            return false;
+        }
+
+        echo str_pad('Policy class to be created:', 30, ' ') . $sTargetPolicyFile;
+        nl();
+        echo 'creating ...';
+        nl();
+
+        copy(
+            Config::get_MVC_APPLICATION_INIT_DIR() . '/skeleton/Policy.phtml',
+            $sTargetPolicyFile
+        );
+
+        // replace placeholder
+        Emvicy::shellExecute(whereis('grep') . ' -rl "{module}" ' . $sTargetPolicyFile . ' | '
+                             . whereis('xargs') . ' '
+                             . whereis('sed') . ' -i "s/{module}/' . $sModuleName . '/g"'
+        );
+        Emvicy::shellExecute(whereis('grep') . ' -rl "{class}" ' . $sTargetPolicyFile . ' | '
+                             . whereis('xargs') . ' '
+                             . whereis('sed') . ' -i "s/{class}/' . $sClass . '/g"'
+        );
+
+        echo '✔ Policy class created: ' . $sTargetPolicyFile;nl(2);
+
+        echo '🛈 path to this Policy class:';nl(1);
+        echo "\033[0;37m" . str_repeat('~', 3) . 'php' . "\033[0m";nl();
+        echo "\033[0;36m" . '\\' . $sModuleName . '\Policy\\' . $sClass . "\033[0m";nl();
+        echo "\033[0;37m" . str_repeat('~', 3) . "\033[0m";nl(3);
+    }
+
+    /**
+     * @return void
+     * @throws \ReflectionException
+     */
+    public static function policyList()
+    {
+        Application::setServerVarsForCli();
+        Route::init();
+        Policy::init(bApply: false, bEventRun: false);
+        $aPolicy = Policy::getRules();
+        ksort($aPolicy);
+
+        echo "\n# Policy List\n";
+        echo '# config: ' . Config::get_MVC_MODULE_PRIMARY_STAGING_CONFIG_DIR() . "\n";
+        echo "\n\n";
+        echo str_pad('| No', 6, ' ')
+             . str_pad('| Class ', 50, ' ')
+             . str_pad('| Method ', 30, ' ')
+             . str_pad('| Policy', 80, ' ')
+             . '|'
+             . "\n"
+        ;
+        echo str_pad('|', 6, '-')
+             . str_pad('|', 50, '-')
+             . str_pad('|', 30, '-')
+             . str_pad('|', 80, '-')
+             . '|'
+             . "\n"
+        ;
+        $iCnt = 1;
+
+        foreach ($aPolicy as $sClass => $aValue)
+        {
+            $sClass = str_replace('\\\\', '\\', $sClass);
+
+            foreach ($aValue as $sMethod => $aPolicy)
+            {
+                foreach ($aPolicy as $sPolicy)
+                {
+                    $sPolicy = str_replace('\\\\', '\\', $sPolicy);
+                    echo str_pad('| ' . $iCnt, 6, ' ')
+                         . str_pad('| ' . Strings::cutOff($sClass, 44), 50, ' ')
+                         . str_pad('| ' . Strings::cutOff($sMethod, 24), 30, ' ')
+                         . str_pad('| ' . Strings::cutOff($sPolicy, 74), 80, ' ')
+                         . '|'
+                         . "\n"
+                    ;
+                    $iCnt++;
+                }
+            }
+        }
+
+        echo "\n";
     }
 
     /**
@@ -457,15 +576,16 @@ class Emvicy
     }
 
     /**
-     * @param string $sController
-     * @param string $sModuleName
-     * @return false|void
+     * @param string      $sController
+     * @param string|null $sModuleName
+     * @return void
      * @throws \ReflectionException
      */
-    public static function moduleCreateController(string $sController = '', string $sModuleName = '')
+    public static function moduleCreateController(string $sController = '', ?string $sModuleName = '')
     {
-        $sController = ucfirst(trim($sController));
+        (true === empty($sModuleName)) ? $sModuleName = current(get(self::modules(bReturn: true)['PRIMARY'], [])) : false;
         $sModuleName = self::createModuleName($sModuleName);
+        $sController = ucfirst(trim($sController));
 
         if (true === empty($sModuleName) || true === empty($sController))
         {
@@ -514,14 +634,15 @@ class Emvicy
     }
 
     /**
-     * @param string $sModel
-     * @param string $sModuleName
-     * @return false|void
+     * @param string      $sModel
+     * @param string|null $sModuleName
+     * @return void
      * @throws \ReflectionException
      */
-    public static function moduleCreateModel(string $sModel = '', string $sModuleName = '')
+    public static function moduleCreateModel(string $sModel = '', ?string $sModuleName = '')
     {
         $sModel = ucfirst(trim($sModel));
+        (true === empty($sModuleName)) ? $sModuleName = current(get(self::modules(bReturn: true)['PRIMARY'], [])) : false;
         $sModuleName = self::createModuleName($sModuleName);
 
         if (true === empty($sModuleName) || true === empty($sModel))
@@ -575,14 +696,15 @@ class Emvicy
     }
 
     /**
-     * @param string $sView
-     * @param string $sModuleName
+     * @param string      $sView
+     * @param string|null $sModuleName
      * @return false|void
      * @throws \ReflectionException
      */
-    public static function moduleCreateView(string $sView = '', string $sModuleName = '')
+    public static function moduleCreateView(string $sView = '', ?string $sModuleName = '')
     {
         $sView = ucfirst(trim($sView));
+        (true === empty($sModuleName)) ? $sModuleName = current(get(self::modules(bReturn: true)['PRIMARY'], [])) : false;
         $sModuleName = self::createModuleName($sModuleName);
 
         if (true === empty($sModuleName) || true === empty($sView))
@@ -638,15 +760,16 @@ class Emvicy
     //------------------------------------------------------------------------------------------------------------------
 
     /**
-     * @param string $sTable
-     * @param string $sModuleName
-     * @return false|void
+     * @param string      $sTable
+     * @param string|null $sModuleName
+     * @return bool
      * @throws \ReflectionException
      */
-    public static function dbCreateTableClass(string $sTable = '', string $sModuleName = '')
+    public static function dbCreateTableClass(string $sTable = '', ?string $sModuleName = '')
     {
         $sTable = ucfirst(trim($sTable));
         $sTraitTable = 'Trait' . $sTable;
+        (true === empty($sModuleName)) ? $sModuleName = current(get(self::modules(bReturn: true)['PRIMARY'], [])) : false;
         $sModuleName = self::createModuleName($sModuleName);
 
         if (true === empty($sModuleName) || true === empty($sTable))
@@ -724,14 +847,15 @@ class Emvicy
     }
 
     /**
-     * @param string $sClass
-     * @param string $sModuleName
+     * @param string      $sClass
+     * @param string|null $sModuleName
      * @return false|void
      * @throws \ReflectionException
      */
-    public static function dbCreateTableClassCollection(string $sClass = '', string $sModuleName = '')
+    public static function dbCreateTableClassCollection(string $sClass = '', ?string $sModuleName = '')
     {
         $sClass = ucfirst(trim($sClass));
+        (true === empty($sModuleName)) ? $sModuleName = current(get(self::modules(bReturn: true)['PRIMARY'], [])) : false;
         $sModuleName = self::createModuleName($sModuleName);
 
         if (true === empty($sModuleName) || true === empty($sClass))

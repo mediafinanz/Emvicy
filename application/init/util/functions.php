@@ -4,6 +4,7 @@
 #
 
 /**
+ * @deprecated
  * simplifies the use of variables.
  * If a variable does not exist, null or a defined value is returned
  *
