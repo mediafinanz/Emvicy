@@ -371,13 +371,13 @@ class Header
     public function ContentSecurityPolicy(array $aCSP = array()) : Header
     {
         (true === empty($aCSP))
-            ? $aCSP = get(Config::MODULE()['CSP'], array())
+            ? $aCSP = (Config::MODULE()['CSP'] ?? array())
             : false
         ;
 
         foreach (self::$aHttpHeaderCSPKeyMapping as $sKey => $sValue)
         {
-            if (null === get($aCSP[$sKey]))
+            if (null === ($aCSP[$sKey] ?? null))
             {
                 continue;
             }

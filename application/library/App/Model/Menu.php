@@ -27,7 +27,7 @@ class Menu
     {
         // try to load module's Menu config if missing in param
         (true === empty($aMenuConfig))
-            ? $aMenuConfig = get(Config::MODULE()['Menu'], array())
+            ? $aMenuConfig = (Config::MODULE()['Menu'] ?? array())
             : false
         ;
         Event::run('app.model.menu.build.before', $aMenuConfig);

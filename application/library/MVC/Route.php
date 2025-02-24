@@ -272,7 +272,7 @@ class Route
 
         foreach ($aRoute as $iIndex => $aValue)
         {
-            (strtolower(get($aValue[$sKey], '')) === strtolower($sValue)) ? $aIndex[] = $iIndex : false;
+            (strtolower(($aValue[$sKey] ?? '')) === strtolower($sValue)) ? $aIndex[] = $iIndex : false;
         }
 
         return $aIndex;
@@ -289,11 +289,11 @@ class Route
         $sRequestMethod = Request::in()->get_requestMethod();
 
         // Path 1:1 Match; e.g: /foo/bar/
-        if (!is_null(get(self::$aMethodRoute[$sRequestMethod][$sPath]))) # concrete
+        if (!is_null((self::$aMethodRoute[$sRequestMethod][$sPath] ?? null))) # concrete
         {
             return self::$aMethodRoute[$sRequestMethod][$sPath];
         }
-        elseif (!is_null(get(self::$aMethodRoute['*'][$sPath]))) # any
+        elseif (!is_null((self::$aMethodRoute['*'][$sPath] ?? null))) # any
         {
             return self::$aMethodRoute['*'][$sPath];
         }
@@ -313,11 +313,11 @@ class Route
         // Path Placeholder Match; e.g: /foo/bar/:id/:name/*
         $sIndex = self::getPathOnPlaceholderIndex($sPath);
 
-        if (!empty(get(self::$aMethodRoute[$sRequestMethod][$sIndex]))) # concrete
+        if (!empty((self::$aMethodRoute[$sRequestMethod][$sIndex] ?? null))) # concrete
         {
             return self::$aMethodRoute[$sRequestMethod][$sIndex];
         }
-        elseif (!empty(get(self::$aMethodRoute['*'][$sIndex]))) # any
+        elseif (!empty((self::$aMethodRoute['*'][$sIndex] ?? null))) # any
         {
             return self::$aMethodRoute['*'][$sIndex];
         }
@@ -395,8 +395,8 @@ class Route
 
                 if (false === empty($sKey))
                 {
-                    $aRoute[$iKey] = get($aPartPath[$iKey]);     # replace variable by concrete value from path
-                    $aPathParam[$sKey] = get($aPartPath[$iKey]); # save PathParam
+                    $aRoute[$iKey] = ($aPartPath[$iKey] ?? null);     # replace variable by concrete value from path
+                    $aPathParam[$sKey] = ($aPartPath[$iKey] ?? null); # save PathParam
                 }
 
                 // add leading and/or trailing slashes if route was defined so
@@ -427,7 +427,7 @@ class Route
         $sIndex = current(self::getRouteIndexArrayOnKey('query', Config::get_MVC_ROUTING_FALLBACK()));
 
         /** @var DTRoute $oRoutingCurrent */
-        $oRoutingCurrent = get(self::$aRoute[$sIndex], array());
+        $oRoutingCurrent = (self::$aRoute[$sIndex] ?? array());
 
         if (true === empty($oRoutingCurrent))
         {

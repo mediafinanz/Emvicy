@@ -567,7 +567,7 @@ class Config
             return (string) Registry::get('MVC_SESSION_NAMESPACE');
         }
 
-        return get($GLOBALS['aConfig']['MVC_SESSION_NAMESPACE'], 'Emvicy');
+        return ($GLOBALS['aConfig']['MVC_SESSION_NAMESPACE'] ?? 'Emvicy');
     }
 
     /**
@@ -578,8 +578,8 @@ class Config
     public static function set_MVC_SESSION_NAMESPACE(string $sNamespace = '') : bool
     {
         $aDebugBacktrace = debug_backtrace(limit: 2);
-        $sClass = get($aDebugBacktrace[1]['class'], '');
-        $sFunction = get($aDebugBacktrace[1]['function'], '');
+        $sClass = ($aDebugBacktrace[1]['class'] ?? '');
+        $sFunction = ($aDebugBacktrace[1]['function'] ?? '');
 
         if (true === empty($sClass) || true === empty($sFunction))
         {
@@ -893,7 +893,7 @@ class Config
 
         if (Registry::isRegistered('MODULE'))
         {
-            return (array) get(Registry::get('MODULE')[$sModule], array());
+            return (array) (Registry::get('MODULE')[$sModule] ?? array());
         }
 
         return array();

@@ -162,6 +162,6 @@ class RequestHelper
             $aHeader = array_change_key_case($aHeader, CASE_LOWER);
         }
 
-        return (string) get($aHeader[$sKey], '');
+        return (string) ($aHeader[$sKey] ?? '');
     }
 }

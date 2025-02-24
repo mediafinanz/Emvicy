@@ -78,7 +78,7 @@ class Emvicy
      */
     public static function get_force()
     {
-        $sForce = substr(strtolower(get($_GET['force'], '')), 0, 1);
+        $sForce = substr(strtolower(($_GET['force'] ?? '')), 0, 1);
 
         if (true === in_array($sForce, array('1','y','j')))
         {
@@ -93,7 +93,7 @@ class Emvicy
      */
     public static function get_primary()
     {
-        $sPrimary = substr(strtolower(get($_GET['primary'], 'yes')), 0, 1);
+        $sPrimary = substr(strtolower(($_GET['primary'] ?? 'yes')), 0, 1);
 
         if (true === in_array($sPrimary, array('0','n')))
         {
@@ -108,7 +108,7 @@ class Emvicy
      */
     public static function get_module()
     {
-        $sModule = get($_GET['module'], '');
+        $sModule = ($_GET['module'] ?? '');
         $sModule = ucfirst(strtolower(preg_replace("/[^[:alpha:]]/ui", '', $sModule)));
 
         return $sModule;
@@ -173,7 +173,7 @@ class Emvicy
      */
     public static function cronlist()
     {
-        $aCron = get(Config::MODULE()['cron'], array());
+        $aCron = (Config::MODULE()['cron'] ?? array());
         ksort($aCron);
 
         echo "\n# Cron List\n";
@@ -212,7 +212,7 @@ class Emvicy
      */
     public static function queueList()
     {
-        $aQueue = get(Config::MODULE()['queue'], array());
+        $aQueue = (Config::MODULE()['queue'] ?? array());
         ksort($aQueue);
 
         echo "\n# Queue List\n";
@@ -269,7 +269,7 @@ class Emvicy
     public static function createWorker(string $sClass = '', ?string $sModuleName = '')
     {
         $sClass = ucfirst(trim($sClass));
-        (true === empty($sModuleName)) ? $sModuleName = current(get(self::modules(bReturn: true)['PRIMARY'], [])) : false;
+        (true === empty($sModuleName)) ? $sModuleName = current((self::modules(bReturn: true)['PRIMARY'] ?? [])) : false;
         $sModuleName = self::createModuleName($sModuleName);
 
         if (true === empty($sModuleName) || true === empty($sClass))
@@ -279,7 +279,7 @@ class Emvicy
 
         if (false === file_exists(Config::get_MVC_MODULES_DIR() . '/' . $sModuleName))
         {
-            $bPrimary = ((true === empty(get(self::modules(true)['PRIMARY']))) ? true : false);
+            $bPrimary = ((true === empty((self::modules(true)['PRIMARY'] ?? null))) ? true : false);
             self::moduleCreate(
                 bForce: true,
                 bPrimary: $bPrimary,
@@ -335,7 +335,7 @@ class Emvicy
     public static function createPolicy(string $sClass = '', ?string $sModuleName = '')
     {
         $sClass = ucfirst(trim($sClass));
-        (true === empty($sModuleName)) ? $sModuleName = current(get(self::modules(bReturn: true)['PRIMARY'], [])) : false;
+        (true === empty($sModuleName)) ? $sModuleName = current((self::modules(bReturn: true)['PRIMARY'] ?? [])) : false;
         $sModuleName = self::createModuleName($sModuleName);
 
         if (true === empty($sModuleName) || true === empty($sClass))
@@ -345,7 +345,7 @@ class Emvicy
 
         if (false === file_exists(Config::get_MVC_MODULES_DIR() . '/' . $sModuleName))
         {
-            $bPrimary = ((true === empty(get(self::modules(true)['PRIMARY']))) ? true : false);
+            $bPrimary = ((true === empty((self::modules(true)['PRIMARY'] ?? null))) ? true : false);
             self::moduleCreate(
                 bForce: true,
                 bPrimary: $bPrimary,
@@ -583,7 +583,7 @@ class Emvicy
      */
     public static function moduleCreateController(string $sController = '', ?string $sModuleName = '')
     {
-        (true === empty($sModuleName)) ? $sModuleName = current(get(self::modules(bReturn: true)['PRIMARY'], [])) : false;
+        (true === empty($sModuleName)) ? $sModuleName = current((self::modules(bReturn: true)['PRIMARY'] ?? [])) : false;
         $sModuleName = self::createModuleName($sModuleName);
         $sController = ucfirst(trim($sController));
 
@@ -594,7 +594,7 @@ class Emvicy
 
         if (false === file_exists(Config::get_MVC_MODULES_DIR() . '/' . $sModuleName))
         {
-            $bPrimary = ((true === empty(get(self::modules(true)['PRIMARY']))) ? true : false);
+            $bPrimary = ((true === empty((self::modules(true)['PRIMARY'] ?? null))) ? true : false);
             self::moduleCreate(
                 bForce: true,
                 bPrimary: $bPrimary,
@@ -642,7 +642,7 @@ class Emvicy
     public static function moduleCreateModel(string $sModel = '', ?string $sModuleName = '')
     {
         $sModel = ucfirst(trim($sModel));
-        (true === empty($sModuleName)) ? $sModuleName = current(get(self::modules(bReturn: true)['PRIMARY'], [])) : false;
+        (true === empty($sModuleName)) ? $sModuleName = current((self::modules(bReturn: true)['PRIMARY'] ?? [])) : false;
         $sModuleName = self::createModuleName($sModuleName);
 
         if (true === empty($sModuleName) || true === empty($sModel))
@@ -652,7 +652,7 @@ class Emvicy
 
         if (false === file_exists(Config::get_MVC_MODULES_DIR() . '/' . $sModuleName))
         {
-            $bPrimary = ((true === empty(get(self::modules(true)['PRIMARY']))) ? true : false);
+            $bPrimary = ((true === empty((self::modules(true)['PRIMARY'] ?? null))) ? true : false);
             self::moduleCreate(
                 bForce: true,
                 bPrimary: $bPrimary,
@@ -704,7 +704,7 @@ class Emvicy
     public static function moduleCreateView(string $sView = '', ?string $sModuleName = '')
     {
         $sView = ucfirst(trim($sView));
-        (true === empty($sModuleName)) ? $sModuleName = current(get(self::modules(bReturn: true)['PRIMARY'], [])) : false;
+        (true === empty($sModuleName)) ? $sModuleName = current((self::modules(bReturn: true)['PRIMARY'] ?? [])) : false;
         $sModuleName = self::createModuleName($sModuleName);
 
         if (true === empty($sModuleName) || true === empty($sView))
@@ -714,7 +714,7 @@ class Emvicy
 
         if (false === file_exists(Config::get_MVC_MODULES_DIR() . '/' . $sModuleName))
         {
-            $bPrimary = ((true === empty(get(self::modules(true)['PRIMARY']))) ? true : false);
+            $bPrimary = ((true === empty((self::modules(true)['PRIMARY'] ?? null))) ? true : false);
             self::moduleCreate(
                 bForce: true,
                 bPrimary: $bPrimary,
@@ -769,7 +769,7 @@ class Emvicy
     {
         $sTable = ucfirst(trim($sTable));
         $sTraitTable = 'Trait' . $sTable;
-        (true === empty($sModuleName)) ? $sModuleName = current(get(self::modules(bReturn: true)['PRIMARY'], [])) : false;
+        (true === empty($sModuleName)) ? $sModuleName = current((self::modules(bReturn: true)['PRIMARY'] ?? [])) : false;
         $sModuleName = self::createModuleName($sModuleName);
 
         if (true === empty($sModuleName) || true === empty($sTable))
@@ -779,7 +779,7 @@ class Emvicy
 
         if (false === file_exists(Config::get_MVC_MODULES_DIR() . '/' . $sModuleName))
         {
-            $bPrimary = ((true === empty(get(self::modules(true)['PRIMARY']))) ? true : false);
+            $bPrimary = ((true === empty((self::modules(true)['PRIMARY'] ?? null))) ? true : false);
             self::moduleCreate(
                 bForce: true,
                 bPrimary: $bPrimary,
@@ -855,7 +855,7 @@ class Emvicy
     public static function dbCreateTableClassCollection(string $sClass = '', ?string $sModuleName = '')
     {
         $sClass = ucfirst(trim($sClass));
-        (true === empty($sModuleName)) ? $sModuleName = current(get(self::modules(bReturn: true)['PRIMARY'], [])) : false;
+        (true === empty($sModuleName)) ? $sModuleName = current((self::modules(bReturn: true)['PRIMARY'] ?? [])) : false;
         $sModuleName = self::createModuleName($sModuleName);
 
         if (true === empty($sModuleName) || true === empty($sClass))
@@ -871,7 +871,7 @@ class Emvicy
 
         if (false === file_exists(Config::get_MVC_MODULES_DIR() . '/' . $sModuleName))
         {
-            $bPrimary = ((true === empty(get(self::modules(true)['PRIMARY']))) ? true : false);
+            $bPrimary = ((true === empty((self::modules(true)['PRIMARY'] ?? null))) ? true : false);
             self::moduleCreate(
                 bForce: true,
                 bPrimary: $bPrimary,
@@ -1072,13 +1072,13 @@ class Emvicy
     {
         if (true === empty($sLogId))
         {
-            $sLogId = (false === empty(get($_GET['id'])))? get($_GET['id']) : Config::get_MVC_UNIQUE_ID();
+            $sLogId = (false === empty(($_GET['id'] ?? null)))? ($_GET['id'] ?? null) : Config::get_MVC_UNIQUE_ID();
         }
 
         if (true === empty($bNewline))
         {
-            $bNewline = (false === empty(get($_GET['nl'])))
-                ? (boolean) get($_GET['nl'])
+            $bNewline = (false === empty(($_GET['nl'] ?? null)))
+                ? (boolean) ($_GET['nl'] ?? null)
                 : false
             ;
         }
@@ -1133,7 +1133,7 @@ class Emvicy
      */
     public static function modules(bool $bReturn = false)
     {
-        $aModuleSet = get($GLOBALS['aConfig']['MVC_MODULE_SET'], array());
+        $aModuleSet = ($GLOBALS['aConfig']['MVC_MODULE_SET'] ?? array());
 
         if (true === $bReturn)
         {
@@ -1159,7 +1159,7 @@ class Emvicy
      */
     public static function datatype(string $sParamModule = '')
     {
-        $sModuleRequested = (false === empty($sParamModule)) ? $sParamModule : get($_GET['module']);
+        $sModuleRequested = (false === empty($sParamModule)) ? $sParamModule : ($_GET['module'] ?? null);
 
         \MVC\Cache::init(\MVC\Config::get_MVC_CACHE_CONFIG());
         \MVC\Cache::autoDeleteCache('DataType', 0);
@@ -1189,7 +1189,7 @@ class Emvicy
                     if (true === is_array($aDataType))
                     {
                         echo '- generating Datatype Classes for module: `' . $sModule . '`, ';
-                        echo 'directory: `' . get($aDataType['dir']) . '` ... ';
+                        echo 'directory: `' . ($aDataType['dir'] ?? null) . '` ... ';
                         \MVC\Generator\DataType::create()->initConfigArray($aDataType);
                         echo "done ✔\n";
                     }
@@ -1367,7 +1367,7 @@ class Emvicy
         }
 
         (false === isset(Config::get_MVC_EVENT()['BIND'])) ? Event::init() : false;
-        $aBonded = get(Config::get_MVC_EVENT()['BIND'], array());
+        $aBonded = (Config::get_MVC_EVENT()['BIND'] ?? array());
         ksort($aBonded);
 
         if (true === $bReturn)

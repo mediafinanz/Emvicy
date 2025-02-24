@@ -250,10 +250,10 @@ class Debug
     public static function prepareBacktraceArray(array $aBacktrace = array()) : array
     {
         $aData = array();
-        $aData['sFile'] = get($aBacktrace[0]['file'], '');
-        $aData['sLine'] = get($aBacktrace[0]['line'], '');
-        $aData['sClass'] = get($aBacktrace[1]['class'], '');
-        $aData['sFunction'] = get($aBacktrace[1]['function'], '');
+        $aData['sFile'] = ($aBacktrace[0]['file'] ?? '');
+        $aData['sLine'] = ($aBacktrace[0]['line'] ?? '');
+        $aData['sClass'] = ($aBacktrace[1]['class'] ?? '');
+        $aData['sFunction'] = ($aBacktrace[1]['function'] ?? '');
 
         return $aData;
     }
@@ -307,7 +307,7 @@ class Debug
             ? Session::is('Emvicy')
                 ->get('startDateTime')
             : new \DateTime (date('Y-m-d H:i:s.' . $sMicrotime));
-        $fEnd = round((date_format ($oDateTime, "s.u") - date_format (get($oStart), "s.u")), 3);
+        $fEnd = round((date_format ($oDateTime, "s.u") - date_format (($oStart ?? null), "s.u")), 3);
 
         return $fEnd;
     }

@@ -332,7 +332,7 @@ class Event
             return self::$aEvent;
         }
 
-        return (array)get(self::$aEvent[$sEvent], array());
+        return (array) (self::$aEvent[$sEvent] ?? array());
     }
 
     /**

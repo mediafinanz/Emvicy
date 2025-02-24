@@ -278,7 +278,7 @@ $oSymfonyComponentConsoleApplication
     ->setCode(function (\Symfony\Component\Console\Input\InputInterface $oInputInterface, \Symfony\Component\Console\Output\OutputInterface $oOutputInterface): int {
 
         $sModuleType = $oInputInterface->getArgument('sModuleType');
-        $bPrimary = (str_starts_with(strtolower(get($sModuleType, '')), 'p')) ? true : false;
+        $bPrimary = (str_starts_with(strtolower(($sModuleType ?? '')), 'p')) ? true : false;
 
         \Emvicy\Emvicy::moduleCreate(
             bForce: true,

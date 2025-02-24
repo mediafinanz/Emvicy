@@ -68,7 +68,7 @@ class InfoTool
 
         // add sRendered markup of current page
         $aToolbar['sRendered'] = $oView->getTemplateVars('layout');
-        $aToolbar['sRenderedHighlight'] = Strings::highlight_html(get($aToolbar['sRendered'], ''));
+        $aToolbar['sRenderedHighlight'] = Strings::highlight_html(($aToolbar['sRendered'] ?? ''));
         Registry::set('aToolbar', $aToolbar);
 
         $sToolBarVarName = 'sToolBar_' . uniqid();
@@ -83,7 +83,7 @@ class InfoTool
         $sHtml = '';
 
         // inject toolbar var to regular string output via DOM
-        if (false === empty(get($aToolbar['sRendered'], '')))
+        if (false === empty(($aToolbar['sRendered'] ?? '')))
         {
             $oDom = new \DOMDocument('', '');
 
@@ -219,7 +219,7 @@ class InfoTool
         $aToolbar['aEventBINDNAME'] = self::buildMarkupListTree(Event::$aEvent);
         $aToolbar['aEventRUN'] = self::buildMarkupListTree($aToolbar['aEvent']['RUN']);
 
-        $aToolbar['aEventDELETE'] = (false === empty(get($aToolbar['aEvent']['DELETE'], array()))) ? self::buildMarkupListTree($aToolbar['aEvent']['DELETE']) : array();
+        $aToolbar['aEventDELETE'] = (false === empty(($aToolbar['aEvent']['DELETE'] ?? array()))) ? self::buildMarkupListTree($aToolbar['aEvent']['DELETE']) : array();
         $aToolbar['aRouting'] = array(
             'aRequest' => Request::in()->getPropertyArray(),
             'sModule' => Route::getCurrent()->get_module(),
@@ -246,7 +246,7 @@ class InfoTool
         $aToolbar['aPolicy']['aApplied'] = self::buildMarkupListTree($aTmpPolicy);
 
         $aToolbar['sTemplate'] = $oView->sTemplate;
-        $aToolbar['sTemplateContent'] = (null !== get($aToolbar['sTemplate']) && true === is_file($oView->sTemplate)) ? file_get_contents ($aToolbar['sTemplate'], true) : '';
+        $aToolbar['sTemplateContent'] = (null !== ($aToolbar['sTemplate'] ?? null) && true === is_file($oView->sTemplate)) ? file_get_contents ($aToolbar['sTemplate'], true) : '';
         $aToolbar['sTemplateContent'] = Strings::highlight_html($aToolbar['sTemplateContent']);
         $aToolbar['aFilesIncluded'] = get_required_files();
         $aToolbar['aMemory'] = array(

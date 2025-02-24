@@ -39,7 +39,7 @@ $aConfig['MVC_LOG_FORCE_LINEBREAK'] = true;     // force linebreaks in logfiles 
 $aConfig['MVC_INFOTOOL_ENABLE'] = true;         // recommended to set to true for develop environments only: show InfoTool bar
 
 // take MVC_UNIQUE_ID out of request Header
-$sUniqueId = preg_replace("/[^[:alnum:]]/ui", '', get(array_change_key_case(getallheaders(), CASE_LOWER)['mvc-unique-id'], ''));
+$sUniqueId = preg_replace("/[^[:alnum:]]/ui", '', (array_change_key_case(getallheaders(), CASE_LOWER)['mvc-unique-id'] ?? ''));
 (false === empty($sUniqueId)) ? $aConfig['MVC_UNIQUE_ID'] = $sUniqueId : false;
 
 

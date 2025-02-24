@@ -249,7 +249,7 @@ class Request
                 return $aParam;
             }
 
-            return (string) get($aParam[$sKey], '');
+            return (string) ($aParam[$sKey] ?? '');
         }
 
         $mReturn = (empty($sKey)) ? array() : '';
@@ -279,7 +279,7 @@ class Request
     {
         return (string) (true === isset($_SERVER['HTTP_CLIENT_IP']))
             ? $_SERVER['HTTP_CLIENT_IP']
-            : get($_SERVER['HTTP_X_FORWARDED_FOR'], $_SERVER['REMOTE_ADDR'])
+            : ($_SERVER['HTTP_X_FORWARDED_FOR'] ?? $_SERVER['REMOTE_ADDR'])
             ;
     }
 
@@ -411,7 +411,7 @@ class Request
     {
         if (false === empty($sKey))
         {
-            return get(self::in()->get_pathParamArray()[$sKey], '');
+            return (self::in()->get_pathParamArray()[$sKey] ?? '');
         }
 
         return self::in()->get_pathParamArray();

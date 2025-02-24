@@ -44,7 +44,7 @@ trait TraitAttribute
 
     public function trait_getAttributeMethod(?string $sMethod = '', ?string $sClassName = null, ?int $iFlag = null, ?string $sScope = '')
     {
-        (true === empty($sMethod)) ? $sMethod = get(debug_backtrace(limit: 2)[1]['function'], '') : false;
+        (true === empty($sMethod)) ? $sMethod = (debug_backtrace(limit: 2)[1]['function'] ?? '') : false;
 
         if (true === empty($sMethod))
         {

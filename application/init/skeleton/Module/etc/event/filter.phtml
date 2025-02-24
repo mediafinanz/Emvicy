@@ -40,33 +40,33 @@
                     }
 
                     // sanitize_var
-                    if (true === is_int(get($aSet['sanitize_var'])))
+                    if (true === is_int(($aSet['sanitize_var'] ?? null)))
                     {
-                        $aInput[$sKey] = filter_var($aInput[$sKey], get($aSet['sanitize_var']));
+                        $aInput[$sKey] = filter_var($aInput[$sKey], ($aSet['sanitize_var'] ?? null));
                     }
-                    elseif(true === is_array(get($aSet['sanitize_var'])))
+                    elseif(true === is_array(($aSet['sanitize_var'] ?? null)))
                     {
-                        foreach (get($aSet['sanitize_var'], []) as $iSanitizeVar)
+                        foreach (($aSet['sanitize_var'] ?? []) as $iSanitizeVar)
                         {
                             $aInput[$sKey] = filter_var($aInput[$sKey], $iSanitizeVar);
                         }
                     }
 
                     // preg_replace
-                    if (true === is_int(get($aSet['preg_replace'])))
+                    if (true === is_int(($aSet['preg_replace'] ?? null)))
                     {
-                        $aInput[$sKey] = filter_var($aInput[$sKey], get($aSet['preg_replace']));
+                        $aInput[$sKey] = filter_var($aInput[$sKey], ($aSet['preg_replace'] ?? null));
                     }
-                    elseif(true === is_array(get($aSet['preg_replace'])))
+                    elseif(true === is_array(($aSet['preg_replace'] ?? null)))
                     {
-                        foreach (get($aSet['preg_replace'], []) as $sRegEx)
+                        foreach (($aSet['preg_replace'] ?? []) as $sRegEx)
                         {
                             $aInput[$sKey] = filter_var($aInput[$sKey], $sRegEx);
                         }
                     }
 
                     // cast
-                    $sCast = get($aSet['cast']);
+                    $sCast = ($aSet['cast'] ?? null);
                     ('int' === $sCast) ? $aInput[$sKey] = (int) $aInput[$sKey] : false;
                     ('string' === $sCast) ? $aInput[$sKey] = (string) $aInput[$sKey] : false;
                     ('bool' === $sCast) ? $aInput[$sKey] = (boolean) $aInput[$sKey] : false;

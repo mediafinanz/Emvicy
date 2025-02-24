@@ -84,7 +84,7 @@ class Registry
             Error::exception(new \ErrorException ($sMsg, 0, E_USER_ERROR, __FILE__, __LINE__));
 		}
 
-		return get(self::$_aStorage[$sIndex]);
+		return (self::$_aStorage[$sIndex] ?? null);
 	}
 
     /**

@@ -552,7 +552,7 @@ class Db
      */
     public function moveColumn(string $sFieldName, string $sAfter = 'id')
     {
-        $sInfo = get($this->aField[$sFieldName]);
+        $sInfo = ($this->aField[$sFieldName] ?? null);
 
         if (true === empty($sInfo))
         {
@@ -618,7 +618,7 @@ class Db
         Cache::saveCache($sCacheSyncKey, $sCacheSyncValue);
 
         $aTableNoForeignKeys = array_diff(array_keys($this->getFieldInfo()), array_filter(array_keys($this->aForeign)));
-        $aTableFieldDef = array_keys(get($this->aFieldArrayComplete, []));
+        $aTableFieldDef = array_keys(($this->aFieldArrayComplete ?? []));
 
         // Delete
         $aDelete = array_diff($aTableNoForeignKeys, $aTableFieldDef);
@@ -632,7 +632,7 @@ class Db
         // DELETE
         foreach ($aDelete as $sFieldName)
         {
-            $oDTDBConstraint = $this->getConstraintInfo(get($sFieldName, ''));
+            $oDTDBConstraint = $this->getConstraintInfo(($sFieldName ?? ''));
             $sSql = '';
 
             if ('' !== $oDTDBConstraint->get_CONSTRAINT_NAME())
@@ -737,10 +737,10 @@ class Db
             }
         }
 
-        if (false === empty(get($this->aForeign[$sField])))
+        if (false === empty(($this->aForeign[$sField] ?? null)))
         {
             /** @var \MVC\DB\DataType\DB\Foreign $oDTForeign */
-            $oDTForeign = get($this->aForeign[$sField]);
+            $oDTForeign = ($this->aForeign[$sField] ?? null);
 
             if (true === $bCacheAtRuntime)
             {
@@ -754,10 +754,10 @@ class Db
         if (true === $bCacheAtRuntime)
         {
             // save to Registry
-            Registry::set($sRegistryKey, (string) get($this->getFieldInfo($sField)['Comment'], ''));
+            Registry::set($sRegistryKey, (string) ($this->getFieldInfo($sField)['Comment'] ?? ''));
         }
 
-        return (string) get($this->getFieldInfo($sField)['Comment'], '');
+        return (string) ($this->getFieldInfo($sField)['Comment'] ?? '');
     }
 
     /**
@@ -814,7 +814,7 @@ class Db
         // add PHP Type equivalents
         foreach ($aResult as $sKey => $mValue)
         {
-            $sType = (true === is_array($mValue)) ? get($mValue['Type'], 'varchar') : '';
+            $sType = (true === is_array($mValue)) ? ($mValue['Type'] ?? 'varchar') : '';
             $sDefString = $sType;
             $sType = strtolower($sType);
             $sType = trim($sType);
@@ -831,11 +831,11 @@ class Db
 
                 if (in_array($sType, array('char','varchar','int','tinyint','smallint','mediumint','bigint')))
                 {
-                    $mValueType = self::getIntegerFromType(get($sDefString, ''), $sType);
+                    $mValueType = self::getIntegerFromType(($sDefString ?? ''), $sType);
                 }
                 elseif ('enum' === $sType)
                 {
-                    $mValueType = self::getArrayFromEnum(get($sDefString, ''));
+                    $mValueType = self::getArrayFromEnum(($sDefString ?? ''));
                 }
                 elseif ('tinytext' === $sType)
                 {
@@ -861,10 +861,10 @@ class Db
         // add comment from foreigns
         foreach ($aResult as $sKey => $aValue)
         {
-            if (!empty(get($this->aForeign[$sKey])))
+            if (!empty(($this->aForeign[$sKey] ?? null)))
             {
                 /** @var \MVC\DB\DataType\DB\Foreign $oDTForeign */
-                $oDTForeign = get($this->aForeign[$sKey]);
+                $oDTForeign = ($this->aForeign[$sKey] ?? null);
 
                 if (!empty($oDTForeign->get_sComment()))
                 {
@@ -1100,7 +1100,7 @@ class Db
         $sSql = 'CHECKSUM TABLE `' . $this->sTableName . '`';
         $aChecksum = self::getDbPdo()->fetchRow($sSql);
 
-        return (int) get($aChecksum['Checksum']);
+        return (int) ($aChecksum['Checksum'] ?? null);
     }
 
     /**
@@ -1369,7 +1369,7 @@ class Db
      */
     protected function fieldIsForeignKey(string $sField = '') : bool
     {
-        $mResult = get($this->aForeign[$sField]);
+        $mResult = ($this->aForeign[$sField] ?? null);
 
         return (!is_null($mResult)) ? true : false;
     }
@@ -1381,7 +1381,7 @@ class Db
      */
     protected function fieldCanBeNull(string $sField = '') : bool
     {
-        $sYesNo = strtolower(get($this->getFieldInfo($sField)['Null'], '')); # yes|no
+        $sYesNo = strtolower(($this->getFieldInfo($sField)['Null'] ?? '')); # yes|no
 
         return ('yes' === $sYesNo) ? true : false;
     }
@@ -1764,10 +1764,10 @@ class Db
             if (true === $bCacheAtRuntime)
             {
                 // save to Registry
-                Registry::set($sRegistryKey, get($aTableDataType[$sFieldName]));
+                Registry::set($sRegistryKey, ($aTableDataType[$sFieldName] ?? null));
             }
 
-            return get($aTableDataType[$sFieldName]);
+            return ($aTableDataType[$sFieldName] ?? null);
         }
 
         if (true === $bCacheAtRuntime)

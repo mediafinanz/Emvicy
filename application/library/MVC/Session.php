@@ -212,7 +212,7 @@ class Session
      */
     public function getAll()
     {
-        return get($_SESSION[$this->_sNamespace], array());
+        return ($_SESSION[$this->_sNamespace] ?? array());
     }
 
     /**
@@ -257,8 +257,8 @@ class Session
      */
     public static function applySessionRules()
     {
-        $aEnableSessionForController = get(Config::MODULE()['SESSION']['aEnableSessionForController'], array());
-        $aDisableSessionForController = get(Config::MODULE()['SESSION']['aDisableSessionForController'], array());
+        $aEnableSessionForController = (Config::MODULE()['SESSION']['aEnableSessionForController'] ?? array());
+        $aDisableSessionForController = (Config::MODULE()['SESSION']['aDisableSessionForController'] ?? array());
 
         $bEnable = (
             // current controller

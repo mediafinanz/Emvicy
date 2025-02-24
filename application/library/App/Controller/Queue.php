@@ -73,7 +73,7 @@ class Queue extends Controller
         $aWorkerConfig = Worker::getConfig();
 
         // class
-        $sWorkerClass = get($aWorkerConfig[$sQueueKey]);
+        $sWorkerClass = ($aWorkerConfig[$sQueueKey] ?? null);
 
         // skip on no worker class
         if (true === empty($sWorkerClass))

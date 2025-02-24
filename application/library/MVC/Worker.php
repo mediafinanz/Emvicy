@@ -14,7 +14,7 @@ class Worker
      */
     public static function getConfig() : array
     {
-        return get(Config::MODULE()['queue']['worker'], array());
+        return (Config::MODULE()['queue']['worker'] ?? array());
     }
 
     /**

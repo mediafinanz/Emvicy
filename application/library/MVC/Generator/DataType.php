@@ -60,7 +60,7 @@ class DataType
      */
     public function initConfigArray(array $aDataType = array())
     {
-        $this->bCreateEvents = get($aDataType['createEvents'], false);
+        $this->bCreateEvents = ($aDataType['createEvents'] ?? false);
         $oDTDataTypeGeneratorConfig = $this->buildDTDataTypeGeneratorConfigObject($aDataType);
         $bSuccess = $this->initConfigObject($oDTDataTypeGeneratorConfig);
 
@@ -84,7 +84,7 @@ class DataType
         {
             $oDTDataTypeGeneratorClass = DTClass::create();
             $oDTDataTypeGeneratorClass->set_name($aDTClass['name']);
-            $oDTDataTypeGeneratorClass->set_trait(get($aDTClass['trait'], array()));
+            $oDTDataTypeGeneratorClass->set_trait(($aDTClass['trait'] ?? array()));
 
             (0 == strlen($oDTDataTypeGeneratorClass->get_file()))
                 ? $oDTDataTypeGeneratorClass->set_file($oDTDataTypeGeneratorClass->get_name() . '.php')
@@ -134,7 +134,7 @@ class DataType
 
                     (isset($aProperty['value']))
                         ? $oDTDataTypeGeneratorProperty->set_value($aProperty['value'])
-                        : (('int' === get($aProperty['var'])) ? $oDTDataTypeGeneratorProperty->set_value(0) : false);
+                        : (('int' === ($aProperty['var'] ?? null)) ? $oDTDataTypeGeneratorProperty->set_value(0) : false);
 
                     (isset($aProperty['var']))
                         ? $oDTDataTypeGeneratorProperty->set_var($aProperty['var'])

@@ -450,7 +450,7 @@ class MyMVCInstaller
 
         $sCmd = $this->_aConfig['MVC_BIN_FIND'] . ' ' . $this->_aConfig['MVC_MODULES_DIR'] . '/ -name "composer.json" -print | ' . $this->_aConfig['MVC_BIN_GREP'] . ' -v vendor';
         $sResult = shell_exec($sCmd);
-        $sFind = trim(get($sResult, ''));
+        $sFind = trim(($sResult ?? ''));
         $aFind = explode("\n", $sFind);
 
         foreach ($aFind as $sComposerJsonFile)

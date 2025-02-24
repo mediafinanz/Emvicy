@@ -49,7 +49,7 @@ class Cron extends Controller
         Event::run('mvc.view.render.off');
         Event::run('mvc.view.echoOut.off');
 
-        $aCron = get(Config::MODULE()['cron'], array());
+        $aCron = (Config::MODULE()['cron'] ?? array());
 
         if (Config::get_MVC_PROCESS_MAX_PROCESSES_OVERALL() < count($aCron))
         {
