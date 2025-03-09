@@ -158,6 +158,16 @@ class Strings
     }
 
     /**
+     * checks whether a param is a valid uuid Version4 string
+     * @param mixed $sUuid4
+     * @return bool
+     */
+    public static function isUuid4(mixed $sUuid4)
+    {
+        return (is_string($sUuid4) && preg_match('/^[a-f\d]{8}(-[a-f\d]{4}){4}[a-f\d]{8}$/i', $sUuid4));
+    }
+
+    /**
      * checks whether a string contains markup
      * @param string $sString
      * @param bool   $bPurify
